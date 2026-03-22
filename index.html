@@ -4,10 +4,13 @@
     <meta name="viewpoint" content="width= device-width", initial-scale = 1.0">
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="style.css">
-    <!-- style.css占位-->
     <title>
         Pomodoro Test
     </title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" 
+        rel="stylesheet" 
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" 
+        crossorigin="anonymous">
 </head>
 <body>
     <header>
@@ -15,41 +18,74 @@
             Pomodoro
         </h1>
     </header>
-    <main>
-        <div>
-            <h1>
-                Today's Tasks
-            </h1>
-            <ul>
+    <div class="container-fluid py-2">
+        <div class="row g-4">
 
-                <li>Task1</li>
-                <li>Task2</li>
-                <!-- 动态列表占位（仍未完成）-->
+            <div class="col-md-6">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body" >
+                        <h1 class="card-title">
+                            Today's Tasks
+                        </h1>
+                        <!-- 未完成内容：标题hover 超链接-->
+                        <ul class="list1">
+                            <li class="list_item">Task1</li>
+                            <li class="list_item">Task1</li>
+                            <li class="list_item">Task1</li>
+                            <li class="list_item">... dynamic(future)</li>
+                            <!-- 动态列表占位-->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body" >
+                        <h1 class="card-title">
+                            Today's Focus Time 
+                        </h1>
+                        <!-- 未完成内容：超链接 hover-->
+                        <p class="show-time">
+                            1 h 36 min  dynamic(future)<!-- 动态时间占位 -->
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body" >
+                        <h1 class="card-title">
+                            Pomodoro Timer 
+                        </h1>
+                        <!-- 未完成内容：link to timer page & hover-->
+                        <p class="content_text">
+                            THAT IS DESCRIPTION!!!!!!!!
+                        </p>
+                    </div>
+                </div>
+            </div>
 
-            </ul>
+            <div class="col-md-6">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body" >
+                        <h1 class="card-title">
+                            Leaderboard 
+                        </h1>
+                        <!-- 未完成内容：link to detailed page & hover-->
+                        <p class="content_text">
+                            Display the current top three leaders!!!!!!
+                        </p>
+                    </div>
+                </div>
+            </div>
+
         </div>
-
-        <div>
-            <h1>
-                Today's Focus Time
-            </h1>
-            <div> 2h 39min </div>
-            <!-- 动态计时（仍未完成）-->
-        </div>
-
-        <div>
-            <h1>
-                Pomodoro Timer
-            </h1>
-            <!-- link to Timer Page-->
-        </div>
-
-        <div>
-            <h1>
-                Leaderboard
-            </h1>
-            <!-- link to Leaderboard Page-->
-        </div>
-    </main>
+    </div>
+        
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" 
+        crossorigin="anonymous">
+    </script>
 </body>
 </html>
