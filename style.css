@@ -1,0 +1,13 @@
+header {
+    background-color:crimson;
+    color:white;
+    text-align:center;
+    padding:40px 0;
+}
+
+header h1{
+    font-style:italic;
+    font-weight:bold;
+    font-size:80px;
+    font-family: Arial, Helvetica, sans-serif;
+}
