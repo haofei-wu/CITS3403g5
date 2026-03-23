@@ -1,13 +1,117 @@
+body {
+    font-family: "Comic Sans MS", "Segoe Print", "Bradley Hand", cursive !important;
+}
+
 header {
-    background-color:crimson;
+    background: linear-gradient(135deg,crimson, #ff6b6b);
     color:white;
     text-align:center;
     padding:40px 0;
+    box-shadow:0 4px 10px rgba(0,0,0,0.1);
 }
 
-header h1{
+header h1 {
     font-style:italic;
     font-weight:bold;
-    font-size:80px;
-    font-family: Arial, Helvetica, sans-serif;
+    font-size:60px;
 }
+
+.card {
+    border:none;
+    border-radius:16px;
+    background-color:aliceblue;
+    padding:10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.card:hover{
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+}
+
+.card-body {
+    padding:20px;
+    gap:15px;
+    background:linear-gradient(to bottom, #e9fefa,#defce7);
+    border-radius: 16px;
+}
+
+.card-title {
+    font-weight:600;
+    margin-bottom:12px;
+    border-left:4px solid crimson; /* waiting for graphical 等待简易图形化标题*/ 
+    padding-left:10px;
+}
+
+.card-link {
+    color:black;
+    text-decoration: none;
+}
+
+.card-link:hover {
+    color:rgb(76, 76, 237);
+    text-decoration: none;
+}
+.show-time {
+    font-size:2rem;
+    font-weight:bold;
+    background:linear-gradient(135deg,crimson,#ff6b6b);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-align:center;
+}
+
+#simple-timer {
+    font-size: 8rem;
+    font-weight: bold;
+    border: 4px solid black;
+    border-radius: 12px;
+    padding: 20px 40px;
+    background-color: white;
+    display: block;
+    width:fit-content;
+    text-align: center;
+    margin: 20px auto;
+}
+
+.btn {
+    padding:8px 18px;
+    border-radius: 8px;
+    background-color: white !important;
+    border:2px solid black !important;
+    color:black;
+    font-weight: bold;
+    transition: 0.2s;
+}
+
+.btn:hover{
+    background-color: rgb(219, 219, 219) !important;
+}
+
+.button-timers {
+    text-align: center;
+    margin-top:10px;
+}
+
+.button-logins {
+    position: fixed;
+    top:20px;
+    right:20px;
+    display: flex;
+    gap:12px;
+}
+
+.list_item {
+    font-size:1.2rem;
+    background: none;
+    padding:8px 0;
+    margin-bottom: 6px;
+    font-weight: 500;
+    gap: 10px; 
+    transition: all 0.2s ease;
+}
+
+.list_item:hover {
+    transform: translateX(5px);
+}
+/*status-based color change---已完成任务绿色，未完成保持红色 */
