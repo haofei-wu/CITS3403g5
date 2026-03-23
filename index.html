@@ -15,19 +15,29 @@
 <body>
     <header>
         <h1>
-            Pomodoro
+            PomodoroTimers
         </h1>
     </header>
+    <div class="button-logins">
+        <a href="login.html" class="btn login-btn">
+            login
+        </a>
+        <a href="register.html" class="btn login-btn">
+            Register
+        </a>
+    </div>
+
     <div class="container-fluid py-2">
         <div class="row g-4">
 
             <div class="col-md-6">
-                <div class="card h-100 shadow-sm">
+                <div class="card h-100">
                     <div class="card-body" >
                         <h1 class="card-title">
-                            Today's Tasks
+                            <a href="tasks.html" class="card-link">
+                                Today's Tasks→
+                            </a>
                         </h1>
-                        <!-- 未完成内容：标题hover 超链接-->
                         <ul class="list1">
                             <li class="list_item">Task1</li>
                             <li class="list_item">Task1</li>
@@ -40,12 +50,13 @@
             </div>
             
             <div class="col-md-6">
-                <div class="card h-100 shadow-sm">
+                <div class="card h-100">
                     <div class="card-body" >
                         <h1 class="card-title">
-                            Today's Focus Time 
+                            <a href="focus_time.html" class="card-link">
+                                Today's Focus Time→ 
+                            </a>
                         </h1>
-                        <!-- 未完成内容：超链接 hover-->
                         <p class="show-time">
                             1 h 36 min  dynamic(future)<!-- 动态时间占位 -->
                         </p>
@@ -54,26 +65,39 @@
             </div>
             
             <div class="col-md-6">
-                <div class="card h-100 shadow-sm">
-                    <div class="card-body" >
+                <div class="card h-100">
+                    <div class="card-body">
                         <h1 class="card-title">
-                            Pomodoro Timer 
+                            <a href="timer.html" class="card-link">
+                                Pomodoro Timer→ 
+                            </a>
                         </h1>
-                        <!-- 未完成内容：link to timer page & hover-->
                         <p class="content_text">
-                            THAT IS DESCRIPTION!!!!!!!!
+                            Simple timer below
                         </p>
+                        <p class="timerset" id="simple-timer">
+                            15:00
+                        </p>
+                        <div class="button-timers">
+                            <button class="btn start-btn">
+                                Start
+                            </button>
+                            <button class="btn start-btn">
+                                Reset
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <div class="col-md-6">
-                <div class="card h-100 shadow-sm">
+                <div class="card h-100">
                     <div class="card-body" >
                         <h1 class="card-title">
-                            Leaderboard 
+                            <a href="leaderboard.html" class="card-link">
+                                Leaderboard→ 
+                            </a>
                         </h1>
-                        <!-- 未完成内容：link to detailed page & hover-->
                         <p class="content_text">
                             Display the current top three leaders!!!!!!
                         </p>
