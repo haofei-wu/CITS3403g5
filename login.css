@@ -1,0 +1,55 @@
+/* Page font */
+body {
+    font-family: "Segoe UI", sans-serif;
+    background-color: #f5f7fb;
+}
+
+/* LEFT SIDE */
+.login-left {
+    background: linear-gradient(135deg, #6aa8ff, #6f7cff);
+    color: white;
+}
+
+.brand-title {
+    font-size: 3rem;
+    font-weight: bold;
+}
+
+.tagline {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+}
+
+/* Illustration */
+.illustration {
+    width: 60%;
+    max-width: 350px;
+}
+
+/* LOGIN CARD */
+.login-card {
+    width: 380px;
+    padding: 40px;
+    border-radius: 14px;
+    background: white;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+}
+
+/* INPUT STYLE */
+.form-control {
+    border-radius: 8px;
+    padding: 10px;
+}
+
+/* LOGIN BUTTON */
+.btn-login {
+    background: linear-gradient(135deg, #6aa8ff, #6f7cff);
+    color: white;
+    border-radius: 8px;
+    padding: 10px;
+    border: none;
+}
+
+.btn-login:hover {
+    opacity: 0.9;
+}
