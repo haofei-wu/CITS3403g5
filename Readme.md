@@ -1,24 +1,41 @@
-# StudyFlow
+# Study & Fitness Tracker App
 
-## Purpose of the Application
-StudyFlow is a web-based study productivity platform that helps students
-track study time, maintain streaks, manage tasks, and compare progress
-through a leaderboard.
+A productivity app with a built-in timer that lets you track time studied and exercised, with social features including friends and a leaderboard.
 
 ---
 
-## Design and Use
-The application focuses on motivation and simplicity:
-- Pomodoro study timer
-- Task management
-- Study streak tracking
-- Leaderboard system
+## Features
+
+- Logging study hours
+- Pomodoro / Flowmodoro timer
+- Motivational quotes
+- Streaks for how many consecutive days you have studied/exercised
+- Task management for current and next day via a timebox planner
+- Google Calendar integration — push and pull tasks made in both apps
+  - Roll-over feature so that today's uncompleted tasks can be pushed to the next day
 
 ---
 
-## Group Members
+## Pages
 
-| UWA ID | Name | GitHub Username |
-|--------|------|-----------------|
-| XXXXX | Himakshi Nayyar | yourusername |
-| XXXXX | Teammate | teammateusername |
+| Page | Description |
+|------|-------------|
+| **Login** | User authentication |
+| **Home** | Summary of everything done today, weekly hours, stats, and tasks to complete today |
+| **Leaderboard** | Compare progress with friends |
+| **Timer** | Pomodoro / Flowmodoro session timer |
+| **Task Management** | Daily planner with timebox scheduling |
+
+---
+
+## Work Distribution
+
+> Deadline: **25/03/26** — draft design (drawing) + HTML of all pages
+
+| Page | Assignee |
+|------|----------|
+| Login | Himkashi |
+| Leaderboard | Himkashi |
+| Timer | Haofei |
+| Home | Michael |
+| Task Management | Haofei + Michael |
