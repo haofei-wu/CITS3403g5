@@ -52,4 +52,29 @@ body {
 
 .btn-login:hover {
     opacity: 0.9;
+}/* PASSWORD FIELD WITH SHOW BUTTON */
+.password-input-wrapper {
+    position: relative;
 }
+
+.password-input-wrapper input {
+    padding-right: 70px; /* space for button */
+}
+
+.show-password-btn {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    color: #6f7cff;
+}
+
+.show-password-btn:hover {
+    color: #4a5cff;
+}
+
