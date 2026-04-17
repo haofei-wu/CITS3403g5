@@ -77,6 +77,13 @@ body {
 .show-password-btn:hover {
     color: #4a5cff;
 }
-<div class="text-end mb-3">
-    <a href="/forgot-password">Forgot Password?</a>
-</div>
+/* Forgot password link */
+.forgot-link {
+    font-size: 14px;
+    color: #6f7cff;
+    text-decoration: none;
+}
+
+.forgot-link:hover {
+    text-decoration: underline;
+}

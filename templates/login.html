@@ -12,7 +12,6 @@
             <h1 class="brand-title">StudyFlow</h1>
             <p class="tagline">Build your study consistency.</p>
 
-            <!-- Illustration -->
             <img src="{{ url_for('static', filename='study.png') }}"
                  class="illustration"
                  alt="Study illustration">
@@ -39,27 +38,40 @@
                     </div>
 
                     <!-- Password -->
-<div class="password-box">
-    <label for="password">Password</label>
+                    <div class="password-box">
+                        <label for="password">Password</label>
 
-    <div class="password-input-wrapper">
-        <input type="password"
-               id="password"
-               name="password"
-               placeholder="Password"
-               class="form-control"
-               required>
+                        <div class="password-input-wrapper">
+                            <input type="password"
+                                   id="password"
+                                   name="password"
+                                   placeholder="Password"
+                                   class="form-control"
+                                   required>
 
-        <button type="button"
-                class="show-password-btn"
-                onclick="togglePassword()">
-            Show
-        </button>
-    </div>
-</div>
+                            <button type="button"
+                                    class="show-password-btn"
+                                    onclick="togglePassword()">
+                                Show
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Forgot Password -->
+                    <div class="text-end mb-3">
+                        <a href="/forgot-password" class="forgot-link">
+                            Forgot Password?
+                        </a>
+                    </div>
+
+                    <!-- Login Button -->
+                    <button type="submit" class="btn btn-login w-100">
+                        Login
+                    </button>
 
                 </form>
 
+                <!-- Register Link -->
                 <p class="text-center mt-3">
                     Don't have an account?
                     <a href="/register">Register</a>
@@ -71,6 +83,8 @@
 
     </div>
 </div>
+
+<!-- Show/Hide Password Script -->
 <script>
 function togglePassword() {
     const passwordInput = document.getElementById("password");
@@ -86,5 +100,5 @@ function togglePassword() {
 }
 </script>
 
-
 {% endblock %}
+
