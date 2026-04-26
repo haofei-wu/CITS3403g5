@@ -12,13 +12,20 @@ class User(db.Model):
     password = db.Column(db.String(200), nullable=False)
 
 @app.route("/", methods=["GET", "POST"])
-@app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
         email = request.form.get("email")
         password = request.form.get("password")
 
-        return f"Logged in as {email}"  # temporary
+        user = User.query.filter_by(email=email).first()
+
+        if user:
+            if user.password == password:
+                return render_template("login.html", success="Login successful!")
+            else:
+                return render_template("login.html", error="Incorrect password")
+        else:
+            return render_template("login.html", error="User not found")
 
     return render_template("login.html")
 

@@ -23,9 +23,21 @@
 
             <div class="login-card">
 
-                <h2 class="text-center mb-4">Login</h2>
+    <h2 class="text-center mb-4">Login</h2>
 
-                <form method="POST" action="/login">
+    {% if error %}
+    <div class="alert alert-danger text-center">
+        {{ error }}
+    </div>
+    {% endif %}
+
+    {% if success %}
+    <div class="alert alert-success text-center">
+        {{ success }}
+    </div>
+    {% endif %}
+
+    <form method="POST">
 
                     <!-- Email -->
                     <div class="mb-3">
