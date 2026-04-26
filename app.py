@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request
 from flask_sqlalchemy import SQLAlchemy
+from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
@@ -20,7 +21,7 @@ def login():
         user = User.query.filter_by(email=email).first()
 
         if user:
-            if user.password == password:
+            if check_password_hash(user.password, password):
                 return render_template("login.html", success="Login successful!")
             else:
                 return render_template("login.html", error="Incorrect password")
@@ -47,8 +48,10 @@ def register():
         email = request.form.get("email")
         password = request.form.get("password")
 
+        hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
+
         try:
-            new_user = User(email=email, password=password)
+            new_user = User(email=email, password=hashed_password)
             db.session.add(new_user)
             db.session.commit()
 
@@ -59,3 +62,6 @@ def register():
             return render_template("register.html", error="Email already exists")
 
     return render_template("register.html")
+
+
+
