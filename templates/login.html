@@ -23,8 +23,10 @@
 
             <div class="login-card">
 
-    <h2 class="text-center mb-4">Login</h2>
-
+    <h2 class="text-center mb-4">Welcome back 👋</h2>
+    <p class="text-center text-muted mb-3">
+      Stay consistent. Stay focused 📚
+   </p>
     {% if error %}
     <div class="alert alert-danger text-center">
         {{ error }}
@@ -40,14 +42,14 @@
     <form method="POST">
 
                     <!-- Email -->
-                    <div class="mb-3">
-                        <label>Email</label>
-                        <input type="email"
-                               name="email"
-                               class="form-control"
-                               placeholder="Enter email"
-                               required>
-                    </div>
+               <div class="mb-3">
+                      <label><i class="fa fa-envelope"></i> Email</label>
+                      <input type="email"
+                          name="email"
+                          class="form-control"
+                          placeholder="Enter your email"
+                          required>
+                </div>
 
                     <!-- Password -->
                     <div class="password-box">

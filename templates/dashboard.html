@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container mt-5 text-center">
+
+    <div class="login-card">
+
+        <h2>Welcome, {{ session.user_email }} 👋</h2>
+
+        <p class="text-muted mt-2">
+            Stay consistent and track your progress 📈
+        </p>
+
+        <div class="mt-4">
+
+            <a href="/leaderboard" class="btn btn-login me-2">
+                View Leaderboard 🏆
+            </a>
+
+            <a href="/logout" class="btn btn-outline-danger">
+                Logout
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

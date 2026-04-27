@@ -11,9 +11,25 @@
 
     <!-- Your CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='login.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 
 <body>
+    <nav class="navbar navbar-light bg-white shadow-sm px-4">
+
+    <span class="navbar-brand fw-bold">StudyFlow 📚</span>
+
+    <div>
+        {% if session.get('user_id') %}
+            <a href="/dashboard" class="me-3">Dashboard</a>
+            <a href="/leaderboard" class="me-3">Leaderboard 🏆</a>
+            <a href="/logout">Logout</a>
+        {% else %}
+            <a href="/">Login</a>
+        {% endif %}
+    </div>
+
+</nav>
 
     {% block content %}
     {% endblock %}

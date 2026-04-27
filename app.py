@@ -13,6 +13,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(200), nullable=False)
+    study_hours = db.Column(db.Float, default=0)
 
 @app.route("/", methods=["GET", "POST"])
 def login():
@@ -73,11 +74,23 @@ def dashboard():
     if 'user_id' not in session:
         return redirect(url_for('login'))
 
-    return f"Welcome {session['user_email']}! You are logged in."
+    return render_template("dashboard.html")
 @app.route("/logout")
 def logout():
     session.clear()
     return redirect(url_for('login'))
+@app.route("/leaderboard")
+def leaderboard():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
 
+    users = User.query.order_by(User.study_hours.desc()).all()
+    top_users = users[:3]
+
+    return render_template(
+        "leaderboard.html",
+        users=users,
+        top_users=top_users
+    )
 
 

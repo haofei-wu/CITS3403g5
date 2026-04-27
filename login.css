@@ -32,10 +32,14 @@ body {
 .login-card {
     width: 380px;
     padding: 40px;
-    border-radius: 18px;
-    background: rgba(255, 255, 255, 0.85);
-    backdrop-filter: blur(10px);
+    border-radius: 16px;
+
+    background: var(--card-bg);
+    backdrop-filter: blur(12px);
+
     box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+
+    animation: fadeIn 0.6s ease-in-out;
 }
 
 /* INPUT STYLE */
@@ -74,18 +78,18 @@ body {
 
 /* LOGIN BUTTON */
 .btn-login {
-    background: linear-gradient(135deg, #6a8dff, #7c6fff);
+    background: linear-gradient(135deg, #6aa8ff, #6f7cff);
     color: white;
     border-radius: 10px;
     padding: 12px;
     border: none;
     font-weight: 600;
-    transition: 0.2s;
+    transition: all 0.3s ease;
 }
 
 .btn-login:hover {
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+    box-shadow: 0 5px 15px rgba(111,124,255,0.4);
 }
 
 /* Forgot link */
@@ -103,6 +107,23 @@ body {
     animation: fadeIn 0.6s ease-in-out;
 }
 
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+:root {
+    --primary: #6f7cff;
+    --secondary: #6aa8ff;
+    --bg: #f5f7fb;
+    --card-bg: rgba(255, 255, 255, 0.8);
+    --text-dark: #2c2c2c;
+}
 @keyframes fadeIn {
     from {
         opacity: 0;
