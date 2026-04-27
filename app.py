@@ -1,8 +1,10 @@
 from flask import Flask, render_template, request
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask import session, redirect, url_for
 
 app = Flask(__name__)
+app.secret_key = "Himakshi"
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
@@ -22,7 +24,11 @@ def login():
 
         if user:
             if check_password_hash(user.password, password):
-                return render_template("login.html", success="Login successful!")
+               session['user_id'] = user.id
+               session['user_email'] = user.email
+
+               return redirect(url_for('dashboard'))
+               return render_template("login.html", success="Login successful!")
             else:
                 return render_template("login.html", error="Incorrect password")
         else:
@@ -62,6 +68,16 @@ def register():
             return render_template("register.html", error="Email already exists")
 
     return render_template("register.html")
+@app.route("/dashboard")
+def dashboard():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+
+    return f"Welcome {session['user_email']}! You are logged in."
+@app.route("/logout")
+def logout():
+    session.clear()
+    return redirect(url_for('login'))
 
 
 
