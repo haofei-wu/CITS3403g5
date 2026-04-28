@@ -12,6 +12,7 @@
             <h1 class="brand-title">StudyFlow</h1>
             <p class="tagline">Build your study consistency.</p>
 
+            <!-- Illustration -->
             <img src="{{ url_for('static', filename='study.png') }}"
                  class="illustration"
                  alt="Study illustration">
@@ -23,37 +24,41 @@
 
             <div class="login-card">
 
-    <h2 class="text-center mb-4">Welcome back 👋</h2>
-    <p class="text-center text-muted mb-3">
-      Stay consistent. Stay focused 📚
-   </p>
-    {% if error %}
-    <div class="alert alert-danger text-center">
-        {{ error }}
-    </div>
-    {% endif %}
+                <h2 class="text-center mb-4">Welcome back 👋</h2>
 
-    {% if success %}
-    <div class="alert alert-success text-center">
-        {{ success }}
-    </div>
-    {% endif %}
+                <p class="text-center text-muted mb-3">
+                    Stay consistent. Stay focused 📚
+                </p>
 
-    <form method="POST">
+                {% if error %}
+                <div class="alert alert-danger text-center">
+                    {{ error }}
+                </div>
+                {% endif %}
+
+                {% if success %}
+                <div class="alert alert-success text-center">
+                    {{ success }}
+                </div>
+                {% endif %}
+
+                <form method="POST">
 
                     <!-- Email -->
-               <div class="mb-3">
-                      <label><i class="fa fa-envelope"></i> Email</label>
-                      <input type="email"
-                          name="email"
-                          class="form-control"
-                          placeholder="Enter your email"
-                          required>
-                </div>
+                    <div class="mb-3">
+                        <label><i class="fa fa-envelope"></i> Email</label>
+                        <input type="email"
+                               name="email"
+                               class="form-control"
+                               placeholder="Enter your email"
+                               required>
+                    </div>
 
                     <!-- Password -->
                     <div class="password-box">
-                        <label for="password">Password</label>
+                        <label for="password">
+                            <i class="fa fa-lock"></i> Password
+                        </label>
 
                         <div class="password-input-wrapper">
                             <input type="password"
@@ -85,7 +90,7 @@
 
                 </form>
 
-                <!-- Register Link -->
+                <!-- Register -->
                 <p class="text-center mt-3">
                     Don't have an account?
                     <a href="/register">Register</a>
@@ -98,7 +103,6 @@
     </div>
 </div>
 
-<!-- Show/Hide Password Script -->
 <script>
 function togglePassword() {
     const passwordInput = document.getElementById("password");
