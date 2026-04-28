@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-
+// Timer
 const mode_btns = document.querySelectorAll('.mode-btn');
 const timerDisplay = document.getElementById('simple-timer');
 
@@ -35,3 +35,55 @@ mode_btns.forEach(btn => {
         timerDisplay.textContent = formatTime(time);
     });
 });
+
+// Task management
+window.onload = function() {
+    fetch('/get_tasks')
+    .then(response => response.json())
+    .then(data => {
+        renderTasks(data.tasks);
+    });
+}
+
+// Add task
+document.getElementById('add-task-btn').addEventListener('click', () => {
+    const taskInput = document.getElementById('task-input').value;
+
+    fetch('/add_task', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'  
+        },
+        body: JSON.stringify({ task: taskInput })
+    })
+    .then(response => response.json())
+    .then(data => {
+        renderTasks(data.tasks);
+        document.getElementById('task-input').value = '';   
+    });
+}); 
+
+// Render tasks
+function renderTasks(tasks) {
+    const taskList = document.getElementById('taskList');
+    taskList.innerHTML = '';
+
+    tasks.forEach((task, index) => {
+        taskList.innerHTML +=
+            `<li class="task-item">
+            <span>${task}</span>
+            <button class="delete-btn" onclick="deleteTask(${index})">-</button>
+            </li>`;
+    });
+}
+
+// Delete task
+function deleteTask(index) {
+    fetch(`/delete_tasks/${index}`, {
+        method: 'DELETE',
+    })
+    .then(response => response.json())
+    .then(data => {
+        renderTasks(data.tasks);
+    });
+}
