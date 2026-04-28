@@ -18,6 +18,22 @@ As a student I want to consistently work, so a streak system would encourage me 
 - Google Calendar integration — push and pull tasks made in both apps
 - Roll-over feature so that today's uncompleted tasks can be pushed to the next day
 - Forgot password page 
+- Friend Request 
+- Small friend groups would be trolls. 
+- Doing tasks -within. 
+- Pop out page for timer
+- Send task to time
+- Gameify? 
+- Working together as a group -> group page, timer on the page. How long u worked together with ecach other. Data transferred to eberyone (GROUP)
+- Chat room on the homme page -> blurred out when studying
+- Group project shared tasks, and add individuak ours, as well as a group timer.
+-Multiple groups
+- Leaderbaord add commments or reaction as support
+- Task creation tool, and pull google calendar. 
+
+-IMPROVE USER INTERACTON
+
+-dont want ot encourage more study, just encourage consistency?
 
 ---
 
