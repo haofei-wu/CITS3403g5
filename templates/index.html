@@ -26,7 +26,9 @@
 
         <div id="menusidebar" class="menu-sidebar">
                 <b>Pomodoro</b>
-                <a href="{{ url_for('tasks') }}">Tasks</a>
+                <!--
+                <a href="{{ url_for('tasks_page') }}">Tasks</a>
+                -->
                 <a href="{{ url_for('timer') }}">Timer</a>
                 <a href="{{ url_for('leaderboard') }}">Leaderboard</a>
         </div>
@@ -85,18 +87,19 @@
             <!--Today's Tasks Card -->
             <div class="card">
                 <div class="card-body" >
+
                     <h1 class="card-title">
-                        <a href="{{ url_for('tasks') }}" class="card-link">
+                        <div class="card-link">
                             Today's Tasks
-                        </a>
+                        </div>
                     </h1>
-                    <ul class="content_text">
-                        <ul class="content_text">
-                            {% for task in tasks %}
-                                <li>{{ task }}</li>
-                            {% endfor %}
-                        </ul>
-                    </ul>
+
+                    <input type="text" id="task-input" class="form-control" placeholder="Add a new task...">
+                    <button id="add-task-btn" class="add-btn">Add Task</button>
+
+                    <hr>
+
+                    <ul id = "taskList"></ul>
                 </div>
             </div>
 

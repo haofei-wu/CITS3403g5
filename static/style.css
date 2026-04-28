@@ -53,7 +53,7 @@ body {
     display: flex;
     flex-direction: column;
     gap: 20px;
-    max-width: 720px;
+    max-width: 1000px;
     margin: 0 auto;
 }
 
@@ -122,6 +122,46 @@ body {
     border-color: #ff6b6b;
 }
 
+.add-btn {
+    padding: 8px 16px;
+    border: 1px solid #e5e5e5;
+    border-radius: 6px;
+    background-color: #ffffff;
+    color: #333;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.add-btn:hover {
+    background-color: #f0f0f0;
+}
+
+.delete-btn {
+    width: 26px;
+    height: 26px;
+
+    border: none;
+    border-radius: 50%;
+
+    background: #ff4d4f;
+    color: white;
+
+    font-size: 18px;
+    font-weight: bold;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+} 
+
+.delete-btn:hover {
+    color: #ff3b3b;
+}
 /* Menu Sidebar Styles */
 .menu-sidebar {
     position: fixed;
@@ -236,6 +276,22 @@ body {
     transform: translateX(5px);
 }
 
+.task-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    border-bottom: 1px solid #e5e5e5;
+    font-size:26px;
+}
+
+#task-input {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #e5e5e5;
+    border-radius: 6px;
+    font-size: 18px;
+}
 /* Timer Styles */
 .show-time {
     font-size:2rem;
