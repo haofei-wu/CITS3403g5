@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, session, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
-from sqlalchemy.exc import IntegrityError
+from sq@lalchemy.exc import IntegrityError
 
 app = Flask(__name__)
 app.secret_key = "Himakshi"
@@ -20,6 +20,15 @@ class User(db.Model):
 
 
 # ------------------ LOGIN ------------------
+app.route("/", methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        email = request.form.get("email")
+        password = request.form.get("password")
+
+<<<<<<< HEAD
+        user = User.query.filter_by(email=email).first()
+
 @app.route("/", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
