@@ -35,9 +35,9 @@ def delete_tasks(index):
 def login():
   return render_template('login.html')
 
-# @app.route('/tasks')
-# def tasks_page():
-#   return render_template('tasks.html')
+@app.route('/tasks')
+def tasks_page():
+  return render_template('tasks.html')
 
 @app.route('/timer')
 def timer(): 
