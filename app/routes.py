@@ -51,10 +51,6 @@ def login():
 def tasks_page():
   return render_template('tasks.html')
 
-@app.route('/timer')
-def timer(): 
-  return render_template('timer.html')
-
 @app.route('/leaderboard')
 def leaderboard():
   return render_template('leaderboard.html')

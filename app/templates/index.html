@@ -29,7 +29,6 @@
                 <!--
                 <a href="{{ url_for('tasks_page') }}">Tasks</a>
                 -->
-                <a href="{{ url_for('timer') }}">Timer</a>
                 <a href="{{ url_for('leaderboard') }}">Leaderboard</a>
         </div>
 
@@ -62,23 +61,30 @@
             <!-- Pomodoro Timer Card -->
             <div class="card">
                 <div class="card-body">
+
+                    <button id="custom-btn" class="mode-btn">Custom</button>
+
+                    <div id="custom-modal" class="custom-modal hidden">
+                        <div class="custom-box">
+                            <p>Custom Timer</p>
+                            <input type="number" id="custom-input" placeholder="Minutes" min="0">
+                            <button id="custom-set">Set</button>
+                        </div>
+                    </div>
+
                     <div class="timer-modes">
                         <button class="mode-btn" data-time="1500">Pomodoro</button>
                         <button class="mode-btn" data-time="300">Short Break</button>
                         <button class="mode-btn" data-time="900">Long Break</button>
                     </div>
 
-                    <p class="content_text">
-                        Simple timer below(waiting for timer page dynamic update)
-                    </p>
-
                     <p class="timerset" id="simple-timer">
                         15:00
                     </p>
 
                     <div class="button-timers">
-                        <button class="btn start-btn">Start</button>
-                        <button class="btn start-btn">Reset</button>
+                        <button id="start-btn" class="btn start-btn">Start</button>
+                        <button id="reset-btn" class="btn start-btn">Reset</button>
                     </div>
 
                 </div>

@@ -16,25 +16,131 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Timer
-const mode_btns = document.querySelectorAll('.mode-btn');
+const mode_btns = document.querySelectorAll('.mode-btn:not(#custom-btn)');
+const custom_btn = document.getElementById('custom-btn');
 const timerDisplay = document.getElementById('simple-timer');
+const startBtn = document.getElementById('start-btn');
+const resetBtn = document.getElementById('reset-btn');
 
+let timer= null;
+let is_running = false;
+let modetime = 900
+let time_left = 900; // 15 minutes in seconds
+
+// Format time in MM:SS
 function formatTime(sec){
     const minutes = Math.floor(sec / 60);
     const seconds = sec % 60;
     return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`; 
 }
 
-mode_btns.forEach(btn => {
-    btn.addEventListener('click', () => {
-        mode_btns.forEach(b => b.classList.remove('active'));
+// update timer display
+function timeupdate(){
+    timerDisplay.textContent = formatTime(time_left);
+}
 
+timeupdate();
+
+// timer mode change
+mode_btns.forEach(btn => {
+
+    btn.addEventListener('click', () => {
+        const time = parseInt(btn.dataset.time);
+        modetime = time;
+        time_left = modetime;
+
+        clearActiveState();
         btn.classList.add('active');
+
+        clearInterval(timer);
+        is_running = false;
+        timer = null;
+
+        startBtn.textContent = 'Start';
         
-        const time = parseInt(btn.getAttribute('data-time'));
-        timerDisplay.textContent = formatTime(time);
+        timeupdate();
     });
 });
+
+// clear active state
+function clearActiveState() {
+    mode_btns.forEach(btn => btn.classList.remove('active'));
+    custom_btn.classList.remove('active');  
+}
+
+// custom timer
+const customInput = document.getElementById('custom-input');
+const customSetBtn = document.getElementById('custom-set');
+const customModal = document.getElementById('custom-modal');
+
+custom_btn.addEventListener('click', () => {
+
+    clearActiveState();
+
+    custom_btn.classList.add('active');
+    customModal.classList.remove('hidden');
+
+    clearInterval(timer);
+    is_running = false;
+    timer = null;
+    startBtn.textContent = 'Start';
+});
+
+customSetBtn.addEventListener('click', () => {
+    const minutes = parseInt(customInput.value);
+    if (!isNaN(minutes) && minutes > 0) {
+        modetime = minutes * 60;
+        time_left = modetime;
+        customModal.classList.add('hidden');
+    }
+    timeupdate();  
+});
+
+//close window
+customModal.addEventListener('click', (e) => {
+    if (e.target === customModal) {
+        customModal.classList.add('hidden');
+    }
+});
+
+// start/pause timer
+startBtn.addEventListener('click', () => {
+    if (!is_running) {
+        is_running = true;
+        startBtn.textContent = 'Pause';
+
+        timer = setInterval(() => {
+            if (time_left > 0) {
+                time_left--;
+                timeupdate();
+            } else {
+                clearInterval(timer);
+                is_running = false;
+                startBtn.textContent = 'Start';
+            }
+        },1000);
+
+    } else {
+        //pause timer
+        clearInterval(timer);
+        timer = null;
+        is_running = false;
+        startBtn.textContent = 'Resume';
+    }
+});
+
+
+// reset timer
+document.getElementById('reset-btn').addEventListener('click', () => {
+    clearInterval(timer);
+    timer = null;
+    is_running = false;
+    time_left = modetime; // reset to 15 minutes
+    document.getElementById('start-btn').textContent = 'Start';
+
+    timeupdate();
+});
+
 
 // Task management
 window.onload = function() {
