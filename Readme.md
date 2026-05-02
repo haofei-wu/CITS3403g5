@@ -61,3 +61,21 @@ As a student I want to consistently work, so a streak system would encourage me 
 | Timer | Haofei |
 | Home | Michael |
 | Task Management | Haofei + Michael |
+
+
+## How to Run
+
+```bash
+python -m venv venv
+
+venv\scripts\activate #window
+source venv/bin/activate #Mac/Linux
+
+#instal dependencies
+pip install -r requirements.txt
+
+#update database
+flask db upgrade
+
+flask run
+
