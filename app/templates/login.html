@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+
 {% block content %}
 
 <div class="container-fluid vh-100">
@@ -23,42 +24,73 @@
 
             <div class="login-card">
 
-                <h2 class="text-center mb-4">Login</h2>
+                <h2 class="text-center mb-4">Welcome back 👋</h2>
 
-                <form method="POST" action="/login">
+                <p class="text-center text-muted mb-3">
+                    Stay consistent. Stay focused 📚
+                </p>
+
+                {% if error %}
+                <div class="alert alert-danger text-center">
+                    {{ error }}
+                </div>
+                {% endif %}
+
+                {% if success %}
+                <div class="alert alert-success text-center">
+                    {{ success }}
+                </div>
+                {% endif %}
+
+                <form method="POST">
 
                     <!-- Email -->
                     <div class="mb-3">
-                        <label>Email</label>
+                        <label><i class="fa fa-envelope"></i> Email</label>
                         <input type="email"
                                name="email"
                                class="form-control"
-                               placeholder="Enter email"
+                               placeholder="Enter your email"
                                required>
                     </div>
 
                     <!-- Password -->
-<div class="password-box">
-    <label for="password">Password</label>
+                    <div class="password-box">
+                        <label for="password">
+                            <i class="fa fa-lock"></i> Password
+                        </label>
 
-    <div class="password-input-wrapper">
-        <input type="password"
-               id="password"
-               name="password"
-               placeholder="Password"
-               class="form-control"
-               required>
+                        <div class="password-input-wrapper">
+                            <input type="password"
+                                   id="password"
+                                   name="password"
+                                   placeholder="Password"
+                                   class="form-control"
+                                   required>
 
-        <button type="button"
-                class="show-password-btn"
-                onclick="togglePassword()">
-            Show
-        </button>
-    </div>
-</div>
+                            <button type="button"
+                                    class="show-password-btn"
+                                    onclick="togglePassword()">
+                                Show
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Forgot Password -->
+                    <div class="text-end mb-3">
+                        <a href="/forgot-password" class="forgot-link">
+                            Forgot Password?
+                        </a>
+                    </div>
+
+                    <!-- Login Button -->
+                    <button type="submit" class="btn btn-login w-100">
+                        Login
+                    </button>
 
                 </form>
 
+                <!-- Register -->
                 <p class="text-center mt-3">
                     Don't have an account?
                     <a href="/register">Register</a>
@@ -70,6 +102,7 @@
 
     </div>
 </div>
+
 <script>
 function togglePassword() {
     const passwordInput = document.getElementById("password");
@@ -85,5 +118,5 @@ function togglePassword() {
 }
 </script>
 
-
 {% endblock %}
+
