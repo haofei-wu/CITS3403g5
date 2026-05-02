@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container-fluid vh-100">
+    <div class="row h-100">
+
+        <!-- LEFT PANEL -->
+        <div class="col-md-6 login-left d-flex flex-column
+                    justify-content-center align-items-center text-center">
+
+            <h1 class="brand-title">StudyFlow</h1>
+            <p class="tagline">Start your study journey today.</p>
+
+        </div>
+
+        <!-- RIGHT PANEL -->
+        <div class="col-md-6 d-flex justify-content-center align-items-center">
+
+            <div class="login-card">
+
+                <h2 class="text-center mb-4">Register</h2>
+
+{% if error %}
+<div class="alert alert-danger text-center">
+    {{ error }}
+</div>
+{% endif %}
+
+{% if success %}
+<div class="alert alert-success text-center">
+    Account created successfully!
+</div>
+{% endif %}
+                <form method="POST">
+
+                    <div class="mb-3">
+                        <label>Email</label>
+                        <input type="email"
+                               name="email"
+                               class="form-control"
+                               required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label>Password</label>
+                        <input type="password"
+                               name="password"
+                               class="form-control"
+                               required>
+                    </div>
+
+                    <button type="submit" class="btn btn-login w-100">
+                        Register
+                    </button>
+
+                </form>
+
+                <p class="text-center mt-3">
+                    Already have an account?
+                    <a href="/">Login</a>
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

@@ -3,16 +3,16 @@
 
 <div class="container mt-5">
 
-    <h1 class="text-center mb-5">🏆 Leaderboard</h1>
+    <h2 class="text-center mb-4">Leaderboard 🏆</h2>
 
-    <!-- TOP 3 USERS -->
+    <!-- 🔥 TOP 3 SECTION -->
     <div class="row text-center mb-5">
 
         <!-- Second Place -->
         <div class="col-md-4">
             <div class="top-card silver">
                 <h2>🥈</h2>
-                <h4>{{ top_users[1].username }}</h4>
+                <h4>{{ top_users[1].email }}</h4>
                 <p>{{ top_users[1].study_hours }} hrs</p>
             </div>
         </div>
@@ -21,7 +21,7 @@
         <div class="col-md-4">
             <div class="top-card gold">
                 <h1>🥇</h1>
-                <h3>{{ top_users[0].username }}</h3>
+                <h3>{{ top_users[0].email }}</h3>
                 <p>{{ top_users[0].study_hours }} hrs</p>
             </div>
         </div>
@@ -30,7 +30,7 @@
         <div class="col-md-4">
             <div class="top-card bronze">
                 <h2>🥉</h2>
-                <h4>{{ top_users[2].username }}</h4>
+                <h4>{{ top_users[2].email }}</h4>
                 <p>{{ top_users[2].study_hours }} hrs</p>
             </div>
         </div>
@@ -52,10 +52,16 @@
         <tbody>
             {% for user in users %}
             <tr>
-                <td>{{ loop.index + 3 }}</td>
-                <td>{{ user.username }}</td>
+                <td>
+                    {% if loop.index == 1 %} 🥇
+                    {% elif loop.index == 2 %} 🥈
+                    {% elif loop.index == 3 %} 🥉
+                    {% else %} {{ loop.index }}
+                    {% endif %}
+                </td>
+                <td>{{ user.email }}</td>
                 <td>{{ user.study_hours }} hrs</td>
-                <td>{{ user.streak }} days</td>
+                <td>🔥 0</td>
             </tr>
             {% endfor %}
         </tbody>
