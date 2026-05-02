@@ -32,14 +32,18 @@ body {
 .login-card {
     width: 380px;
     padding: 40px;
-    border-radius: 16px;
+    border-radius: 18px;
 
     background: var(--card-bg);
     backdrop-filter: blur(12px);
 
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
 
-    animation: fadeIn 0.6s ease-in-out;
+    animation: fadeIn 0.6s ease;
+}
+.login-card:hover {
+    transform: translateY(-4px);
+    transition: 0.3s ease;
 }
 
 /* INPUT STYLE */
@@ -51,8 +55,9 @@ body {
 }
 
 .form-control:focus {
-    border-color: #6f7cff;
-    box-shadow: 0 0 0 2px rgba(111,124,255,0.2);
+    border-color: var(--primary);
+    box-shadow: 0 0 8px rgba(111,124,255,0.4);
+    transition: 0.2s ease;
 }
 
 /* PASSWORD FIELD */
@@ -88,8 +93,8 @@ body {
 }
 
 .btn-login:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(111,124,255,0.4);
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 8px 18px rgba(111,124,255,0.4);
 }
 
 /* Forgot link */
@@ -134,3 +139,45 @@ body {
         transform: translateY(0);
     }
 }
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(25px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+.leaderboard-table tr {
+    transition: all 0.2s ease;
+}
+
+.leaderboard-table tr:hover {
+    background: #f1f5ff;
+    transform: scale(1.01);
+}
+/* TOP 3 LEADERBOARD CARDS */
+.top-card {
+    padding: 20px;
+    border-radius: 16px;
+    transition: all 0.3s ease;
+}
+
+.top-card:hover {
+    transform: translateY(-6px) scale(1.03);
+}
+
+/* COLORS */
+.gold {
+    background: linear-gradient(135deg, #fff3cd, #ffe69c);
+}
+
+.silver {
+    background: linear-gradient(135deg, #e2e3e5, #d6d8db);
+}
+
+.bronze {
+    background: linear-gradient(135deg, #f8d7da, #f5c2c7);
+}
+
