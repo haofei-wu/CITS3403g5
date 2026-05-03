@@ -1,10 +1,10 @@
-from flask import Flask, render_template, request, jsonify
+from flask import render_template, request, redirect, url_for, session
 from app import app, db
-from app.models import Task
+from app.models import User
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-  return render_template('index.html')
+    return redirect(url_for('login'))
 
 
 @app.route('/get_tasks', methods=['GET'])
@@ -43,14 +43,72 @@ def delete_tasks(id):
 
   return jsonify({"tasks": [ {"id": task.id, "content": task.content} for task in tasks ]})
 
-@app.route('/login')
+@app.route('/login', methods=['GET', 'POST'])
 def login():
-  return render_template('login.html')
+    if request.method == "POST":
+        email = request.form.get("email")
+        password = request.form.get("password")
+
+        user = User.query.filter_by(email=email).first()
+
+        if user:
+            # temporary simple check (since hashing may not be set up here)
+            if user.password == password:
+                session['user_id'] = user.id
+                return redirect(url_for('dashboard'))
+
+        return render_template("login.html", error="Invalid credentials")
+
+    return render_template("login.html")
 
 @app.route('/tasks')
 def tasks_page():
   return render_template('tasks.html')
 
-@app.route('/leaderboard')
+@app.route("/leaderboard")
 def leaderboard():
-  return render_template('leaderboard.html')
+    users = User.query.order_by(User.study_hours.desc()).all()
+    top_users = users[:3]
+
+    return render_template(
+        "leaderboard.html",
+        users=users,
+        top_users=top_users
+    )
+
+@app.route("/timer")
+def timer():
+    return render_template("timer.html")
+
+@app.route("/dashboard")
+def dashboard():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+
+    user = User.query.get(session['user_id'])
+
+    return render_template("dashboard.html", user=user)
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == "POST":
+        email = request.form.get("email")
+        password = request.form.get("password")
+
+        new_user = User(email=email, password=password)
+        db.session.add(new_user)
+        db.session.commit()
+
+        return redirect(url_for('login'))
+
+    return render_template("register.html")
+
+@app.route('/forgot-password', methods=['GET', 'POST'])
+def forgot_password():
+    if request.method == "POST":
+        return render_template("forgot_password.html", success=True)
+
+    return render_template("forgot_password.html")
+
+
+
