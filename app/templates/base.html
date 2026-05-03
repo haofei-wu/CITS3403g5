@@ -22,7 +22,7 @@
     <div>
         {% if session.get('user_id') %}
             <a href="/dashboard" class="me-3">Dashboard</a>
-            <a href="/leaderboard" class="me-3">Leaderboard 🏆</a>
+            <a href="{{ url_for('leaderboard') }}">Leaderboard 🏆</a>
             <a href="/logout">Logout</a>
         {% else %}
             <a hrf="/">Login</a>
