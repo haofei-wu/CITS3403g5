@@ -1,52 +1,52 @@
 from flask import Flask, render_template, request, jsonify, redirect, url_for, session
 from werkzeug.security import generate_password_hash, check_password_hash
 from app import app, db
-from app.models import Task
+#from app.models import Task
 
-@app.route('/', methods=['GET', 'POST'])
-def index():
-  return render_template('index.html')
+# @app.route('/', methods=['GET', 'POST'])
+# def index():
+#   return render_template('index.html')
 
 
-@app.route('/get_tasks', methods=['GET'])
-def get_tasks():
-  tasks = Task.query.all()
-  return jsonify({"tasks": [ {"id": task.id, "content": task.content} for task in tasks ]})
+# @app.route('/get_tasks', methods=['GET'])
+# def get_tasks():
+#   tasks = Task.query.all()
+#   return jsonify({"tasks": [ {"id": task.id, "content": task.content} for task in tasks ]})
 
-@app.route('/add_task', methods=['POST'])
-def add_task():
-    data = request.get_json()
-    task_content = data.get('task')
+# @app.route('/add_task', methods=['POST'])
+# def add_task():
+#     data = request.get_json()
+#     task_content = data.get('task')
 
-    if task_content:
-        new_task = Task(content=task_content)
-        db.session.add(new_task)
-        db.session.commit()
+#     if task_content:
+#         new_task = Task(content=task_content)
+#         db.session.add(new_task)
+#         db.session.commit()
 
-    tasks = Task.query.all()
+#     tasks = Task.query.all()
 
-    return jsonify({
-        "tasks": [
-            {"id": t.id, "content": t.content}
-            for t in tasks
-        ]
-    })
+#     return jsonify({
+#         "tasks": [
+#             {"id": t.id, "content": t.content}
+#             for t in tasks
+#         ]
+#     })
 
-@app.route('/delete_tasks/<int:id>', methods=['DELETE'])
-def delete_tasks(id):
-  task_thing= Task.query.get(id)
+# @app.route('/delete_tasks/<int:id>', methods=['DELETE'])
+# def delete_tasks(id):
+#   task_thing= Task.query.get(id)
 
-  if task_thing:
-    db.session.delete(task_thing)
-    db.session.commit()
+#   if task_thing:
+#     db.session.delete(task_thing)
+#     db.session.commit()
 
-  tasks = Task.query.all()
+#   tasks = Task.query.all()
 
-  return jsonify({"tasks": [ {"id": task.id, "content": task.content} for task in tasks ]})
+#   return jsonify({"tasks": [ {"id": task.id, "content": task.content} for task in tasks ]})
 
-@app.route('/tasks')
-def tasks_page():
-  return render_template('tasks.html')
+# @app.route('/tasks')
+# def tasks_page():
+#   return render_template('tasks.html')
 
 
 # ------------------ LOGIN ------------------

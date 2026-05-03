@@ -18,6 +18,9 @@ class Tasks(db.Model):
     email = db.Column(db.Integer, db.ForeignKey('user.email'), primary_key=True, nullable=False)
     subjects = db.Column(db.String(128), nullable=False)
 
-
+# Initialise: python3 -m venv application-env
+# .
+# Activate: source application-env/bin/activate
+# .
 
 
