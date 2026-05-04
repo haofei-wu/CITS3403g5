@@ -1,6 +1,6 @@
 from flask import render_template, request, redirect, url_for, session, jsonify
 from app import app, db
-from app.models import User, Task
+from app.models import User, Tasks
 
 # ------------------ HOME ------------------
 @app.route('/')
@@ -18,7 +18,7 @@ def login():
         user = User.query.filter_by(email=email).first()
 
         if user and user.password == password:
-            session['user_id'] = user.id
+            session['user_email'] = user.email   # ✅ important fix
             return redirect(url_for('dashboard'))
 
         return render_template("login.html", error="Invalid credentials")
@@ -54,12 +54,11 @@ def forgot_password():
 # ------------------ DASHBOARD ------------------
 @app.route("/dashboard")
 def dashboard():
-    if 'user_id' not in session:
+    if 'user_email' not in session:
         return redirect(url_for('login'))
 
-    user = User.query.get(session['user_id'])
+    user = User.query.get(session['user_email'])  # ✅ fix
     return render_template("dashboard.html", user=user)
-
 
 # ------------------ LOGOUT ------------------
 @app.route("/logout")
@@ -82,16 +81,16 @@ def leaderboard():
 
 
 # ------------------ TASK SYSTEM ------------------
-@app.route('/get_tasks', methods=['GET'])
-def get_tasks():
+#@app.route('/get_tasks', methods=['GET'])
+#def get_tasks():
     tasks = Task.query.all()
     return jsonify({
         "tasks": [{"id": t.id, "content": t.content} for t in tasks]
     })
 
 
-@app.route('/add_task', methods=['POST'])
-def add_task():
+#@app.route('/add_task', methods=['POST'])
+#def add_task():
     data = request.get_json()
     content = data.get('task')
 
@@ -106,8 +105,8 @@ def add_task():
     })
 
 
-@app.route('/delete_tasks/<int:id>', methods=['DELETE'])
-def delete_tasks(id):
+#@app.route('/delete_tasks/<int:id>', methods=['DELETE'])
+#def delete_tasks(id):
     task = Task.query.get(id)
 
     if task:
