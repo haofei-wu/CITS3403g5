@@ -1,19 +1,3 @@
-document.addEventListener('DOMContentLoaded', () => {
-
-    const btn = document.getElementById('menubtn');
-    const menu_sidebar = document.getElementById('menusidebar');
-    const overlay = document.getElementById('overlay');
-    
-    btn.addEventListener('click', () => {
-        menu_sidebar.classList.toggle('show');
-        overlay.classList.toggle('show');
-    });
-
-    overlay.addEventListener('click', () => {
-        menu_sidebar.classList.remove('show');
-        overlay.classList.remove('show');
-    });
-});
 
 // Timer
 const mode_btns = document.querySelectorAll('.mode-btn:not(#custom-btn)');
@@ -143,6 +127,8 @@ document.getElementById('reset-btn').addEventListener('click', () => {
 
 
 // Task management
+const getcsrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
 window.onload = function() {
     fetch('/get_tasks')
     .then(response => response.json())
@@ -158,16 +144,23 @@ document.getElementById('add-task-btn').addEventListener('click', () => {
     fetch('/add_task', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'  
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getcsrfToken
         },
         body: JSON.stringify({ task: taskInput })
     })
-    .then(response => response.json())
+    .then(response => {
+        if (response.status === 401) {
+            window.location.href = "/login";
+            return;
+        }
+        return response.json()
+    })
     .then(data => {
         renderTasks(data.tasks);
         document.getElementById('task-input').value = '';   
-    });
-}); 
+    }); 
+});
 
 // Render tasks
 function renderTasks(tasks) {
@@ -188,6 +181,9 @@ function renderTasks(tasks) {
 function deleteTask(id) {
     fetch(`/delete_tasks/${id}`, {
         method: 'DELETE',
+        headers: {
+            'X-CSRFToken': getcsrfToken
+        }
     })
     .then(response => response.json())
     .then(data => {
