@@ -32,7 +32,7 @@
     Account created successfully!
 </div>
 {% endif %}
-                <form method="POST">
+                <form method="POST" action="{{ url_for('register') }}">
 
                     <div class="mb-3">
                         <label>Email</label>

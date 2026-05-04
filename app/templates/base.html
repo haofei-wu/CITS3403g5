@@ -14,38 +14,45 @@
 <body>
 
 <header class="app-header">
-    <!--Menu Button-->
+
+    <!-- ☰ Menu Button -->
     <div class="menu-btn">
         <button id="menubtn">☰</button>
     </div>
 
+    <!-- Sidebar -->
     <div id="menusidebar" class="menu-sidebar">
         <b>Pomodoro</b>
-        <a href="{{ url_for('leaderboard') }}">Leaderboard</a>
+        <a href="{{ url_for('dashboard') }}">Dashboard</a>
+        <a href="{{ url_for('leaderboard') }}">Leaderboard 🏆</a>
     </div>
 
     <div id="overlay" class="overlay"></div>
 
-    <div class="header-left">
-        Pomodoro
+    <!-- Left Title -->
+    <div class="header-left fw-bold">
+        StudyFlow 📚
     </div>
 
+    <!-- Right Side -->
     <div class="header-right">
-        <a href="{{ url_for('login') }}" class="btn login-btn">
-            {% if session.get('user_id') %}
-                {{ session.get('user_email') }}
-            {% else %}
-                Login
-            {% endif %}
-        </a>
+
+        {% if session.get('user_id') %}
+            <span class="me-3">{{ session.get('user_email') }}</span>
+            <a href="{{ url_for('logout') }}" class="btn btn-danger btn-sm">Logout</a>
+        {% else %}
+            <a href="{{ url_for('login') }}" class="btn login-btn">Login</a>
+        {% endif %}
+
     </div>
+
 </header>
 
-{% block content %}
-{% endblock %}
+<div class="container mt-4">
+    {% block content %}{% endblock %}
+</div>
 
 <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 
 </body>
 </html>
-

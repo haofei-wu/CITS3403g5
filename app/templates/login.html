@@ -42,7 +42,7 @@
                 </div>
                 {% endif %}
 
-                <form method="POST">
+                <form method="POST" action="{{ url_for('login') }}">
 
                     <!-- Email -->
                     <div class="mb-3">
@@ -78,7 +78,7 @@
 
                     <!-- Forgot Password -->
                     <div class="text-end mb-3">
-                        <a href="/forgot-password" class="forgot-link">
+                        <a href="{{ url_for('forgot_password') }}" class="forgot-link">
                             Forgot Password?
                         </a>
                     </div>
@@ -93,7 +93,7 @@
                 <!-- Register -->
                 <p class="text-center mt-3">
                     Don't have an account?
-                    <a href="/register">Register</a>
+                    <a href="{{ url_for('register') }}">Register</a>
                 </p>
 
             </div>
