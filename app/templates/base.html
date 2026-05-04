@@ -23,8 +23,10 @@
     <!-- Sidebar -->
     <div id="menusidebar" class="menu-sidebar">
         <b>Pomodoro</b>
+        <a href="{{ url_for('index') }}">Home</a>
+        <a href="{{ url_for('login') }}">Login</a>
         <a href="{{ url_for('dashboard') }}">Dashboard</a>
-        <a href="{{ url_for('leaderboard') }}">Leaderboard 🏆</a>
+        <a href="{{ url_for('leaderboard') }}">Leaderboard</a>
     </div>
 
     <div id="overlay" class="overlay"></div>
@@ -52,7 +54,7 @@
     {% block content %}{% endblock %}
 </div>
 
-<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+<script src="{{ url_for('static', filename='js/base.js') }}"></script>
 
 </body>
 </html>
