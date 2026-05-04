@@ -8,8 +8,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)#easy to query by unique id, allows for multiple users with the same email
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(200), nullable=False)
-    study_hours = db.Column(db.Integer, default=0)
-
+    
     #connection to Task table and lazyloading
     task = db.relationship('Task', backref='user', lazy=True)
 
