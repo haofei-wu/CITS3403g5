@@ -19,9 +19,9 @@ def login():
 
         if user and user.password == form.password.data:
             session['user_id'] = user.id
-            return redirect(url_for('index'))
+            session['user_email'] = user.email
 
-        return render_template("login.html", form = form, error="Invalid credentials")
+            return redirect(url_for('index'))
 
     return render_template("login.html", form = form)
 
@@ -34,6 +34,7 @@ def register():
     if form.validate_on_submit():
         new_user = User(email=form.email.data, 
                         password=form.password.data)
+
         db.session.add(new_user)
         db.session.commit()
 
@@ -98,6 +99,7 @@ def get_tasks():
 
 @app.route('/add_task', methods=['POST'])
 def add_task():
+    print(session.get('user_id'))
     if "user_id" not in session:
         return jsonify({"error": "no login"}), 401
     
