@@ -9,15 +9,15 @@
     <div class="row login-row w-100 shadow-lg overflow-hidden">
 
         <!-- LEFT PANEL -->
-        <div class="col-md-6 login-left d-flex flex-column justify-content-center align-items-center text-center">
+        <div class="col-md-6 login-left d-flex flex-column justify-content-center align-items-center">
 
             <h1 class="login-brand">StudyFlow</h1>
-            <p class="login-tagline">Start your study journey today.</p>
+            <p class="login-tagline">Start your study today.</p>
 
         </div>
 
         <!-- RIGHT PANEL -->
-        <div class="col-md-6 d-flex justify-content-center align-items-center">
+        <div class="col-md-6 login-right d-flex justify-content-center align-items-center ">
 
             <div class="login-card">
 
@@ -48,7 +48,7 @@
                         {{ form.password(class="form-control", placeholder="Enter your password") }}
                     </div>
 
-                    <button type="submit" class="login-btn">
+                    <button type="submit" class="login-btn2">
                         Register
                     </button>
 
@@ -56,10 +56,9 @@
 
                 <p class="text-center mt-3">
                     Already have an account?
-                    <span class="login-link login-link-action"
-                          onclick="location.href='{{ url_for('login') }}'">
+                    <a href="{{ url_for('login') }}" class="login-link login-link-action">
                         Login
-                    </span>
+                    </a>
                 </p>
 
             </div>

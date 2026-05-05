@@ -93,7 +93,7 @@ def get_tasks():
     tasks = Task.query.filter_by(user_id=session['user_id']).all()
 
     return jsonify({
-        "tasks": [{"id": t.id, "content": t.content} for t in tasks]
+        "tasks": [{"id": t.id, "content": t.content, "status": t.status} for t in tasks]
     })
 
 
@@ -115,7 +115,7 @@ def add_task():
 
     tasks = Task.query.filter_by(user_id=session['user_id']).all()
     return jsonify({
-        "tasks": [{"id": t.id, "content": t.content} for t in tasks]
+        "tasks": [{"id": t.id, "content": t.content, "status": t.status} for t in tasks]
     })
 
 
@@ -131,10 +131,24 @@ def delete_tasks(id):
     tasks = Task.query.filter_by(user_id=session['user_id']).all()
     
     return jsonify({
-        "tasks": [{"id": t.id, "content": t.content} for t in tasks]
+        "tasks": [{"id": t.id, "content": t.content, "status": t.status} for t in tasks]
     })
 
+# ------------------ STATUS ------------------
+@app.route('/toggle_status/<int:id>', methods=['POST'])
+def toggle_status(id):
+    task = Task.query.get(id)
+    task.status = not task.status
+    db.session.commit()
 
+    tasks = Task.query.all()
+
+    return jsonify(tasks=[{
+        "id": t.id,
+        "content": t.content,
+        "status": t.status
+    } for t in tasks])
+    
 # ------------------ TIMER ------------------
 @app.route("/timer")
 def timer():

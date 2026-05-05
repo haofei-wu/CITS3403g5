@@ -2,8 +2,8 @@
 
 /* Background */
 .login-page {
+    background: linear-gradient(135deg, #e0f7ff, #f5f7fa);
     font-family: 'Inter', system-ui, sans-serif;
-    background: #f7f7f7;
     color: #333;
     display: flex;
     justify-content: center;
@@ -151,3 +151,6 @@
     text-decoration: underline;
 }
 
+.form-label {
+    text-align: left;
+}

@@ -1,4 +1,3 @@
-
 // Timer
 const mode_btns = document.querySelectorAll('.mode-btn:not(#custom-btn)');
 const custom_btn = document.getElementById('custom-btn');
@@ -30,6 +29,7 @@ mode_btns.forEach(btn => {
 
     btn.addEventListener('click', () => {
         const time = parseInt(btn.dataset.time);
+
         modetime = time;
         time_left = modetime;
 
@@ -125,9 +125,33 @@ document.getElementById('reset-btn').addEventListener('click', () => {
     timeupdate();
 });
 
+let mode = 'add';
 
+// Modechange
+function updateModeUI() {
+    document.body.classList.toggle('delete-mode', mode === 'delete');
+
+    addBtn.classList.toggle('active', mode === 'add');
+    deleteBtn.classList.toggle('active', mode === 'delete');   
+}
 // Task management
 const getcsrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+const addBtn = document.getElementById('add-task-btn');
+const deleteBtn = document.getElementById('delete-task-btn');
+
+addBtn.addEventListener('click', () => {
+    mode = 'add';
+    updateModeUI();
+})
+
+deleteBtn.addEventListener('click', () => {
+    if (mode==='delete') {
+        mode = 'add';
+    } else {
+        mode = 'delete';
+    }
+    updateModeUI();
+});
 
 window.onload = function() {
     fetch('/get_tasks')
@@ -165,22 +189,50 @@ document.getElementById('add-task-btn').addEventListener('click', () => {
 // Render tasks
 function renderTasks(tasks) {
     console.log(tasks);
+    console.log(tasks[0]);
     const taskList = document.getElementById('taskList');
     taskList.innerHTML = '';
 
     tasks.forEach(task => {
+        let className = 'task-item';
+
+        if (task.status == true) {
+            className = 'task-item completed';
+        }
+
         taskList.innerHTML +=
-            `<li class="task-item" id ="task-${task.id}">
-            <span>${task.content}</span>
-            <button class="delete-btn" onclick="deleteTask(${task.id})">-</button>
+            `<li class="${className}" id="task-${task.id}">
+                <div class="statusbar"></div>
+                <span class="statusbox" onclick = "toggleStatus(${task.id})"></span>
+                <span>${task.content}</span>
+                <button class="delete-btn" onclick="deleteTask(${task.id})">-</button>
             </li>`;
     });
+    updateModeUI();
 }
 
 // Delete task
 function deleteTask(id) {
+    if (mode !== 'delete') {
+        return;
+    }
+
     fetch(`/delete_tasks/${id}`, {
         method: 'DELETE',
+        headers: {
+            'X-CSRFToken': getcsrfToken
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        renderTasks(data.tasks);
+    });
+}
+
+// status of task
+function toggleStatus(id) {
+    fetch(`/toggle_status/${id}`, {
+        method: 'POST',
         headers: {
             'X-CSRFToken': getcsrfToken
         }
