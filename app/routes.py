@@ -54,10 +54,25 @@ def forgot_password():
     form = ForgotPasswordForm()
 
     if form.validate_on_submit():
-        return render_template("forgot_password.html", form=form, success=True)
+        user = User.query.filter_by(email=form.email.data).first()
+
+        if user:
+            user.password = generate_password_hash(form.new_password.data)
+            db.session.commit()
+
+            return render_template(
+                "forgot_password.html",
+                form=form,
+                success="Password updated successfully!"
+            )
+        else:
+            return render_template(
+                "forgot_password.html",
+                form=form,
+                error="Email not found"
+            )
 
     return render_template("forgot_password.html", form=form)
-
 
 # ------------------ DASHBOARD ------------------
 @app.route("/dashboard")
