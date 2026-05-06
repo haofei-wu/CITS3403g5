@@ -1,51 +1,3 @@
-/* Main css file*/
-
-body {
-    min-height:80vh;
-    font-family: 'Inter', system-ui, sans-serif;
-    background: linear-gradient(135deg, #e0f7ff, #f5f7fa);
-    color: #333;
-    font-weight: 400;
-    margin:0;
-}
-
-/* Header Styles */
-.app-header {
-    display: grid;
-    grid-template-columns: auto 1fr auto;
-    align-items: center;
-
-    padding: 16px 32px;
-    background: white;
-    border-bottom: 1px solid #eee;
-
-    gap: 28px;
-}
-
-.header-left {
-    justify-self: start;
-    font-size: 34px;
-    font-weight: 700;
-    color:#ff6b6b
-}
-
-.header-center {
-    display: flex;
-    gap: 28px;
-    justify-self: center;
-}
-
-.header-center a {
-    text-decoration: none;
-    color: #555;
-}
-
-.header-right {
-    justify-self: end;
-    display: flex;
-    gap: 16px;
-}
-
 /* Main Content Styles */
 .page-title {
     font-size: 26px;
@@ -61,42 +13,6 @@ body {
 }
 
 /* Button Styles */
-.menu-btn {
-    position: relative;
-    display: flex;
-    align-items: center;
-}
-
-#menubtn {
-    background: white;
-    border: 1px solid #e5e5e5;
-    border-radius: 8px;
-
-    padding: 6px 10px;
-    font-size: 16px;
-
-    cursor: pointer;
-    transition: 0.2s ease;
-}
-
-#menubtn:hover {
-    background: #f6f6f6;
-}
-
-.btn {
-    padding: 8px 16px;
-    border: 1px solid #e5e5e5;
-    border-radius: 12px;
-    background-color: #ffffff;
-    color: #333;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-}
-
-.btn:hover {
-    background-color: #f0f0f0;
-}
 
 .button-timers {
     text-align: center;
@@ -180,71 +96,45 @@ body.delete-mode .delete-btn {
     display: flex;
 }
 
-/*Menu Sidebar Styles */
-.menu-sidebar {
-    position: fixed;
-    top: 0;
-    left: -260px;/* Start hidden off-screen */
-    height: 100%;
-    width:220px;
-
-    background: white;
-    box-shadow:2px 0 8px rgba(0,0,0,0.1);
-    padding:30px 22px;
-
+.timer_mode_switch {
+    justify-content: center;
     display: flex;
-    flex-direction: column;
-    gap: 18px;
-    transition: left 0.3s ease;
-    z-index: 2000;
+    background: #f2f2f2;
+    border-radius: 999px;
+    padding: 8px;
+    width: fit-content;
+    margin-top: 10px;
+    margin: 10px auto;
 }
 
-.menu-sidebar a {
-    font-size:18px;
-    font-weight: 700;
-    padding: 12px 14px;
-    text-decoration: none;
-    color: #333;
-    border-radius: 12px;
-    transition: all 0.2s ease;
+.seg-btn {
+    border: none;
+    padding: 8px 18px;
+    border-radius: 999px;
+    background: transparent;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.25s ease;
+    color: #555;
 }
 
-.menu-sidebar.show {
-    left: 0; /* Slide in */
+.seg-btn.active {
+    background: white;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    color: #111;
 }
 
-.menu-sidebar a:hover {
-    background: #f5f5f5;
-}
-
-.menu-sidebar a.active {
-    background: #ff6b6b;
-    color: white;
-}
-
-.menu-sidebar b {
-    font-size : 24px;
-    font-weight: 700;
-    color : #ff6b6b;
-    margin-bottom: 10px;
-}
-
-.overlay {
-    opacity: 0;
-    pointer-events: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.3);
-    transition: opacity 0.3s ease;
-    z-index: 1000;
-}
-
-.overlay.show {
-    opacity: 1;
-    pointer-events: all;  
+.gear-btn {
+    position: absolute;
+    left:0;
+    border: none;
+    background: transparent;
+    font-size: 26px;
+    cursor: pointer;
+    padding: 12px;
+    border-radius: 8px;
+    transition: 0.2s;
+    margin-left: 10px;
 }
 
 /* Card Styles */
@@ -327,9 +217,17 @@ body.delete-mode .delete-btn {
     display: none;
 }
 
-.timer-modes {
+.modeset {
     display: flex;
+    flex:1;
     justify-content: center;
+    gap: 10px;
+}
+
+.timer-modes {
+    position: relative;
+    display: flex;
+    align-items: center;
     gap: 10px;
 }
 
@@ -451,8 +349,14 @@ body.delete-mode .delete-btn {
     margin: 20px auto;
 }
 
-/*userinfo*/
-.userinfo {
-    font-size: 20px;
-    font-weight: 400;
+/* Pomodoro Page */
+#pomodoro,
+#flowdoro {
+    display: none;
 }
+
+#pomodoro.active,
+#flowdoro.active {
+    display: block;
+}
+

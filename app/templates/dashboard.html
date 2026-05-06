@@ -14,7 +14,7 @@
             <div class="profile-stats">
                 <img class="avatar" src="{{ url_for('static', filename='images/avatar.png') }}" alt="Avatar">
                 
-                <h3 class="username"> {{ session.user_email }}</h3>
+                <h3 class="username"> {{ current_user.email }}</h3>
 
                 <button class="edit-btn">Edit Profile</button>
             </div>

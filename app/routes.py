@@ -1,7 +1,8 @@
-from flask import render_template, request, redirect, url_for, session, jsonify
+from flask import render_template, request, redirect, url_for, jsonify
 from app import app, db
-from app.models import User, Task
-from app.forms import LoginForm, RegisterForm, ForgotPasswordForm
+from app.models import *
+from app.forms import *
+from flask_login import *
 
 # ------------------ HOME ------------------
 @app.route('/')
@@ -18,9 +19,7 @@ def login():
         user = User.query.filter_by(email=form.email.data).first()
 
         if user and user.password == form.password.data:
-            session['user_id'] = user.id
-            session['user_email'] = user.email
-
+            login_user(user,remember=True)
             return redirect(url_for('index'))
 
     return render_template("login.html", form = form)
@@ -32,8 +31,10 @@ def register():
     form = RegisterForm()
 
     if form.validate_on_submit():
+
         new_user = User(email=form.email.data, 
                         password=form.password.data)
+
 
         db.session.add(new_user)
         db.session.commit()
@@ -56,13 +57,11 @@ def forgot_password():
 
 # ------------------ DASHBOARD ------------------
 @app.route("/dashboard")
+@login_required
 def dashboard():
-    if 'user_id' not in session:
-        return redirect(url_for('login'))
+    user = current_user
 
-    user = User.query.get(session['user_id'])
-
-    tasks = Task.query.filter_by(user_id=session['user_id']).all()
+    tasks = Task.query.filter_by(user_id=user.id).all()
 
     total_tasks=len(tasks)
     done_tasks=sum(1 for t in tasks if t.status)
@@ -73,12 +72,13 @@ def dashboard():
 # ------------------ LOGOUT ------------------
 @app.route("/logout")
 def logout():
-    session.clear()
+    logout_user()
     return redirect(url_for('login'))
 
 
 # ------------------ LEADERBOARD ------------------
 @app.route("/leaderboard")
+@login_required
 def leaderboard():
     users = User.query.order_by(User.study_hours.desc()).all()
     top_users = users[:3]
@@ -92,11 +92,10 @@ def leaderboard():
 
 # ------------------ TASK SYSTEM ------------------
 @app.route('/get_tasks', methods=['GET'])
+@login_required
 def get_tasks():
-    if 'user_id' not in session:
-        return jsonify({"tasks": []})
 
-    tasks = Task.query.filter_by(user_id=session['user_id']).all()
+    tasks = Task.query.filter_by(user_id=current_user.id).all()
 
     return jsonify({
         "tasks": [{"id": t.id, "content": t.content, "status": t.status} for t in tasks]
@@ -104,37 +103,37 @@ def get_tasks():
 
 
 @app.route('/add_task', methods=['POST'])
+@login_required
 def add_task():
-    print(session.get('user_id'))
-    if "user_id" not in session:
-        return jsonify({"error": "no login"}), 401
-    
+
     data = request.get_json()
     content = data.get('task')
 
     if content:
         new_task = Task(content=content, 
-                    user_id=session['user_id'])
+                    user_id=current_user.id)
 
         db.session.add(new_task)
         db.session.commit()
 
-    tasks = Task.query.filter_by(user_id=session['user_id']).all()
+    tasks = Task.query.filter_by(user_id=current_user.id).all()
+
     return jsonify({
         "tasks": [{"id": t.id, "content": t.content, "status": t.status} for t in tasks]
     })
 
 
 @app.route('/delete_tasks/<int:id>', methods=['DELETE'])
+@login_required
 def delete_tasks(id):
 
-    task = Task.query.filter_by(id=id, user_id=session['user_id']).first()
+    task = Task.query.filter_by(id=id, user_id=current_user.id).first()
 
     if task:
         db.session.delete(task)
         db.session.commit()
 
-    tasks = Task.query.filter_by(user_id=session['user_id']).all()
+    tasks = Task.query.filter_by(user_id=current_user.id).all()
     
     return jsonify({
         "tasks": [{"id": t.id, "content": t.content, "status": t.status} for t in tasks]
@@ -142,12 +141,15 @@ def delete_tasks(id):
 
 # ------------------ STATUS ------------------
 @app.route('/toggle_status/<int:id>', methods=['POST'])
+@login_required
+
 def toggle_status(id):
-    task = Task.query.filter_by(id=id, user_id=session['user_id']).first()
+
+    task = Task.query.filter_by(id=id, user_id=current_user.id).first()
     task.status = not task.status
     db.session.commit()
 
-    tasks = Task.query.filter_by(user_id=session['user_id']).all()
+    tasks = Task.query.filter_by(user_id=current_user.id).all()
 
     return jsonify(tasks=[{
         "id": t.id,
@@ -159,3 +161,21 @@ def toggle_status(id):
 @app.route("/timer")
 def timer():
     return render_template("timer.html")
+
+@app.route("/settings", methods=['GET', 'POST'])
+def settings():
+    form = SettingsForm()
+
+    if form.validate_on_submit():
+        s= Settings.query.get(current_user.id)
+        if s is None:
+            s= Settings(id=current_user.id)
+            db.session.add()
+        s.flow_restratio = form.flow_restratio.data
+        s.pom_restratio = form.pom_restratio.data
+        s.pom_worklength = form.pom_worklength.data
+        db.session.commit()
+        flash("Settings saved successfully")
+        return redirect(url_for('settings'))
+
+    return render_template("settings.html", form = form)

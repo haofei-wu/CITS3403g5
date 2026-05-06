@@ -1,40 +1,84 @@
 {% extends "base.html" %}
 
 {% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <div class="container py-4">
 
     <div class="dashboard-flow">
             
-        <!-- Pomodoro Timer Card -->
         <div class="card">
-            <div class="card-body">
 
-                <button id="custom-btn" class="mode-btn">Custom</button>
-
-            <div id="custom-modal" class="custom-modal hidden">
-                <div class="custom-box">
-                    <p>Custom Timer</p>
-                    <input type="number" id="custom-input" placeholder="Minutes" min="0">
-                    <button id="custom-set">Set</button>
-                </div>
+            <!-- TIMER CARD-->
+            
+            <div class="timer_mode_switch">
+                <button id="mode-pomo" class="seg-btn active">Pomo</button>    
+                <button id="mode-flow" class="seg-btn">FLow</button>
             </div>
 
-                <div class="timer-modes">
-                    <button class="mode-btn" data-time="1500">Pomodoro</button>
-                    <button class="mode-btn" data-time="300">Short Break</button>
-                    <button class="mode-btn" data-time="900">Long Break</button>
+            <div class="card-body">
+
+
+
+
+                <!------------ POMODORO TIMER -------------->
+
+                <div id="pomodoro" class="active">
+                    <div id="custom-modal" class="custom-modal hidden">
+                        <div class="custom-box">
+                            <p>Custom Timer</p>
+                            <input type="number" id="custom-input" placeholder="Minutes" min="0">
+                            <button id="custom-set">Set</button>
+                        </div>
+                    </div>
+
+                    <div class="timer-modes">
+                        <button id="custom-btn" class="gear-btn">⚙</button>
+                        <div class="modeset">
+                            <button class="mode-btn" data-time="1500">Pomodoro</button>
+                            <button class="mode-btn" data-time="300">Short Break</button>
+                            <button class="mode-btn" data-time="900">Long Break</button>
+                        </div>
+                    </div>
+
+                    <p class="timerset" id="simple-timer">
+                        15:00
+                    </p>
+
+                    <div class="button-timers">
+                        <button id="start-btn" class="btn start-btn">Start</button>
+                        <button id="reset-btn" class="btn start-btn">Reset</button>
+                    </div>
                 </div>
 
-                <p class="timerset" id="simple-timer">
-                    15:00
-                </p>
+                <!--------------END POMODORO TIMER -------------->
 
-                <div class="button-timers">
-                    <button id="start-btn" class="btn start-btn">Start</button>
-                    <button id="reset-btn" class="btn start-btn">Reset</button>
+                <div id="flowdoro">
+
+
+                        
+
+
+
+
+
+
+
                 </div>
 
+                <!------------ FLOWDORO(?) TIMER -------------->
+
+
+
+
+
+
+
+
+
+
+
+                <!-------------- END FLOWDORO TIMER -------------->
             </div>
         </div>
 

@@ -38,6 +38,13 @@ document.getElementById("end-btn").addEventListener("click", function() {
     // set interval to update timer displayer every second using setinterval
 });
 
+fetch("/sessiontimes", {
+    method: "POST",
+    body: JSON.stringify({
+        startTime: livetime.startTime,
+        endTime: livetime.endTime,
+    })
+})
 
 
 // "end-btn".addEventListener("click", timeElapsed(currentTime)

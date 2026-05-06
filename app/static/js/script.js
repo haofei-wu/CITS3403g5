@@ -125,14 +125,14 @@ document.getElementById('reset-btn').addEventListener('click', () => {
     timeupdate();
 });
 
-let mode = 'add';
+let taskmode = 'add';
 
 // Modechange
 function updateModeUI() {
-    document.body.classList.toggle('delete-mode', mode === 'delete');
+    document.body.classList.toggle('delete-mode', taskmode === 'delete');
 
-    addBtn.classList.toggle('active', mode === 'add');
-    deleteBtn.classList.toggle('active', mode === 'delete');   
+    addBtn.classList.toggle('active', taskmode === 'add');
+    deleteBtn.classList.toggle('active', taskmode === 'delete');   
 }
 // Task management
 const getcsrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
@@ -140,15 +140,15 @@ const addBtn = document.getElementById('add-task-btn');
 const deleteBtn = document.getElementById('delete-task-btn');
 
 addBtn.addEventListener('click', () => {
-    mode = 'add';
+    taskmode = 'add';
     updateModeUI();
 })
 
 deleteBtn.addEventListener('click', () => {
-    if (mode==='delete') {
-        mode = 'add';
+    if (taskmode ==='delete') {
+        taskmode = 'add';
     } else {
-        mode = 'delete';
+        taskmode = 'delete';
     }
     updateModeUI();
 });
@@ -215,7 +215,7 @@ function renderTasks(tasks) {
 
 // Delete task
 function deleteTask(id) {
-    if (mode !== 'delete') {
+    if (taskmode !== 'delete') {
         return;
     }
 
@@ -244,3 +244,45 @@ function toggleStatus(id) {
         renderTasks(data.tasks);
     });
 }
+
+
+// ============Switch Timer Mode===============
+let timermode="flow";
+
+const flowView = document.getElementById('flowdoro');
+const pomoView = document.getElementById('pomodoro');
+
+const flowbtn = document.getElementById('mode-flow');
+const pomobtn = document.getElementById('mode-pomo');
+
+function modeswitch(Mode1){
+    clearInterval(timer);
+    timer = null;
+    timermode = Mode1;
+
+    if (timermode === 'flow') {
+
+        flowView.classList.add('active');
+        pomoView.classList.remove('active');
+
+        flowbtn.classList.add('active');
+        pomobtn.classList.remove('active');
+
+    } else {
+
+        pomoView.classList.add('active');
+        flowView.classList.remove('active');
+
+        pomobtn.classList.add('active');
+        flowbtn.classList.remove('active');
+
+    }
+}
+
+flowbtn.addEventListener('click', () => {
+    modeswitch('flow');
+});
+
+pomobtn.addEventListener('click', () => {
+    modeswitch('pomo');
+});
