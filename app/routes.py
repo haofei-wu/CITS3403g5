@@ -1,8 +1,8 @@
-from flask import render_template, request, redirect, url_for, session, jsonify, flash
+from flask import render_template, request, redirect, url_for, jsonify, flash
 from app import app, db
 from app.models import *
 from app.forms import *
-from flask_login import login_user, current_user
+from flask_login import login_user, current_user, logout_user, login_required
 # ------------------ HOME ------------------
 @app.route('/')
 def index():
@@ -16,10 +16,7 @@ def login():
 
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
-
         if user and user.password == form.password.data:
-            session['user_id'] = user.id
-            session['user_email'] = user.email
             login_user(user, remember=True)
 
             return redirect(url_for('index'))
@@ -31,11 +28,11 @@ def login():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     form = RegisterForm()
-
+    
     if form.validate_on_submit():
+        #HASH PASSWORDS?
         new_user = User(email=form.email.data, 
                         password=form.password.data)
-
         db.session.add(new_user)
         db.session.commit()
 
@@ -57,18 +54,16 @@ def forgot_password():
 
 # ------------------ DASHBOARD ------------------
 @app.route("/dashboard")
+@login_required
 def dashboard():
-    if 'user_id' not in session:
-        return redirect(url_for('login'))
-
-    user = User.query.get(session['user_id'])
-    return render_template("dashboard.html", user=user)
+    return render_template("dashboard.html", user=current_user)
 
 
 # ------------------ LOGOUT ------------------
 @app.route("/logout")
+@login_required
 def logout():
-    session.clear()
+    logout_user()
     return redirect(url_for('login'))
 
 
@@ -87,11 +82,9 @@ def leaderboard():
 
 # ------------------ TASK SYSTEM ------------------
 @app.route('/get_tasks', methods=['GET'])
+@login_required
 def get_tasks():
-    if 'user_id' not in session:
-        return jsonify({"tasks": []})
-
-    tasks = Task.query.filter_by(user_id=session['user_id']).all()
+    tasks = Task.query.filter_by(user_id=current_user.id).all()
 
     return jsonify({
         "tasks": [{"id": t.id, "content": t.content} for t in tasks]
@@ -99,37 +92,35 @@ def get_tasks():
 
 
 @app.route('/add_task', methods=['POST'])
+@login_required
 def add_task():
-    print(session.get('user_id'))
-    if "user_id" not in session:
-        return jsonify({"error": "no login"}), 401
-    
     data = request.get_json()
     content = data.get('task')
 
     if content:
         new_task = Task(content=content, 
-                    user_id=session['user_id'])
+                    user_id=current_user.id)
 
         db.session.add(new_task)
         db.session.commit()
 
-    tasks = Task.query.filter_by(user_id=session['user_id']).all()
+    tasks = Task.query.filter_by(user_id=current_user.id).all()
     return jsonify({
         "tasks": [{"id": t.id, "content": t.content} for t in tasks]
     })
 
 
 @app.route('/delete_tasks/<int:id>', methods=['DELETE'])
+@login_required
 def delete_tasks(id):
 
-    task = Task.query.filter_by(id=id, user_id=session['user_id']).first()
+    task = Task.query.filter_by(id=id, user_id=current_user.id).first()
 
     if task:
         db.session.delete(task)
         db.session.commit()
 
-    tasks = Task.query.filter_by(user_id=session['user_id']).all()
+    tasks = Task.query.filter_by(user_id=current_user.id).all()
     
     return jsonify({
         "tasks": [{"id": t.id, "content": t.content} for t in tasks]
@@ -143,9 +134,9 @@ def timer():
 
 # ------------------ SETTINGS ------------------
 @app.route("/settings", methods=['GET', 'POST'])
+@login_required
 def settings():
     form = SettingsForm()
-
     if form.validate_on_submit():
         s = Settings.query.get(current_user.id)
         if s is None:
