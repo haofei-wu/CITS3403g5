@@ -193,6 +193,8 @@ function renderTasks(tasks) {
     const taskList = document.getElementById('taskList');
     taskList.innerHTML = '';
 
+    tasks.sort((a, b) => a.status - b.status);
+    
     tasks.forEach(task => {
         let className = 'task-item';
 

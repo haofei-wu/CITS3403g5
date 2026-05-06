@@ -61,7 +61,13 @@ def dashboard():
         return redirect(url_for('login'))
 
     user = User.query.get(session['user_id'])
-    return render_template("dashboard.html", user=user)
+
+    tasks = Task.query.filter_by(user_id=session['user_id']).all()
+
+    total_tasks=len(tasks)
+    done_tasks=sum(1 for t in tasks if t.status)
+
+    return render_template("dashboard.html", user=user,total_tasks=total_tasks,done_tasks=done_tasks)
 
 
 # ------------------ LOGOUT ------------------
@@ -137,11 +143,11 @@ def delete_tasks(id):
 # ------------------ STATUS ------------------
 @app.route('/toggle_status/<int:id>', methods=['POST'])
 def toggle_status(id):
-    task = Task.query.get(id)
+    task = Task.query.filter_by(id=id, user_id=session['user_id']).first()
     task.status = not task.status
     db.session.commit()
 
-    tasks = Task.query.all()
+    tasks = Task.query.filter_by(user_id=session['user_id']).all()
 
     return jsonify(tasks=[{
         "id": t.id,

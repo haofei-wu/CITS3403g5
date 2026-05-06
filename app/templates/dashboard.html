@@ -1,69 +1,56 @@
 {% extends "base.html" %}
 
 {% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
 
 <div class="container mt-5">
 
-    <div class="dashboard-card text-center">
+    <div class="dashboard-card">
 
-        <h2>Welcome, {{ session.user_email }} 👋</h2>
+        <div class="profile-stats-layout">
 
-        <p class="text-muted">
-            Stay consistent and track your progress 📈
-        </p>
+            <!-- Profile Stats -->
+            <div class="profile-stats">
+                <img class="avatar" src="{{ url_for('static', filename='images/avatar.png') }}" alt="Avatar">
+                
+                <h3 class="username"> {{ session.user_email }}</h3>
 
-        <!-- STATS -->
-        <div class="row mt-4">
-
-            <div class="col-md-4">
-                <div class="stat-box">
-                    <h4>📚 Study Hours</h4>
-                    <h2>{{ user.study_hours }} hrs</h2>
-                </div>
+                <button class="edit-btn">Edit Profile</button>
             </div>
 
-            <div class="col-md-4">
-                <div class="stat-box">
-                    <h4>🔥 Streak</h4>
-                    <h2>0 days</h2>
+            <div class="stats-grid">
+
+                <div class="stat-card">
+                    <h4>Daily Focus</h4>
+                    <div class="divider"></div>
+                    <div class="stat-placeholder">1111</div>
+                </div>
+
+                <div class="stat-card">
+                    <h4>Weekly Trend</h4>
+                    <div class="divider"></div>
+                    <div class="stat-placeholder">1111</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="task-summary-card">
+                        <h4>Todays' Tasks<h4>
+                        <span class="task-count">
+                            {{done_tasks}}/{{total_tasks}}
+                        </span>
+                    </div>
+                    <div class="divider"></div>
+
+                    <ol class="task-summary"></ol>
+                </div>
+
+                <div class="stat-card">
+                    <h4>Leaderboard</h4>
+                    <div class="divider"></div>
+                    <div class="stat-placeholder">1111</div>
                 </div>
             </div>
-
-            <div class="col-md-4">
-                <div class="stat-box">
-                    <h4>🏆 Rank</h4>
-                    <h2>#1</h2>
-                </div>
-            </div>
-
-        </div>
-
-        <!-- PROGRESS BAR -->
-        <div class="mt-5">
-            <h5>Daily Goal Progress 🎯</h5>
-
-            <div class="progress">
-                <div class="progress-bar"
-                     role="progressbar"
-                     style="width: {{ (user.study_hours / 5) * 100 }}%;">
-                </div>
-            </div>
-
-            <small class="text-muted">
-                Goal: 5 hours/day
-            </small>
-        </div>
-
-        <!-- ACTION BUTTONS -->
-        <div class="mt-4">
-
-            <a href="/leaderboard" class="btn btn-login me-2">
-                Leaderboard 🏆
-            </a>
-
-            <a href="/logout" class="btn btn-outline-danger">
-                Logout
-            </a>
 
         </div>
 

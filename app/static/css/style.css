@@ -1,6 +1,7 @@
 /* Main css file*/
 
 body {
+    min-height:80vh;
     font-family: 'Inter', system-ui, sans-serif;
     background: linear-gradient(135deg, #e0f7ff, #f5f7fa);
     color: #333;
@@ -14,23 +15,23 @@ body {
     grid-template-columns: auto 1fr auto;
     align-items: center;
 
-    padding: 12px 24px;
+    padding: 16px 32px;
     background: white;
     border-bottom: 1px solid #eee;
 
-    gap: 20px;
+    gap: 28px;
 }
 
 .header-left {
     justify-self: start;
-    font-size: 30px;
-    font-weight: 600;
+    font-size: 34px;
+    font-weight: 700;
     color:#ff6b6b
 }
 
 .header-center {
     display: flex;
-    gap: 20px;
+    gap: 28px;
     justify-self: center;
 }
 
@@ -42,7 +43,7 @@ body {
 .header-right {
     justify-self: end;
     display: flex;
-    gap: 10px;
+    gap: 16px;
 }
 
 /* Main Content Styles */
@@ -189,7 +190,7 @@ body.delete-mode .delete-btn {
 
     background: white;
     box-shadow:2px 0 8px rgba(0,0,0,0.1);
-    padding:24px 18px;
+    padding:30px 22px;
 
     display: flex;
     flex-direction: column;
@@ -200,11 +201,12 @@ body.delete-mode .delete-btn {
 
 .menu-sidebar a {
     font-size:18px;
-    font-weight: 500;
-    padding: 10px 12px;
+    font-weight: 700;
+    padding: 12px 14px;
     text-decoration: none;
     color: #333;
-    border-radius: 6px;
+    border-radius: 12px;
+    transition: all 0.2s ease;
 }
 
 .menu-sidebar.show {
@@ -213,6 +215,18 @@ body.delete-mode .delete-btn {
 
 .menu-sidebar a:hover {
     background: #f5f5f5;
+}
+
+.menu-sidebar a.active {
+    background: #ff6b6b;
+    color: white;
+}
+
+.menu-sidebar b {
+    font-size : 24px;
+    font-weight: 700;
+    color : #ff6b6b;
+    margin-bottom: 10px;
 }
 
 .overlay {
@@ -235,6 +249,7 @@ body.delete-mode .delete-btn {
 
 /* Card Styles */
 .card {
+    min-height: 30vh;
     border:1px solid #e5e5e5;
     backdrop-filter: blur(10px);
     border-radius: 18px;
