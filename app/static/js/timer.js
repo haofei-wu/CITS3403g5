@@ -43,6 +43,7 @@ fetch("/sessiontimes", {
     body: JSON.stringify({
         startTime: livetime.startTime,
         endTime: livetime.endTime,
+        
     })
 })
 
