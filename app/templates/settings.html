@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings</title>
+</head>
+<body>
+    <h1>Settings</h1>
+    <form method="POST" action="{{ url_for('settings') }}">
+        {{ form.hidden_tag() }} 
+        <!-- CSRF PROTECTION? -->
+        {{ form.flow_restratio.label}} {{form.flow_restratio()}}
+        {{ form.pom_restratio.label}} {{form.pom_restratio()}}
+        {{ form.pom_worklength.label}} {{form.pom_worklength()}}
+        {{ form.submit()}}
+    </form>
+</body>
+</html>
