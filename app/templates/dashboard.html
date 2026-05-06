@@ -6,7 +6,7 @@
 
     <div class="dashboard-card text-center">
 
-        <h2>Welcome, {{ user.email }} 👋</h2>
+        <h2>Welcome, {{ current_user.email }} 👋</h2>
 
         <p class="text-muted">
             Stay consistent and track your progress 📈
@@ -40,18 +40,23 @@
 
         <!-- PROGRESS BAR -->
         <div class="mt-5">
+
             <h5>Daily Goal Progress 🎯</h5>
 
             <div class="progress">
+
                 <div class="progress-bar"
                      role="progressbar"
                      style="width: 0%;">
+
                 </div>
+
             </div>
 
             <small class="text-muted">
                 Goal: 5 hours/day
             </small>
+
         </div>
 
         <!-- ACTION BUTTONS -->
@@ -72,4 +77,3 @@
 </div>
 
 {% endblock %}
-
