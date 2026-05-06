@@ -1,6 +1,7 @@
 __pycache__/
 *.pyc
-.vscode/
 .venv/
 venv/
 *.db
+config.bat
+node_modules
