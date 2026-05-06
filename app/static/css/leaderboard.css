@@ -1,68 +1,74 @@
-{% extends "base.html" %}
+/* Animation */
+.login-card {
+    animation: fadeIn 0.6s ease-in-out;
+}
 
-{% block content %}
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+:root {
+    --primary: #6f7cff;
+    --secondary: #6aa8ff;
+    --bg: #f5f7fb;
+    --card-bg: rgba(255, 255, 255, 0.8);
+    --text-dark: #2c2c2c;
+}
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(25px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+.leaderboard-table tr {
+    transition: all 0.2s ease;
+}
 
-<div class="container mt-5">
+.leaderboard-table tr:hover {
+    background: #f1f5ff;
+    transform: scale(1.01);
+}
+/* TOP 3 LEADERBOARD CARDS */
+.top-card {
+    padding: 20px;
+    border-radius: 16px;
+    transition: all 0.3s ease;
+}
 
-    <h1 class="text-center mb-5">🏆 Leaderboard</h1>
+.top-card:hover {
+    transform: translateY(-6px) scale(1.03);
+}
 
-    <!-- TOP 3 USERS -->
-    <div class="row text-center mb-5">
+/* COLORS */
+.gold {
+    background: linear-gradient(135deg, #fff3cd, #ffe69c);
+}
 
-        <!-- Second Place -->
-        <div class="col-md-4">
-            <div class="top-card silver">
-                <h2>🥈</h2>
-                <h4>{{ top_users[1].username }}</h4>
-                <p>{{ top_users[1].study_hours }} hrs</p>
-            </div>
-        </div>
+.silver {
+    background: linear-gradient(135deg, #e2e3e5, #d6d8db);
+}
 
-        <!-- First Place -->
-        <div class="col-md-4">
-            <div class="top-card gold">
-                <h1>🥇</h1>
-                <h3>{{ top_users[0].username }}</h3>
-                <p>{{ top_users[0].study_hours }} hrs</p>
-            </div>
-        </div>
+.bronze {
+    background: linear-gradient(135deg, #f8d7da, #f5c2c7);
+}
 
-        <!-- Third Place -->
-        <div class="col-md-4">
-            <div class="top-card bronze">
-                <h2>🥉</h2>
-                <h4>{{ top_users[2].username }}</h4>
-                <p>{{ top_users[2].study_hours }} hrs</p>
-            </div>
-        </div>
-
-    </div>
-
-    <!-- TABLE -->
-    <table class="table table-hover leaderboard-table">
-
-        <thead>
-            <tr>
-                <th>Rank</th>
-                <th>User</th>
-                <th>Study Hours</th>
-                <th>Streak 🔥</th>
-            </tr>
-        </thead>
-
-        <tbody>
-            {% for user in users %}
-            <tr>
-                <td>{{ loop.index + 3 }}</td>
-                <td>{{ user.username }}</td>
-                <td>{{ user.study_hours }} hrs</td>
-                <td>{{ user.streak }} days</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-
-    </table>
-
-</div>
-
-{% endblock %}

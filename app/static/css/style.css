@@ -1,3 +1,5 @@
+/* Main css file*/
+
 body {
     font-family: 'Inter', system-ui, sans-serif;
     background: #f7f7f7;
@@ -368,4 +370,9 @@ body {
     text-align: center;
     margin: 20px auto;
 }
-/*status-based color change---已完成任务绿色，未完成保持红色 */
+
+/*userinfo*/
+.userinfo {
+    font-size: 20px;
+    font-weight: 400;
+}

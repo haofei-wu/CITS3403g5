@@ -39,13 +39,14 @@
     <!-- Right Side -->
     <div class="header-right">
 
-        {% if session.get('user_id') %}
-            <span class="me-3">{{ session.get('user_email') }}</span>
-            <a href="{{ url_for('logout') }}" class="btn btn-danger btn-sm">Logout</a>
+        {% if session.get('user_email') %}
+        <div class="d-flex align-items-center gap-3">
+            <span class="userinfo">{{ session.get('user_email') }}</span>
+            <a href="{{ url_for('logout') }}" class="btn login-btn">Logout</a>
         {% else %}
             <a href="{{ url_for('login') }}" class="btn login-btn">Login</a>
+        </div>
         {% endif %}
-
     </div>
 
 </header>

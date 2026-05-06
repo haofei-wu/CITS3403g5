@@ -1,16 +1,18 @@
 {% extends "base.html" %}
 
 {% block content %}
+
 <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
-<div class="container-fluid vh-100">
-    <div class="row h-100">
+
+<div class="container-fluid login-page d-flex justify-content-center align-items-center min-vh-100">
+
+    <div class="row login-row w-100 shadow-lg overflow-hidden">
 
         <!-- LEFT PANEL -->
-        <div class="col-md-6 login-left d-flex flex-column
-                    justify-content-center align-items-center text-center">
+        <div class="col-md-6 login-left d-flex flex-column justify-content-center align-items-center text-center">
 
-            <h1 class="brand-title">StudyFlow</h1>
-            <p class="tagline">Start your study journey today.</p>
+            <h1 class="login-brand">StudyFlow</h1>
+            <p class="login-tagline">Start your study journey today.</p>
 
         </div>
 
@@ -21,17 +23,18 @@
 
                 <h2 class="text-center mb-4">Register</h2>
 
-{% if error %}
-<div class="alert alert-danger text-center">
-    {{ error }}
-</div>
-{% endif %}
+                {% if error %}
+                <div class="alert alert-danger text-center">
+                    {{ error }}
+                </div>
+                {% endif %}
 
-{% if success %}
-<div class="alert alert-success text-center">
-    Account created successfully!
-</div>
-{% endif %}
+                {% if success %}
+                <div class="alert alert-success text-center">
+                    Account created successfully!
+                </div>
+                {% endif %}
+
                 <form method="POST" action="{{ url_for('register') }}">
                     {{ form.hidden_tag() }}
 
@@ -45,7 +48,7 @@
                         {{ form.password(class="form-control", placeholder="Enter your password") }}
                     </div>
 
-                    <button type="submit" class="btn btn-login w-100">
+                    <button type="submit" class="login-btn">
                         Register
                     </button>
 
@@ -53,7 +56,10 @@
 
                 <p class="text-center mt-3">
                     Already have an account?
-                    <a href="/">Login</a>
+                    <span class="login-link login-link-action"
+                          onclick="location.href='{{ url_for('login') }}'">
+                        Login
+                    </span>
                 </p>
 
             </div>

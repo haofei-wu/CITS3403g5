@@ -10,6 +10,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 def index():
     return redirect(url_for('login'))
 
+
 # ------------------ LOGIN ------------------
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -22,7 +23,11 @@ def login():
             session['user_email'] = user.email
             return redirect(url_for('dashboard'))
 
-        return render_template("login.html", form=form, error="Invalid credentials")
+        return render_template(
+            "login.html",
+            form=form,
+            error="Invalid credentials"
+        )
 
     return render_template("login.html", form=form)
 
@@ -65,14 +70,15 @@ def forgot_password():
                 form=form,
                 success="Password updated successfully!"
             )
-        else:
-            return render_template(
-                "forgot_password.html",
-                form=form,
-                error="Email not found"
-            )
+
+        return render_template(
+            "forgot_password.html",
+            form=form,
+            error="Email not found"
+        )
 
     return render_template("forgot_password.html", form=form)
+
 
 # ------------------ DASHBOARD ------------------
 @app.route("/dashboard")
@@ -80,7 +86,10 @@ def dashboard():
     if 'user_email' not in session:
         return redirect(url_for('login'))
 
-    user = User.query.get(session['user_email'])
+    user = User.query.filter_by(
+        email=session['user_email']
+    ).first()
+
     return render_template("dashboard.html", user=user)
 
 
@@ -110,11 +119,17 @@ def get_tasks():
     if 'user_email' not in session:
         return jsonify({"tasks": []})
 
-    user = User.query.get(session['user_email'])
+    user = User.query.filter_by(
+        email=session['user_email']
+    ).first()
+
     tasks = Task.query.filter_by(user_id=user.id).all()
 
     return jsonify({
-        "tasks": [{"id": t.id, "content": t.content} for t in tasks]
+        "tasks": [
+            {"id": t.id, "content": t.content}
+            for t in tasks
+        ]
     })
 
 
@@ -122,8 +137,10 @@ def get_tasks():
 def add_task():
     if "user_email" not in session:
         return jsonify({"error": "no login"}), 401
-    
-    user = User.query.get(session['user_email'])
+
+    user = User.query.filter_by(
+        email=session['user_email']
+    ).first()
 
     data = request.get_json()
     content = data.get('task')
@@ -140,7 +157,10 @@ def add_task():
     tasks = Task.query.filter_by(user_id=user.id).all()
 
     return jsonify({
-        "tasks": [{"id": t.id, "content": t.content} for t in tasks]
+        "tasks": [
+            {"id": t.id, "content": t.content}
+            for t in tasks
+        ]
     })
 
 
@@ -150,18 +170,26 @@ def delete_tasks(id):
     if 'user_email' not in session:
         return jsonify({"error": "no login"}), 401
 
-    user = User.query.get(session['user_email'])
+    user = User.query.filter_by(
+        email=session['user_email']
+    ).first()
 
-    task = Task.query.filter_by(id=id, user_id=user.id).first()
+    task = Task.query.filter_by(
+        id=id,
+        user_id=user.id
+    ).first()
 
     if task:
         db.session.delete(task)
         db.session.commit()
 
     tasks = Task.query.filter_by(user_id=user.id).all()
-    
+
     return jsonify({
-        "tasks": [{"id": t.id, "content": t.content} for t in tasks]
+        "tasks": [
+            {"id": t.id, "content": t.content}
+            for t in tasks
+        ]
     })
 
 
@@ -169,4 +197,3 @@ def delete_tasks(id):
 @app.route("/timer")
 def timer():
     return render_template("timer.html")
-

@@ -1,7 +1,7 @@
 
 function togglePassword() {
     const passwordInput = document.getElementById("password");
-    const button = document.querySelector(".show-password-btn");
+    const button = document.querySelector(".login-show-btn");
 
     if (passwordInput.type === "password") {
         passwordInput.type = "text";
