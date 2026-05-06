@@ -1,8 +1,8 @@
-from flask import render_template, request, redirect, url_for, session, jsonify
+from flask import render_template, request, redirect, url_for, session, jsonify, flash
 from app import app, db
-from app.models import User, Task
-from app.forms import LoginForm, RegisterForm, ForgotPasswordForm
-
+from app.models import *
+from app.forms import *
+from flask_login import login_user, current_user
 # ------------------ HOME ------------------
 @app.route('/')
 def index():
@@ -20,6 +20,7 @@ def login():
         if user and user.password == form.password.data:
             session['user_id'] = user.id
             session['user_email'] = user.email
+            login_user(user, remember=True)
 
             return redirect(url_for('index'))
 
@@ -139,3 +140,22 @@ def delete_tasks(id):
 @app.route("/timer")
 def timer():
     return render_template("timer.html")
+
+# ------------------ SETTINGS ------------------
+@app.route("/settings", methods=['GET', 'POST'])
+def settings():
+    form = SettingsForm()
+
+    if form.validate_on_submit():
+        s = Settings.query.get(current_user.id)
+        if s is None:
+            s = Settings(id=current_user.id)
+            db.session.add(s)
+        s.flow_restratio = form.flow_restratio.data
+        s.pom_restratio = form.pom_restratio.data
+        s.pom_worklength = form.pom_worklength.data
+        db.session.commit()
+        flash("Settings saved successfully")
+        return redirect(url_for('settings'))
+
+    return render_template("settings.html", form = form)
