@@ -116,8 +116,6 @@ def add_task():
     if content:
         new_task = Task(content=content, 
                     user_id=current_user.id)
-                    user_id=current_user.id)
-
         db.session.add(new_task)
         db.session.commit()
 
