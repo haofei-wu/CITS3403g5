@@ -44,3 +44,12 @@ class Settings(db.Model):
 # .
 
 
+
+
+
+
+
+
+
+
+

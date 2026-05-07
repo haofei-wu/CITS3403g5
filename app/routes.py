@@ -1,4 +1,4 @@
-from flask import render_template, request, redirect, url_for, jsonify
+from flask import render_template, request, redirect, url_for, jsonify, flash
 from app import app, db
 from app.models import *
 from app.forms import *
@@ -17,9 +17,9 @@ def login():
 
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
-
         if user and user.password == form.password.data:
-            login_user(user,remember=True)
+            login_user(user, remember=True)
+
             return redirect(url_for('index'))
 
     return render_template("login.html", form = form)
@@ -29,9 +29,9 @@ def login():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     form = RegisterForm()
-
+    
     if form.validate_on_submit():
-
+        #HASH PASSWORDS?
         new_user = User(email=form.email.data, 
                         password=form.password.data)
 
@@ -58,6 +58,7 @@ def forgot_password():
 # ------------------ DASHBOARD ------------------
 @app.route("/dashboard")
 @login_required
+@login_required
 def dashboard():
     user = current_user
 
@@ -71,7 +72,9 @@ def dashboard():
 
 # ------------------ LOGOUT ------------------
 @app.route("/logout")
+@login_required
 def logout():
+    logout_user()
     logout_user()
     return redirect(url_for('login'))
 
@@ -104,6 +107,7 @@ def get_tasks():
 
 @app.route('/add_task', methods=['POST'])
 @login_required
+@login_required
 def add_task():
 
     data = request.get_json()
@@ -111,6 +115,7 @@ def add_task():
 
     if content:
         new_task = Task(content=content, 
+                    user_id=current_user.id)
                     user_id=current_user.id)
 
         db.session.add(new_task)
@@ -125,14 +130,17 @@ def add_task():
 
 @app.route('/delete_tasks/<int:id>', methods=['DELETE'])
 @login_required
+@login_required
 def delete_tasks(id):
 
+    task = Task.query.filter_by(id=id, user_id=current_user.id).first()
     task = Task.query.filter_by(id=id, user_id=current_user.id).first()
 
     if task:
         db.session.delete(task)
         db.session.commit()
 
+    tasks = Task.query.filter_by(user_id=current_user.id).all()
     tasks = Task.query.filter_by(user_id=current_user.id).all()
     
     return jsonify({
@@ -162,15 +170,16 @@ def toggle_status(id):
 def timer():
     return render_template("timer.html")
 
+# ------------------ SETTINGS ------------------
 @app.route("/settings", methods=['GET', 'POST'])
+@login_required
 def settings():
     form = SettingsForm()
-
     if form.validate_on_submit():
-        s= Settings.query.get(current_user.id)
+        s = Settings.query.get(current_user.id)
         if s is None:
-            s= Settings(id=current_user.id)
-            db.session.add()
+            s = Settings(id=current_user.id)
+            db.session.add(s)
         s.flow_restratio = form.flow_restratio.data
         s.pom_restratio = form.pom_restratio.data
         s.pom_worklength = form.pom_worklength.data
