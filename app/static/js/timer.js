@@ -1,5 +1,19 @@
 let livetime = {}
-    
+   
+const commitSessionTimes = await fetch("/sessiontimes", {
+    headers: {
+        "Content-Type": "application/json",
+       //"X-CSRFToken": getCookie("csrf_token") CSRF TOKEN?
+    },
+    method: "POST",
+    body: JSON.stringify({
+        userid:current_user.id,
+        startTime: livetime.startTime,
+        endTime: livetime.endTime,
+        task: document.querySelector("#task-input").value,
+        sessiondate: date.today();
+    })
+})
     // we want user click timer start, click again end, and know how much time elapsed
     // store start and end time in external object
     // in external object minus end from start on the second click
@@ -34,7 +48,7 @@ document.getElementById("end-btn").addEventListener("click", function() {
     document.getElementById("start-btn").style.display = "block";
     clearInterval(timerrefresh);
     console.log("killed timer");
-
+    commitSessionTimes();
     // set interval to update timer displayer every second using setinterval
 });
 

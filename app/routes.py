@@ -194,6 +194,24 @@ def toggle_status(id):
 def timer():
     return render_template("timer.html")
 
+
+@app.route("/sessiontimes", methods=['POST'])
+@login_required
+def sessiontimes():
+    data = request.get_json()
+    startTime = data['startTime']
+    endTime = data['endTime']
+    task = data['task']
+    sessiondate = data['sessiondate']
+    new_session = TimerSession(user_id=current_user.id,
+                               start_time=startTime,
+                               end_time=endTime,
+                               taskforsession=task,
+                               sessiondate=sessiondate)
+    db.session.add(new_session)
+    db.session.commit()
+    return jsonify({'message': 'Session times committed successfully'})
+
 # ------------------ SETTINGS ------------------
 @app.route("/settings", methods=['GET', 'POST'])
 @login_required
