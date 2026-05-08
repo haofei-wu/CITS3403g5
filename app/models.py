@@ -1,10 +1,6 @@
 from app import db
 from flask_login import UserMixin
 
-# The first argument defines the type of the column, then the rest you can defineoptional columns in any order after.
-#foreign key references table name, not class name -> table name is tolower in the database automatically. 
-
-# Foreign Key: db.Column(db.Integer, db.ForeignKey('tablename.primary_key_column'))
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
 

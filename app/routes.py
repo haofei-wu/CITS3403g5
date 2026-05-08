@@ -4,6 +4,8 @@ from app.models import *
 from app.forms import *
 from flask_login import *
 
+from werkzeug.security import *
+
 # ------------------ HOME ------------------
 @app.route('/')
 def index():
@@ -17,7 +19,8 @@ def login():
 
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
-        if user and user.password == form.password.data:
+        if user and check_password_hash(user.password, form.password.data):
+            
             login_user(user, remember=True)
 
             return redirect(url_for('index'))
@@ -32,9 +35,13 @@ def register():
     
     if form.validate_on_submit():
         #HASH PASSWORDS?
-        new_user = User(email=form.email.data, 
-                        password=form.password.data)
 
+        hashed_password = generate_password_hash(form.password.data)
+
+        new_user = User(
+            email=form.email.data,
+            password=hashed_password
+        )
 
         db.session.add(new_user)
         db.session.commit()
@@ -50,7 +57,26 @@ def forgot_password():
     form = ForgotPasswordForm()
 
     if form.validate_on_submit():
-        return render_template("forgot_password.html", success=True)
+
+        user=User.query.filter_by(
+            email=form.email.data
+        ).first()
+
+        if not user:
+            return render_template(
+                "forgot_password.html",
+                form=form,
+                error="Email not found"
+            )
+        
+        user.password = generate_password_hash(form.new_password.data)
+        db.session.commit()
+
+        return render_template(
+            "forgot_password.html",
+            form=form,
+            success="Password reset successfully",
+        )    
 
     return render_template("forgot_password.html", form = form)
 
