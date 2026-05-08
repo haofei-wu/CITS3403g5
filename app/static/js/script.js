@@ -1,6 +1,6 @@
 // Timer
 const mode_btns = document.querySelectorAll('.mode-btn:not(#custom-btn)');
-const custom_btn = document.getElementById('custom-btn');
+// const custom_btn = document.getElementById('custom-btn');
 const timerDisplay = document.getElementById('simple-timer');
 const startBtn = document.getElementById('start-btn');
 const resetBtn = document.getElementById('reset-btn');
@@ -49,43 +49,43 @@ mode_btns.forEach(btn => {
 // clear active state
 function clearActiveState() {
     mode_btns.forEach(btn => btn.classList.remove('active'));
-    custom_btn.classList.remove('active');  
+    // custom_btn.classList.remove('active');
 }
 
 // custom timer
-const customInput = document.getElementById('custom-input');
-const customSetBtn = document.getElementById('custom-set');
-const customModal = document.getElementById('custom-modal');
+// const customInput = document.getElementById('custom-input');
+// const customSetBtn = document.getElementById('custom-set');
+// const customModal = document.getElementById('custom-modal');
 
-custom_btn.addEventListener('click', () => {
+// custom_btn.addEventListener('click', () => {
 
-    clearActiveState();
+//     clearActiveState();
 
-    custom_btn.classList.add('active');
-    customModal.classList.remove('hidden');
+//     custom_btn.classList.add('active');
+//     customModal.classList.remove('hidden');
 
-    clearInterval(timer);
-    is_running = false;
-    timer = null;
-    startBtn.textContent = 'Start';
-});
+//     clearInterval(timer);
+//     is_running = false;
+//     timer = null;
+//     startBtn.textContent = 'Start';
+// });
 
-customSetBtn.addEventListener('click', () => {
-    const minutes = parseInt(customInput.value);
-    if (!isNaN(minutes) && minutes > 0) {
-        modetime = minutes * 60;
-        time_left = modetime;
-        customModal.classList.add('hidden');
-    }
-    timeupdate();  
-});
+// customSetBtn.addEventListener('click', () => {
+//     const minutes = parseInt(customInput.value);
+//     if (!isNaN(minutes) && minutes > 0) {
+//         modetime = minutes * 60;
+//         time_left = modetime;
+//         customModal.classList.add('hidden');
+//     }
+//     timeupdate();
+// });
 
 //close window
-customModal.addEventListener('click', (e) => {
-    if (e.target === customModal) {
-        customModal.classList.add('hidden');
-    }
-});
+// customModal.addEventListener('click', (e) => {
+//     if (e.target === customModal) {
+//         customModal.classList.add('hidden');
+//     }
+// });
 
 // start/pause timer
 startBtn.addEventListener('click', () => {

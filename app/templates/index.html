@@ -24,6 +24,7 @@
                 <!------------ POMODORO TIMER -------------->
 
                 <div id="pomodoro" class="active">
+                    {#
                     <div id="custom-modal" class="custom-modal hidden">
                         <div class="custom-box">
                             <p>Custom Timer</p>
@@ -31,9 +32,10 @@
                             <button id="custom-set">Set</button>
                         </div>
                     </div>
+                    #}
 
                     <div class="timer-modes">
-                        <button id="custom-btn" class="gear-btn">⚙</button>
+                        {# <button id="custom-btn" class="gear-btn">⚙</button> #}
                         <div class="modeset">
                             <button class="mode-btn" data-time="1500">Pomodoro</button>
                             <button class="mode-btn" data-time="300">Short Break</button>
