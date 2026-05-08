@@ -1,0 +1,155 @@
+body {
+    min-height:80vh;
+    font-family: 'Inter', system-ui, sans-serif;
+    background: linear-gradient(135deg, #e0f7ff, #f5f7fa);
+    color: #333;
+    font-weight: 400;
+    margin:0;
+}
+
+/* Header Styles */
+.app-header {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+
+    padding: 16px 32px;
+    background: white;
+    border-bottom: 1px solid #eee;
+
+    gap: 28px;
+}
+
+.header-left {
+    justify-self: start;
+    font-size: 34px;
+    font-weight: 700;
+    color:#ff6b6b
+}
+
+.header-center {
+    display: flex;
+    gap: 28px;
+    justify-self: center;
+}
+
+.header-center a {
+    text-decoration: none;
+    color: #555;
+}
+
+.header-right {
+    justify-self: end;
+    display: flex;
+    gap: 16px;
+}
+
+/*Menu Sidebar Styles */
+.menu-sidebar {
+    position: fixed;
+    top: 0;
+    left: -260px;/* Start hidden off-screen */
+    height: 100%;
+    width:220px;
+
+    background: white;
+    box-shadow:2px 0 8px rgba(0,0,0,0.1);
+    padding:30px 22px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    transition: left 0.3s ease;
+    z-index: 2000;
+}
+
+.menu-sidebar a {
+    font-size:18px;
+    font-weight: 700;
+    padding: 12px 14px;
+    text-decoration: none;
+    color: #333;
+    border-radius: 12px;
+    transition: all 0.2s ease;
+}
+
+.menu-sidebar.show {
+    left: 0; /* Slide in */
+}
+
+.menu-sidebar a:hover {
+    background: #f5f5f5;
+}
+
+.menu-sidebar a.active {
+    background: #ff6b6b;
+    color: white;
+}
+
+.menu-sidebar b {
+    font-size : 24px;
+    font-weight: 700;
+    color : #ff6b6b;
+    margin-bottom: 10px;
+}
+
+.overlay {
+    opacity: 0;
+    pointer-events: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.3);
+    transition: opacity 0.3s ease;
+    z-index: 1000;
+}
+
+.overlay.show {
+    opacity: 1;
+    pointer-events: all;  
+}
+
+.btn {
+    padding: 8px 16px;
+    border: 1px solid #e5e5e5;
+    border-radius: 12px;
+    background-color: #ffffff;
+    color: #333;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.btn:hover {
+    background-color: #f0f0f0;
+}
+
+.menu-btn {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+#menubtn {
+    background: white;
+    border: 1px solid #e5e5e5;
+    border-radius: 8px;
+
+    padding: 6px 10px;
+    font-size: 16px;
+
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+#menubtn:hover {
+    background: #f6f6f6;
+}
+
+/*userinfo*/
+.userinfo {
+    font-size: 20px;
+    font-weight: 400;
+}

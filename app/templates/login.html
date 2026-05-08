@@ -53,7 +53,6 @@
 
                     <!-- Email -->
                     <div class="mb-3">
-                        {{ form.email.label(class="form-label") }}
                         {{ form.email(class="login-input", placeholder="Enter your email") }}
                     </div>
 
@@ -69,10 +68,11 @@
                     </div>
 
                     <!-- Forgot Password -->
+                    <!-- Forgot Password -->
                     <div class="text-end mb-3">
-                        <span class="login-link login-link-action" onclick="location.href='{{ url_for('forgot_password') }}'">
-                            Forgot Password?
-                        </span>
+                        <a href="{{ url_for('forgot_password') }}" class="login-link login-link-action">
+                        Forgot Password?
+                        </a>
                     </div>
 
                     <!-- Login Button -->
@@ -85,9 +85,9 @@
                 <!-- Register -->
                 <p class="text-center mt-3">
                     Don't have an account?
-                    <span class="login-link login-link-action" onclick="location.href='{{ url_for('register') }}'">
-                    Register
-                    </span>
+                    <a href="{{ url_for('register') }}" class="login-link login-link-action">
+                        Register
+                    </a>
                 </p>
 
             </div>
