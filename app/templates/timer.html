@@ -1,40 +1,25 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Timer</title>
-    <link rel = "stylesheet" href = "./timer.CSS">
-   
-</head>
-<body>
-    <div>
-        <header id = "flowtitle"> Flowmodoro </header>
-        <!-- bottom outline -->
-         <p class = "maininfo"> Quote Box</p>
-         <p id = focusbox> Focusing/not</p>
-        <!-- timer needed to be built with javascript with start and stop watch -->
-        <div id = "timer-container">
-            <p id = "timer-display">00:00</p>
-            
-        <button id = "start-btn" >Start</button>
-        <button id = "end-btn" style = "display:None">End</button>
-        </div>
-         <!-- <button id = "end-btn" style = "display: 'None'" >End</button> INCORRECT -->
-       
-          <p class= "maininfo">Todays total </p> 
-        <p class = "maininfo"> Daily avg</p>
+{% extends "base.html" %}
+
+{% block content %}
+<div>
+    <header id="flowtitle"> Flowmodoro </header>
+    <p class="maininfo"> Quote Box</p>
+    <p id="focusbox"> Focusing/not</p>
+
+    <div id="timer-container">
+        <p id="timer-display">00:00</p>
+        <button id="start-btn">Start</button>
+        <button id="end-btn" style="display:none">End</button>
     </div>
-    
-<script  src = timer.js>
 
-//    onclick we want to hide the start button, then show the end button
-// onclick of the end button we want to hide the end button and hsow th start button
-</script>
+    <input type="text" id="task-input" placeholder="Enter task name">
 
+    <p class="maininfo">Todays total</p>
+    <p class="maininfo">Daily avg</p>
+</div>
 
-</body>
-</html>>
+<script src="{{ url_for('static', filename='js/timer.js') }}"></script>
+{% endblock %}
 
 <!-- timer logic
 PLANNING:

@@ -1,19 +1,23 @@
+
 let livetime = {}
-   
-const commitSessionTimes = await fetch("/sessiontimes", {
+
+// source venv/bin/activate
+const getcsrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+async function commitSessionTimes() {           
+    const response = await fetch("/sessiontimes", {
     headers: {
         "Content-Type": "application/json",
-       //"X-CSRFToken": getCookie("csrf_token") CSRF TOKEN?
+       "X-CSRFToken": getcsrfToken
     },
     method: "POST",
     body: JSON.stringify({
-        userid:current_user.id,
         startTime: livetime.startTime,
         endTime: livetime.endTime,
         task: document.querySelector("#task-input").value,
-        sessiondate: date.today();
+        sessiondate: new Date().toISOString().split('T')[0]
     })
-})
+});
+};
     // we want user click timer start, click again end, and know how much time elapsed
     // store start and end time in external object
     // in external object minus end from start on the second click

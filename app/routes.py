@@ -191,6 +191,7 @@ def toggle_status(id):
     
 # ------------------ TIMER ------------------
 @app.route("/timer")
+@login_required
 def timer():
     return render_template("timer.html")
 
@@ -203,11 +204,13 @@ def sessiontimes():
     endTime = data['endTime']
     task = data['task']
     sessiondate = data['sessiondate']
+    timeCost = endTime - startTime
     new_session = TimerSession(user_id=current_user.id,
                                start_time=startTime,
                                end_time=endTime,
                                taskforsession=task,
-                               sessiondate=sessiondate)
+                               sessiondate=sessiondate,
+                               timeCost=timeCost)
     db.session.add(new_session)
     db.session.commit()
     return jsonify({'message': 'Session times committed successfully'})
