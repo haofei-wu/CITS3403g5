@@ -190,11 +190,14 @@ def toggle_status(id):
     } for t in tasks])
     
 # ------------------ TIMER ------------------
-@app.route("/timer")
+@app.route("/timer", methods = ['GET'])
 @login_required
 def timer():
-    return render_template("timer.html")
+    user_settings = Settings.query.get(current_user.id)
+    flow_restratio = user_settings.flow_restratio if user_settings else 5
+    return render_template("timer.html", flow_restratio = flow_restratio)
 
+#can write inline if else in 
 
 @app.route("/sessiontimes", methods=['POST'])
 @login_required

@@ -3,14 +3,18 @@
 {% block content %}
 <div>
     <header id="flowtitle"> Flowmodoro </header>
-    <p class="maininfo"> Quote Box</p>
     <p id="focusbox"> Focusing/not</p>
 
+    <p id="flow-restratio" style="display:none">{{ flow_restratio }}</p>
     <div id="timer-container">
         <p id="timer-display">00:00</p>
         <button id="start-btn">Start</button>
         <button id="end-btn" style="display:none">End</button>
     </div>
+    <button id="countdown-btn">Start Countdown</button>
+
+    <div id = "restTime" style="display:none"> Rest Time</div>
+
 
     <input type="text" id="task-input" placeholder="Enter task name">
 

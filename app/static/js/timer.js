@@ -42,9 +42,26 @@ document.getElementById("start-btn").addEventListener("click", function() {
         livetime.endTime = Date.now();
         let timeElapsed = (livetime.endTime - livetime.startTime);
         document.querySelector("#timer-display").innerHTML = formatTime(timeElapsed)}, 1000);
+     }, 1000);
 
     
-});
+
+
+
+
+function countdownTimer() {
+    let resttime = Date.now() + (livetime.startTime - livetime.endTime + 1200000 )/document.getElementById("flow-restratio").innerHTML;
+    let countdown = setInterval(() => {     
+            if (Date.now() < resttime)   {
+                document.querySelector("#timer-display").innerHTML = formatTime(resttime - Date.now()) + "s remaining";
+            } else {
+                clearInterval(countdown);
+                document.querySelector("#timer-display").innerHTML = "00:00";
+                return;
+            }
+    }, 1000);
+}
+
 
 document.getElementById("end-btn").addEventListener("click", function() {
     // console.log("working")
@@ -53,8 +70,22 @@ document.getElementById("end-btn").addEventListener("click", function() {
     clearInterval(timerrefresh);
     console.log("killed timer");
     commitSessionTimes();
+    document.getElementById("restTime").style.display = "flex";
+    document.querySelector("#timer-display").innerHTML = formatTime((livetime.endTime - livetime.startTime)/document.getElementById("flow-restratio").innerHTML) + "s remaining";
+    countdownTimer();
+    //countdown ment.getElementById("restTime").innerHTML = formatTime((livetime.endTime - livetime.startTime)/document.getElementById("flow-restratio").innerHTML);
+    
     // set interval to update timer displayer every second using setinterval
 });
+//countdown 
+
+
+
+
+//countdown timer -> date.now() + resttime
+// set interval to update timer display every second until, date.now() = date.now() + resttime
+
+
 
 fetch("/sessiontimes", {
     method: "POST",
