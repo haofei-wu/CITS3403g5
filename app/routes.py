@@ -106,16 +106,15 @@ def logout():
 
 
 # ------------------ LEADERBOARD ------------------
+# ------------------ LEADERBOARD ------------------
 @app.route("/leaderboard")
-@login_required
 def leaderboard():
-    users = User.query.order_by(User.study_hours.desc()).all()
-    top_users = users[:3]
+
+    users = User.query.all()
 
     return render_template(
         "leaderboard.html",
-        users=users,
-        top_users=top_users
+        users=users
     )
 
 
