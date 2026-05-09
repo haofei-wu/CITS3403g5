@@ -1,20 +1,36 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Settings</title>
-</head>
-<body>
+<div class="container mt-5">
     <h1>Settings</h1>
+
     <form method="POST" action="{{ url_for('settings') }}">
         {{ form.hidden_tag() }} 
         <!-- CSRF PROTECTION? -->
-        {{ form.flow_restratio.label}} {{form.flow_restratio()}}
-        {{ form.pom_restratio.label}} {{form.pom_restratio()}}
-        {{ form.pom_worklength.label}} {{form.pom_worklength()}}
+        <div>
+        {{ form.flow_restratio.label}} 
+        {{form.flow_restratio()}}
+        </div>
+
+        <div>
+        {{ form.pom_worklength.label}} 
+        {{form.pom_worklength()}}
+        </div>
+
+        <div>
+        {{ form.pom_short_break.label}} 
+        {{form.pom_short_break()}}
+        </div>
+
+        <div>
+        {{ form.pom_long_break.label}} 
+        {{form.pom_long_break()}}
+        </div>
+
+        <div>
         {{ form.submit()}}
+        </div>
     </form>
-</body>
+</div>
+
 {% endblock %}

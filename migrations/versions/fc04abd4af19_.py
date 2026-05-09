@@ -1,14 +1,8 @@
-"""initial schema
+"""empty message
 
-<<<<<<<< HEAD:migrations/versions/81789185071a_.py
-Revision ID: 81789185071a
+Revision ID: fc04abd4af19
 Revises: 
-Create Date: 2026-05-06 22:48:45.783260
-========
-Revision ID: 0c3bb04db94f
-Revises: 
-Create Date: 2026-05-06 11:19:29.794011
->>>>>>>> 39b5ed23b91ff02e9e8ed4011e8bd50c1a311a5d:migrations/versions/0c3bb04db94f_addedTimerSessionandSettingsTables.py
+Create Date: 2026-05-09 23:10:26.208726
 
 """
 from alembic import op
@@ -16,11 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-<<<<<<<< HEAD:migrations/versions/81789185071a_.py
-revision = '81789185071a'
-========
-revision = '0c3bb04db94f'
->>>>>>>> 39b5ed23b91ff02e9e8ed4011e8bd50c1a311a5d:migrations/versions/0c3bb04db94f_addedTimerSessionandSettingsTables.py
+revision = 'fc04abd4af19'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -57,8 +47,8 @@ def upgrade():
     sa.Column('user_id', sa.Integer(), nullable=False),
     sa.Column('start_time', sa.Integer(), nullable=False),
     sa.Column('end_time', sa.Integer(), nullable=False),
-    sa.Column('taskforsession', sa.String(length=128), nullable=False),
-    sa.ForeignKeyConstraint(['taskforsession'], ['task.content'], ),
+    sa.Column('taskforsession_id', sa.String(length=128), nullable=False),
+    sa.ForeignKeyConstraint(['taskforsession_id'], ['task.content'], ),
     sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
     sa.PrimaryKeyConstraint('id')
     )

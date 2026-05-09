@@ -25,32 +25,43 @@ function timeupdate(){
 timeupdate();
 
 // timer mode change
-mode_btns.forEach(btn => {
-
-    btn.addEventListener('click', () => {
-        const time = parseInt(btn.dataset.time);
-
-        modetime = time;
-        time_left = modetime;
-
-        clearActiveState();
-        btn.classList.add('active');
-
-        clearInterval(timer);
-        is_running = false;
-        timer = null;
-
-        startBtn.textContent = 'Start';
-        
-        timeupdate();
-    });
-});
 
 // clear active state
 function clearActiveState() {
     mode_btns.forEach(btn => btn.classList.remove('active'));
     // custom_btn.classList.remove('active');
 }
+
+function length_change(length, button) {
+    modetime = length * 60;
+    time_left = modetime;
+
+    clearActiveState();
+
+    button.classList.add('active');
+
+    clearInterval(timer);
+    is_running = false;
+    timer = null;
+
+    startBtn.textContent = 'Start';
+    
+    timeupdate();
+}
+const workbtn = document.getElementById('pomo_length');
+const shortbtn = document.getElementById('sbreak_length');
+const longbtn = document.getElementById('lbreak_length');
+
+workbtn.addEventListener('click', () => {
+    length_change(worklength, workbtn);
+})
+shortbtn.addEventListener('click', () => {
+    length_change(short_break, shortbtn);
+})
+longbtn.addEventListener('click', () => {
+    length_change(long_break, longbtn); 
+})
+
 
 // custom timer
 // const customInput = document.getElementById('custom-input');
@@ -86,6 +97,24 @@ function clearActiveState() {
 //         customModal.classList.add('hidden');
 //     }
 // });
+
+
+
+let worklength;
+let short_break;
+let long_break;
+
+function load_POMO_Settings() {
+    fetch('/get_settings')
+    .then(response => response.json())
+    .then(data => {
+        worklength = data.pom_worklength;
+        short_break = data.pom_short_break;
+        long_break = data.pom_long_break;
+    });
+} 
+
+load_POMO_Settings();
 
 // start/pause timer
 startBtn.addEventListener('click', () => {

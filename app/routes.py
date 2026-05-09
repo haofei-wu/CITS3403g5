@@ -200,15 +200,48 @@ def timer():
 def settings():
     form = SettingsForm()
     if form.validate_on_submit():
+        #validation
+        if form.pom_short_break.data >= form.pom_long_break.data:
+            flash("Short break must be less than long break")
+            return render_template("settings.html", form = form)
+
         s = Settings.query.get(current_user.id)
+
         if s is None:
             s = Settings(id=current_user.id)
             db.session.add(s)
         s.flow_restratio = form.flow_restratio.data
-        s.pom_restratio = form.pom_restratio.data
         s.pom_worklength = form.pom_worklength.data
+        s.pom_short_break = form.pom_short_break.data
+        s.pom_long_break = form.pom_long_break.data
+
         db.session.commit()
         flash("Settings saved successfully")
         return redirect(url_for('settings'))
 
     return render_template("settings.html", form = form)
+
+# GET_SETTINGS
+@app.route("/get_settings", methods=['GET'])
+def get_settings():
+    default_settings = {
+        #s.flow_restratio = form.flow_restratio.data YOU CAN ADD THE DEFAULT VaLUES HERE
+        "pom_worklength": 25,
+        "pom_short_break": 5,
+        "pom_long_break": 15
+    }
+
+    if not current_user.is_authenticated:
+        return jsonify(default_settings)
+
+    s = Settings.query.get(current_user.id)
+    
+    if s is None:
+        return jsonify(default_settings)
+
+    return jsonify({
+        #"flow_restratio": s.flow_restratio,
+        "pom_worklength": s.pom_worklength,
+        "pom_short_break": s.pom_short_break,
+        "pom_long_break": s.pom_long_break
+    })
