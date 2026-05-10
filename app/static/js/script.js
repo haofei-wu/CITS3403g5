@@ -7,9 +7,9 @@ const resetBtn = document.getElementById('reset-btn');
 
 let timer= null;
 let is_running = false;
-let worklength = Number(document.getElementById('pom-worklength').textContent);
-let short_break = Number(document.getElementById('pom-short-break').textContent);
-let long_break = Number(document.getElementById('pom-long-break').textContent);
+let worklength = document.getElementById('pom-worklength').textContent;
+let short_break = document.getElementById('pom-short-break').textContent;
+let long_break = document.getElementById('pom-long-break').textContent;
 let modetime = worklength * 60;
 let time_left = modetime;
 
