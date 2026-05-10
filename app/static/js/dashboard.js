@@ -37,3 +37,18 @@ function renderTaskSummary(tasks) {
         container.appendChild(item);
     });
 }
+
+function formatFocusTime(ms) {
+    const totalMinutes = Math.floor(ms / 60000);
+    const hours = Math.floor(totalMinutes / 60);
+    const minutes = totalMinutes % 60;
+    return `${String(hours).padStart(2, "0")}h ${String(minutes).padStart(2, "0")}min `;
+}
+
+const sessiondate = new Date().toISOString().split('T')[0];
+
+fetch(`/calculate?sessiondate=${sessiondate}`)
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById("total_focus").textContent = formatFocusTime(data.today_total);
+    });

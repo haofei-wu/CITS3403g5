@@ -19,6 +19,7 @@ class ForgotPasswordForm(FlaskForm):
 
 class SettingsForm(FlaskForm):
     flow_restratio = IntegerField('Flow Rest Ratio', validators=[DataRequired()])
-    pom_restratio = IntegerField('Pomodoro Rest Ratio', validators=[DataRequired()])
     pom_worklength = IntegerField('Pomodoro Work Length', validators=[DataRequired()])
+    pom_short_break = IntegerField('Pomodoro Short Break Length', validators=[DataRequired()])
+    pom_long_break = IntegerField('Pomodoro Long Break Length', validators=[DataRequired()])
     submit = SubmitField('Save')

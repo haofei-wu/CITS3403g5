@@ -122,6 +122,18 @@
     border-radius: 8px;
 }
 
+#total_focus {
+    min-height: 120px;
+    margin-top: 14px;
+    font-size: 36px;
+    font-weight: 800;
+    color: #111;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
 .task-summary-card {
     display:flex;
     justify-content: space-between;

@@ -1,8 +1,8 @@
-"""rebuilt schema
+"""empty message
 
-Revision ID: cac67f7ac47e
+Revision ID: 0fe8c1a1127d
 Revises: 
-Create Date: 2026-05-10 14:14:44.441712
+Create Date: 2026-05-10 16:54:50.762268
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'cac67f7ac47e'
+revision = '0fe8c1a1127d'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -29,8 +29,9 @@ def upgrade():
     op.create_table('settings',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('flow_restratio', sa.Integer(), nullable=False),
-    sa.Column('pom_restratio', sa.Integer(), nullable=False),
     sa.Column('pom_worklength', sa.Integer(), nullable=False),
+    sa.Column('pom_short_break', sa.Integer(), nullable=False),
+    sa.Column('pom_long_break', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['id'], ['user.id'], ),
     sa.PrimaryKeyConstraint('id')
     )

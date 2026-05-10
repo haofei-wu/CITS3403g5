@@ -50,8 +50,9 @@ class Task(db.Model):
 class Settings(db.Model):
     id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True, nullable=False)
     flow_restratio = db.Column(db.Integer, nullable=False, default=5)
-    pom_restratio = db.Column(db.Integer, nullable=False, default=5)
     pom_worklength = db.Column(db.Integer, nullable=False, default= 25)
+    pom_short_break = db.Column(db.Integer, nullable=False, default= 5)
+    pom_long_break = db.Column(db.Integer, nullable=False, default= 15)
 
 # Initialise: python3 -m venv application-env
 # .

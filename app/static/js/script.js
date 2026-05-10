@@ -7,8 +7,11 @@ const resetBtn = document.getElementById('reset-btn');
 
 let timer= null;
 let is_running = false;
-let modetime = 900
-let time_left = 900; // 15 minutes in seconds
+let worklength = document.getElementById('pom-worklength').textContent;
+let short_break = document.getElementById('pom-short-break').textContent;
+let long_break = document.getElementById('pom-long-break').textContent;
+let modetime = worklength * 60;
+let time_left = modetime;
 
 // Format time in MM:SS
 function formatTime(sec){
@@ -25,32 +28,43 @@ function timeupdate(){
 timeupdate();
 
 // timer mode change
-mode_btns.forEach(btn => {
-
-    btn.addEventListener('click', () => {
-        const time = parseInt(btn.dataset.time);
-
-        modetime = time;
-        time_left = modetime;
-
-        clearActiveState();
-        btn.classList.add('active');
-
-        clearInterval(timer);
-        is_running = false;
-        timer = null;
-
-        startBtn.textContent = 'Start';
-        
-        timeupdate();
-    });
-});
 
 // clear active state
 function clearActiveState() {
     mode_btns.forEach(btn => btn.classList.remove('active'));
     // custom_btn.classList.remove('active');
 }
+
+function length_change(length, button) {
+    modetime = length * 60;
+    time_left = modetime;
+
+    clearActiveState();
+
+    button.classList.add('active');
+
+    clearInterval(timer);
+    is_running = false;
+    timer = null;
+
+    startBtn.textContent = 'Start';
+    
+    timeupdate();
+}
+const workbtn = document.getElementById('pomo_length');
+const shortbtn = document.getElementById('sbreak_length');
+const longbtn = document.getElementById('lbreak_length');
+
+workbtn.addEventListener('click', () => {
+    length_change(worklength, workbtn);
+})
+shortbtn.addEventListener('click', () => {
+    length_change(short_break, shortbtn);
+})
+longbtn.addEventListener('click', () => {
+    length_change(long_break, longbtn); 
+})
+
 
 // custom timer
 // const customInput = document.getElementById('custom-input');
@@ -86,6 +100,8 @@ function clearActiveState() {
 //         customModal.classList.add('hidden');
 //     }
 // });
+
+
 
 // start/pause timer
 startBtn.addEventListener('click', () => {
@@ -126,6 +142,8 @@ document.getElementById('reset-btn').addEventListener('click', () => {
 });
 
 let taskmode = 'add';
+let selectedFlowTaskId = null;
+let taskCache = [];
 
 // Modechange
 function updateModeUI() {
@@ -133,6 +151,45 @@ function updateModeUI() {
 
     addBtn.classList.toggle('active', taskmode === 'add');
     deleteBtn.classList.toggle('active', taskmode === 'delete');   
+}
+
+function selectFlowTask(task) {
+    if (selectedFlowTaskId === task.id) {
+        selectedFlowTaskId = null;
+        document.getElementById('flow-task-name').textContent = 'No task selected';
+        document.getElementById('flow-task-value').textContent = '';
+        document.getElementById('flow-start-btn').disabled = true;
+
+        document.querySelectorAll('.task-item').forEach(item => {
+            item.classList.remove('selected');
+        });
+
+        return;
+    }
+
+    selectedFlowTaskId = task.id;
+
+    document.getElementById('flow-task-name').textContent = task.content;
+    document.getElementById('flow-task-value').textContent = task.content;
+    document.getElementById('flow-start-btn').disabled = false;
+
+    document.querySelectorAll('.task-item').forEach(item => {
+        item.classList.toggle('selected', Number(item.dataset.taskId) === selectedFlowTaskId);
+    });
+
+    modeswitch('flow');
+}
+
+function selectFlowTaskFromList(id) {
+    if (taskmode === 'delete') {
+        return;
+    }
+
+    const task = taskCache.find(item => item.id === id);
+
+    if (task) {
+        selectFlowTask(task);
+    }
 }
 // Task management
 const getcsrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
@@ -190,6 +247,15 @@ document.getElementById('add-task-btn').addEventListener('click', () => {
 function renderTasks(tasks) {
     console.log(tasks);
     console.log(tasks[0]);
+    taskCache = tasks;
+
+    if (selectedFlowTaskId !== null && !taskCache.some(task => task.id === selectedFlowTaskId)) {
+        selectedFlowTaskId = null;
+        document.getElementById('flow-task-name').textContent = 'No task selected';
+        document.getElementById('flow-task-value').textContent = '';
+        document.getElementById('flow-start-btn').disabled = true;
+    }
+
     const taskList = document.getElementById('taskList');
     taskList.innerHTML = '';
 
@@ -202,12 +268,16 @@ function renderTasks(tasks) {
             className = 'task-item completed';
         }
 
+        if (task.id === selectedFlowTaskId) {
+            className += ' selected';
+        }
+
         taskList.innerHTML +=
-            `<li class="${className}" id="task-${task.id}">
+            `<li class="${className}" id="task-${task.id}" data-task-id="${task.id}" onclick="selectFlowTaskFromList(${task.id})">
                 <div class="statusbar"></div>
-                <span class="statusbox" onclick = "toggleStatus(${task.id})"></span>
+                <span class="statusbox" onclick="event.stopPropagation(); toggleStatus(${task.id})"></span>
                 <span>${task.content}</span>
-                <button class="delete-btn" onclick="deleteTask(${task.id})">-</button>
+                <button class="delete-btn" onclick="event.stopPropagation(); deleteTask(${task.id})">-</button>
             </li>`;
     });
     updateModeUI();
@@ -247,7 +317,7 @@ function toggleStatus(id) {
 
 
 // ============Switch Timer Mode===============
-let timermode="flow";
+let timermode="pomo";
 
 const flowView = document.getElementById('flowdoro');
 const pomoView = document.getElementById('pomodoro');

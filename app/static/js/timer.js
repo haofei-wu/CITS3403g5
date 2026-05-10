@@ -1,8 +1,11 @@
 
 let livetime = {}
+let timerrefresh = null;
 
 // source venv/bin/activate
 async function commitSessionTimes() {
+    const selectedTask = document.querySelector("#flow-task-value").textContent;
+
     const response = await fetch("/sessiontimes", {
     headers: {
         "Content-Type": "application/json",
@@ -12,7 +15,7 @@ async function commitSessionTimes() {
     body: JSON.stringify({
         startTime: livetime.startTime,
         endTime: livetime.endTime,
-        task: document.querySelector("#flow-task-input").value,
+        task: selectedTask,
         sessiondate: new Date().toISOString().split('T')[0]
     })
 });
@@ -31,6 +34,10 @@ function formatMs(ms) {
     // formatTime(125000); // "02:05" 
     
 document.getElementById("flow-start-btn").addEventListener("click", function() {
+    if (!document.querySelector("#flow-task-value").textContent) {
+        return;
+    }
+
     // keytimes.startTime = Date.now()
     // console.log("working")
     document.getElementById("flow-start-btn").style.display = "none";
@@ -83,17 +90,6 @@ document.getElementById("flow-end-btn").addEventListener("click", function() {
 
 //countdown timer -> date.now() + resttime
 // set interval to update timer display every second until, date.now() = date.now() + resttime
-
-
-
-fetch("/sessiontimes", {
-    method: "POST",
-    body: JSON.stringify({
-        startTime: livetime.startTime,
-        endTime: livetime.endTime,
-    })
-})
-
 
 // "flow-end-btn".addEventListener("click", timeElapsed(currentTime)
 //     let timepassed = Date.now() - startTime;

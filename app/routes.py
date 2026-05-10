@@ -6,15 +6,34 @@ from flask_login import *
 
 from werkzeug.security import *
 
-# ------------------ HOME ------------------
-@app.route('/')
-def index():
-    flow_restratio = 5
+DEFAULT_SETTINGS = {
+    "flow_restratio": 5,
+    "pom_worklength": 25,
+    "pom_short_break": 5,
+    "pom_long_break": 15
+}
+
+
+def get_user_settings_values():
+    values = DEFAULT_SETTINGS.copy()
+
     if current_user.is_authenticated:
         user_settings = Settings.query.get(current_user.id)
         if user_settings:
-            flow_restratio = user_settings.flow_restratio
-    return render_template('index.html', flow_restratio=flow_restratio)
+            values.update({
+                "flow_restratio": user_settings.flow_restratio,
+                "pom_worklength": user_settings.pom_worklength,
+                "pom_short_break": user_settings.pom_short_break,
+                "pom_long_break": user_settings.pom_long_break
+            })
+
+    return values
+
+
+# ------------------ HOME ------------------
+@app.route('/')
+def index():
+    return render_template('index.html', **get_user_settings_values())
 
 
 # ------------------ LOGIN ------------------
@@ -198,9 +217,7 @@ def toggle_status(id):
 @app.route("/timer", methods = ['GET'])
 @login_required
 def timer():
-    user_settings = Settings.query.get(current_user.id)
-    flow_restratio = user_settings.flow_restratio if user_settings else 5
-    return render_template("timer.html", flow_restratio = flow_restratio)
+    return render_template("timer.html", **get_user_settings_values())
 
 #can write inline if else in 
 
@@ -229,15 +246,43 @@ def sessiontimes():
 def settings():
     form = SettingsForm()
     if form.validate_on_submit():
+        #validation
+        if form.pom_short_break.data >= form.pom_long_break.data:
+            flash("Short break must be less than long break")
+            return render_template("settings.html", form = form)
+
         s = Settings.query.get(current_user.id)
+
         if s is None:
             s = Settings(id=current_user.id)
             db.session.add(s)
         s.flow_restratio = form.flow_restratio.data
-        s.pom_restratio = form.pom_restratio.data
         s.pom_worklength = form.pom_worklength.data
+        s.pom_short_break = form.pom_short_break.data
+        s.pom_long_break = form.pom_long_break.data
+
         db.session.commit()
         flash("Settings saved successfully")
-        return redirect(url_for('settings'))
+        return redirect(url_for('index'))
+
+    if request.method == 'GET':
+        current_settings = get_user_settings_values()
+        form.flow_restratio.data = current_settings["flow_restratio"]
+        form.pom_worklength.data = current_settings["pom_worklength"]
+        form.pom_short_break.data = current_settings["pom_short_break"]
+        form.pom_long_break.data = current_settings["pom_long_break"]
 
     return render_template("settings.html", form = form)
+
+# ------------------ TIMERSESSION CAUCULATE ------------------
+@app.route("/calculate", methods=['GET'])
+@login_required
+def calculate():
+    sessiondate = request.args.get('sessiondate')
+    sessionsum = db.session.query(
+        db.func.sum(TimerSession.timeCost)).filter_by(
+            user_id=current_user.id,
+            sessiondate=sessiondate).first()
+    today_total = sessionsum[0] or 0
+
+    return jsonify({'sessiondate': sessiondate, 'today_total': today_total})
