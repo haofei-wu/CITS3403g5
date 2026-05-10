@@ -2,8 +2,7 @@
 let livetime = {}
 
 // source venv/bin/activate
-const getcsrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-async function commitSessionTimes() {           
+async function commitSessionTimes() {
     const response = await fetch("/sessiontimes", {
     headers: {
         "Content-Type": "application/json",
@@ -13,7 +12,7 @@ async function commitSessionTimes() {
     body: JSON.stringify({
         startTime: livetime.startTime,
         endTime: livetime.endTime,
-        task: document.querySelector("#task-input").value,
+        task: document.querySelector("#flow-task-input").value,
         sessiondate: new Date().toISOString().split('T')[0]
     })
 });
@@ -22,7 +21,7 @@ async function commitSessionTimes() {
     // store start and end time in external object
     // in external object minus end from start on the second click
     // return difference
-function formatTime(ms) {
+function formatMs(ms) {
     const totalSeconds = Math.floor(ms / 1000);
     const minutes = Math.floor(totalSeconds / 60);
     const seconds = totalSeconds % 60;
@@ -31,17 +30,17 @@ function formatTime(ms) {
 
     // formatTime(125000); // "02:05" 
     
-document.getElementById("start-btn").addEventListener("click", function() {
+document.getElementById("flow-start-btn").addEventListener("click", function() {
     // keytimes.startTime = Date.now()
     // console.log("working")
-    document.getElementById("start-btn").style.display = "none";
-    document.getElementById("end-btn").style.display = "block";
+    document.getElementById("flow-start-btn").style.display = "none";
+    document.getElementById("flow-end-btn").style.display = "block";
     livetime.startTime = Date.now()
     // Every 1000 ms, take current time as end time, and subtact start time from it
      timerrefresh = setInterval(() => {
         livetime.endTime = Date.now();
         let timeElapsed = (livetime.endTime - livetime.startTime);
-        document.querySelector("#timer-display").innerHTML = formatTime(timeElapsed)}, 1000);
+        document.querySelector("#timer-display").innerHTML = formatMs(timeElapsed)}, 1000);
      }, 1000);
 
     
@@ -50,10 +49,10 @@ document.getElementById("start-btn").addEventListener("click", function() {
 
 
 function countdownTimer() {
-    let resttime = Date.now() + (livetime.startTime - livetime.endTime + 1200000 )/document.getElementById("flow-restratio").innerHTML;
+    let resttime = Date.now() + (livetime.endTime - livetime.startTime)/document.getElementById("flow-restratio").innerHTML;
     let countdown = setInterval(() => {     
             if (Date.now() < resttime)   {
-                document.querySelector("#timer-display").innerHTML = formatTime(resttime - Date.now()) + "s remaining";
+                document.querySelector("#timer-display").innerHTML = formatMs(resttime - Date.now()) + "s remaining";
             } else {
                 clearInterval(countdown);
                 document.querySelector("#timer-display").innerHTML = "00:00";
@@ -63,15 +62,15 @@ function countdownTimer() {
 }
 
 
-document.getElementById("end-btn").addEventListener("click", function() {
+document.getElementById("flow-end-btn").addEventListener("click", function() {
     // console.log("working")
-    document.getElementById("end-btn").style.display = "none";
-    document.getElementById("start-btn").style.display = "block";
+    document.getElementById("flow-end-btn").style.display = "none";
+    document.getElementById("flow-start-btn").style.display = "block";
     clearInterval(timerrefresh);
     console.log("killed timer");
     commitSessionTimes();
     document.getElementById("restTime").style.display = "flex";
-    document.querySelector("#timer-display").innerHTML = formatTime((livetime.endTime - livetime.startTime)/document.getElementById("flow-restratio").innerHTML) + "s remaining";
+    document.querySelector("#timer-display").innerHTML = formatMs((livetime.endTime - livetime.startTime)/document.getElementById("flow-restratio").innerHTML) + "s remaining";
     countdownTimer();
     //countdown ment.getElementById("restTime").innerHTML = formatTime((livetime.endTime - livetime.startTime)/document.getElementById("flow-restratio").innerHTML);
     
@@ -96,7 +95,7 @@ fetch("/sessiontimes", {
 })
 
 
-// "end-btn".addEventListener("click", timeElapsed(currentTime)
+// "flow-end-btn".addEventListener("click", timeElapsed(currentTime)
 //     let timepassed = Date.now() - startTime;
 //     return timepassed;
 // }

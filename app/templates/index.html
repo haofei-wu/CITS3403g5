@@ -58,6 +58,26 @@
                 
                 <!-------------- FLOWDORO TIMER -------------->               
                 <div id="flowdoro">
+                    <header id="flowtitle"> Flowmodoro </header>
+                    <p id="focusbox"> Focusing/not</p>
+                
+                    <p id="flow-restratio" style="display:none">{{ flow_restratio }}</p>
+                    <div id="timer-container">
+                        <p id="timer-display">00:00</p>
+                        <button id="flow-start-btn">Start</button>
+                        <button id="flow-end-btn" style="display:none">End</button>
+                    </div>
+                
+                    <div id = "restTime" style="display:none"> Rest Time</div>
+                
+                
+                    <input type="text" id="flow-task-input" placeholder="Enter task name">
+                
+                    <p class="maininfo">Todays total</p>
+                    <p class="maininfo">Daily avg</p>
+                </div>
+                
+                <script src="{{ url_for('static', filename='js/timer.js') }}"></script>
 
 
 

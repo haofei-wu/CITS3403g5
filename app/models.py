@@ -26,7 +26,12 @@ class TimerSession(db.Model):
     taskforsession = db.Column(db.ForeignKey('task.content'), nullable=False)
     sessiondate = db.Column(db.String(10), nullable=False)
     timeCost = db.Column(db.Integer, nullable=False)
-    
+
+class Task(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    content = db.Column(db.String(128), nullable=False)
+    status = db.Column(db.Boolean, default=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 # # trigger to automatically insert timecost into timer_session table after insert
 # trigger = DDL("""
 #     CREATE TRIGGER timeCostTrigger AFTER INSERT ON timer_session
@@ -41,11 +46,6 @@ class TimerSession(db.Model):
 # # This ensures it runs automatically during metadata.create_all()
 # event.listen(TimerSession.__table__, 'after_create', trigger)
 # dont need trigger, can do it server side in route. 
-class Task(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    content = db.Column(db.String(128), nullable=False)
-    status = db.Column(db.Boolean, default=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
 class Settings(db.Model):
     id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True, nullable=False)

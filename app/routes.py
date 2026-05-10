@@ -9,7 +9,12 @@ from werkzeug.security import *
 # ------------------ HOME ------------------
 @app.route('/')
 def index():
-    return render_template('index.html')
+    flow_restratio = 5
+    if current_user.is_authenticated:
+        user_settings = Settings.query.get(current_user.id)
+        if user_settings:
+            flow_restratio = user_settings.flow_restratio
+    return render_template('index.html', flow_restratio=flow_restratio)
 
 
 # ------------------ LOGIN ------------------
