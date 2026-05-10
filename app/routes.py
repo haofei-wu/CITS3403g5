@@ -9,7 +9,12 @@ from werkzeug.security import *
 # ------------------ HOME ------------------
 @app.route('/')
 def index():
-    return render_template('index.html')
+    flow_restratio = 5
+    if current_user.is_authenticated:
+        user_settings = Settings.query.get(current_user.id)
+        if user_settings:
+            flow_restratio = user_settings.flow_restratio
+    return render_template('index.html', flow_restratio=flow_restratio)
 
 
 # ------------------ LOGIN ------------------
@@ -190,9 +195,33 @@ def toggle_status(id):
     } for t in tasks])
     
 # ------------------ TIMER ------------------
-@app.route("/timer")
+@app.route("/timer", methods = ['GET'])
+@login_required
 def timer():
-    return render_template("timer.html")
+    user_settings = Settings.query.get(current_user.id)
+    flow_restratio = user_settings.flow_restratio if user_settings else 5
+    return render_template("timer.html", flow_restratio = flow_restratio)
+
+#can write inline if else in 
+
+@app.route("/sessiontimes", methods=['POST'])
+@login_required
+def sessiontimes():
+    data = request.get_json()
+    startTime = data['startTime']
+    endTime = data['endTime']
+    task = data['task']
+    sessiondate = data['sessiondate']
+    timeCost = endTime - startTime
+    new_session = TimerSession(user_id=current_user.id,
+                               start_time=startTime,
+                               end_time=endTime,
+                               taskforsession=task,
+                               sessiondate=sessiondate,
+                               timeCost=timeCost)
+    db.session.add(new_session)
+    db.session.commit()
+    return jsonify({'message': 'Session times committed successfully'})
 
 # ------------------ SETTINGS ------------------
 @app.route("/settings", methods=['GET', 'POST'])
