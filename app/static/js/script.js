@@ -7,8 +7,11 @@ const resetBtn = document.getElementById('reset-btn');
 
 let timer= null;
 let is_running = false;
-let modetime = 900
-let time_left = 900; // 15 minutes in seconds
+let worklength = Number(document.getElementById('pom-worklength').textContent);
+let short_break = Number(document.getElementById('pom-short-break').textContent);
+let long_break = Number(document.getElementById('pom-long-break').textContent);
+let modetime = worklength * 60;
+let time_left = modetime;
 
 // Format time in MM:SS
 function formatTime(sec){
@@ -100,22 +103,6 @@ longbtn.addEventListener('click', () => {
 
 
 
-let worklength;
-let short_break;
-let long_break;
-
-function load_POMO_Settings() {
-    fetch('/get_settings')
-    .then(response => response.json())
-    .then(data => {
-        worklength = data.pom_worklength;
-        short_break = data.pom_short_break;
-        long_break = data.pom_long_break;
-    });
-} 
-
-load_POMO_Settings();
-
 // start/pause timer
 startBtn.addEventListener('click', () => {
     if (!is_running) {
@@ -155,6 +142,8 @@ document.getElementById('reset-btn').addEventListener('click', () => {
 });
 
 let taskmode = 'add';
+let selectedFlowTaskId = null;
+let taskCache = [];
 
 // Modechange
 function updateModeUI() {
@@ -162,6 +151,45 @@ function updateModeUI() {
 
     addBtn.classList.toggle('active', taskmode === 'add');
     deleteBtn.classList.toggle('active', taskmode === 'delete');   
+}
+
+function selectFlowTask(task) {
+    if (selectedFlowTaskId === task.id) {
+        selectedFlowTaskId = null;
+        document.getElementById('flow-task-name').textContent = 'No task selected';
+        document.getElementById('flow-task-value').textContent = '';
+        document.getElementById('flow-start-btn').disabled = true;
+
+        document.querySelectorAll('.task-item').forEach(item => {
+            item.classList.remove('selected');
+        });
+
+        return;
+    }
+
+    selectedFlowTaskId = task.id;
+
+    document.getElementById('flow-task-name').textContent = task.content;
+    document.getElementById('flow-task-value').textContent = task.content;
+    document.getElementById('flow-start-btn').disabled = false;
+
+    document.querySelectorAll('.task-item').forEach(item => {
+        item.classList.toggle('selected', Number(item.dataset.taskId) === selectedFlowTaskId);
+    });
+
+    modeswitch('flow');
+}
+
+function selectFlowTaskFromList(id) {
+    if (taskmode === 'delete') {
+        return;
+    }
+
+    const task = taskCache.find(item => item.id === id);
+
+    if (task) {
+        selectFlowTask(task);
+    }
 }
 // Task management
 const getcsrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
@@ -219,6 +247,15 @@ document.getElementById('add-task-btn').addEventListener('click', () => {
 function renderTasks(tasks) {
     console.log(tasks);
     console.log(tasks[0]);
+    taskCache = tasks;
+
+    if (selectedFlowTaskId !== null && !taskCache.some(task => task.id === selectedFlowTaskId)) {
+        selectedFlowTaskId = null;
+        document.getElementById('flow-task-name').textContent = 'No task selected';
+        document.getElementById('flow-task-value').textContent = '';
+        document.getElementById('flow-start-btn').disabled = true;
+    }
+
     const taskList = document.getElementById('taskList');
     taskList.innerHTML = '';
 
@@ -231,12 +268,16 @@ function renderTasks(tasks) {
             className = 'task-item completed';
         }
 
+        if (task.id === selectedFlowTaskId) {
+            className += ' selected';
+        }
+
         taskList.innerHTML +=
-            `<li class="${className}" id="task-${task.id}">
+            `<li class="${className}" id="task-${task.id}" data-task-id="${task.id}" onclick="selectFlowTaskFromList(${task.id})">
                 <div class="statusbar"></div>
-                <span class="statusbox" onclick = "toggleStatus(${task.id})"></span>
+                <span class="statusbox" onclick="event.stopPropagation(); toggleStatus(${task.id})"></span>
                 <span>${task.content}</span>
-                <button class="delete-btn" onclick="deleteTask(${task.id})">-</button>
+                <button class="delete-btn" onclick="event.stopPropagation(); deleteTask(${task.id})">-</button>
             </li>`;
     });
     updateModeUI();
@@ -276,7 +317,7 @@ function toggleStatus(id) {
 
 
 // ============Switch Timer Mode===============
-let timermode="flow";
+let timermode="pomo";
 
 const flowView = document.getElementById('flowdoro');
 const pomoView = document.getElementById('pomodoro');

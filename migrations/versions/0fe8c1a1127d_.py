@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: fc04abd4af19
+Revision ID: 0fe8c1a1127d
 Revises: 
-Create Date: 2026-05-09 23:10:26.208726
+Create Date: 2026-05-10 16:54:50.762268
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'fc04abd4af19'
+revision = '0fe8c1a1127d'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -29,8 +29,9 @@ def upgrade():
     op.create_table('settings',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('flow_restratio', sa.Integer(), nullable=False),
-    sa.Column('pom_restratio', sa.Integer(), nullable=False),
     sa.Column('pom_worklength', sa.Integer(), nullable=False),
+    sa.Column('pom_short_break', sa.Integer(), nullable=False),
+    sa.Column('pom_long_break', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['id'], ['user.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
@@ -47,8 +48,10 @@ def upgrade():
     sa.Column('user_id', sa.Integer(), nullable=False),
     sa.Column('start_time', sa.Integer(), nullable=False),
     sa.Column('end_time', sa.Integer(), nullable=False),
-    sa.Column('taskforsession_id', sa.String(length=128), nullable=False),
-    sa.ForeignKeyConstraint(['taskforsession_id'], ['task.content'], ),
+    sa.Column('taskforsession', sa.String(length=128), nullable=False),
+    sa.Column('sessiondate', sa.String(length=10), nullable=False),
+    sa.Column('timeCost', sa.Integer(), nullable=False),
+    sa.ForeignKeyConstraint(['taskforsession'], ['task.content'], ),
     sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
     sa.PrimaryKeyConstraint('id')
     )

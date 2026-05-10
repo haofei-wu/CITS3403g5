@@ -6,10 +6,34 @@ from flask_login import *
 
 from werkzeug.security import *
 
+DEFAULT_SETTINGS = {
+    "flow_restratio": 5,
+    "pom_worklength": 25,
+    "pom_short_break": 5,
+    "pom_long_break": 15
+}
+
+
+def get_user_settings_values():
+    values = DEFAULT_SETTINGS.copy()
+
+    if current_user.is_authenticated:
+        user_settings = Settings.query.get(current_user.id)
+        if user_settings:
+            values.update({
+                "flow_restratio": user_settings.flow_restratio,
+                "pom_worklength": user_settings.pom_worklength,
+                "pom_short_break": user_settings.pom_short_break,
+                "pom_long_break": user_settings.pom_long_break
+            })
+
+    return values
+
+
 # ------------------ HOME ------------------
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('index.html', **get_user_settings_values())
 
 
 # ------------------ LOGIN ------------------
@@ -190,9 +214,31 @@ def toggle_status(id):
     } for t in tasks])
     
 # ------------------ TIMER ------------------
-@app.route("/timer")
+@app.route("/timer", methods = ['GET'])
+@login_required
 def timer():
-    return render_template("timer.html")
+    return render_template("timer.html", **get_user_settings_values())
+
+#can write inline if else in 
+
+@app.route("/sessiontimes", methods=['POST'])
+@login_required
+def sessiontimes():
+    data = request.get_json()
+    startTime = data['startTime']
+    endTime = data['endTime']
+    task = data['task']
+    sessiondate = data['sessiondate']
+    timeCost = endTime - startTime
+    new_session = TimerSession(user_id=current_user.id,
+                               start_time=startTime,
+                               end_time=endTime,
+                               taskforsession=task,
+                               sessiondate=sessiondate,
+                               timeCost=timeCost)
+    db.session.add(new_session)
+    db.session.commit()
+    return jsonify({'message': 'Session times committed successfully'})
 
 # ------------------ SETTINGS ------------------
 @app.route("/settings", methods=['GET', 'POST'])
@@ -217,31 +263,18 @@ def settings():
 
         db.session.commit()
         flash("Settings saved successfully")
-        return redirect(url_for('settings'))
+        return redirect(url_for('index'))
+
+    if request.method == 'GET':
+        current_settings = get_user_settings_values()
+        form.flow_restratio.data = current_settings["flow_restratio"]
+        form.pom_worklength.data = current_settings["pom_worklength"]
+        form.pom_short_break.data = current_settings["pom_short_break"]
+        form.pom_long_break.data = current_settings["pom_long_break"]
 
     return render_template("settings.html", form = form)
 
 # GET_SETTINGS
 @app.route("/get_settings", methods=['GET'])
 def get_settings():
-    default_settings = {
-        #s.flow_restratio = form.flow_restratio.data YOU CAN ADD THE DEFAULT VaLUES HERE
-        "pom_worklength": 25,
-        "pom_short_break": 5,
-        "pom_long_break": 15
-    }
-
-    if not current_user.is_authenticated:
-        return jsonify(default_settings)
-
-    s = Settings.query.get(current_user.id)
-    
-    if s is None:
-        return jsonify(default_settings)
-
-    return jsonify({
-        #"flow_restratio": s.flow_restratio,
-        "pom_worklength": s.pom_worklength,
-        "pom_short_break": s.pom_short_break,
-        "pom_long_break": s.pom_long_break
-    })
+    return jsonify(get_user_settings_values())
