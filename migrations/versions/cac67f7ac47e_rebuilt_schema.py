@@ -1,8 +1,8 @@
-"""rebuilt schema after rebase
+"""rebuilt schema
 
-Revision ID: d49ddbd87e03
+Revision ID: cac67f7ac47e
 Revises: 
-Create Date: 2026-05-10 14:12:11.924825
+Create Date: 2026-05-10 14:14:44.441712
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'd49ddbd87e03'
+revision = 'cac67f7ac47e'
 down_revision = None
 branch_labels = None
 depends_on = None
