@@ -1,7 +1,8 @@
 __pycache__/
 *.pyc
-.vscode/
 .venv/
 venv/
 app/*.db
 echo "app/app.db" >> .gitignore
+config.bat
+node_modules
