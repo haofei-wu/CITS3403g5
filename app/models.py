@@ -1,11 +1,8 @@
 from app import db
 from flask_login import UserMixin
-<<<<<<< HEAD
-=======
-from sqlalchemy import DDL, event
+#rom sqlalchemy import DDL, event
 # The first argument defines the type of the column, then the rest you can defineoptional columns in any order after.
 #foreign key references table name, not class name -> table name is tolower in the database automatically. 
->>>>>>> e107baa (feat: linked flowmodoro timer to backend database, updated database to get rid of overkill datecosttrigger and calcualted in routes.py instead, added csrftoken to base.html so the flaskserver properly receives fetch requests)
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
@@ -26,15 +23,6 @@ class TimerSession(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     start_time = db.Column(db.Integer, nullable=False)
     end_time = db.Column(db.Integer, nullable=False)
-<<<<<<< HEAD
-    taskforsession_id = db.Column(db.ForeignKey('task.content'), nullable=False)
-
-class Task(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    content = db.Column(db.String(128), nullable=False)
-    status = db.Column(db.Boolean, default=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-=======
     taskforsession = db.Column(db.ForeignKey('task.content'), nullable=False)
     sessiondate = db.Column(db.String(10), nullable=False)
     timeCost = db.Column(db.Integer, nullable=False)
@@ -53,7 +41,11 @@ class Task(db.Model):
 # # This ensures it runs automatically during metadata.create_all()
 # event.listen(TimerSession.__table__, 'after_create', trigger)
 # dont need trigger, can do it server side in route. 
->>>>>>> e107baa (feat: linked flowmodoro timer to backend database, updated database to get rid of overkill datecosttrigger and calcualted in routes.py instead, added csrftoken to base.html so the flaskserver properly receives fetch requests)
+class Task(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    content = db.Column(db.String(128), nullable=False)
+    status = db.Column(db.Boolean, default=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
 class Settings(db.Model):
     id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True, nullable=False)
