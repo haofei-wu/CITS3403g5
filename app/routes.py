@@ -274,7 +274,15 @@ def settings():
 
     return render_template("settings.html", form = form)
 
-# GET_SETTINGS
-@app.route("/get_settings", methods=['GET'])
-def get_settings():
-    return jsonify(get_user_settings_values())
+# ------------------ TIMERSESSION CAUCULATE ------------------
+@app.route("/calculate", methods=['GET'])
+@login_required
+def calculate():
+    sessiondate = request.args.get('sessiondate')
+    sessionsum = db.session.query(
+        db.func.sum(TimerSession.timeCost)).filter_by(
+            user_id=current_user.id,
+            sessiondate=sessiondate).first()
+    today_total = sessionsum[0] or 0
+
+    return jsonify({'sessiondate': sessiondate, 'today_total': today_total})
