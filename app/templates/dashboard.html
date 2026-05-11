@@ -2,7 +2,6 @@
 
 {% block content %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
-<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
 
 <div class="container mt-5">
 
@@ -12,11 +11,24 @@
 
             <!-- Profile Stats -->
             <div class="profile-stats">
-                <img class="avatar" src="{{ url_for('static', filename='images/avatar.png') }}" alt="Avatar">
                 
                 <h3 class="username"> {{ current_user.email }}</h3>
+                <form id = "avatar-form"
+                    method="POST"
+                    action="{{ url_for('update_avatar') }}"
+                    enctype="multipart/form-data">
 
-                <button class="edit-btn">Edit Profile</button>
+                    {{ avatar_form.hidden_tag() }}
+
+                    <img class="avatar"
+                        src="{{ url_for('static', filename=current_user.avatar) }}"
+                        alt="Avatar">
+
+                    <label class="edit-btn" for="avatar-input">Edit Avatar</label>
+                    {{ avatar_form.avatar(id="avatar-input",class="avatar-input") }}
+
+                </form>
+
             </div>
 
             <div class="stats-grid">
@@ -57,6 +69,6 @@
     </div>
 
 </div>
-
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
 {% endblock %}
 

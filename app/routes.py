@@ -3,9 +3,14 @@ from app import app, db
 from app.models import *
 from app.forms import *
 from flask_login import *
-
 from werkzeug.security import *
 
+#------------------ IMAGE IMPORT ------------------
+import os
+from werkzeug.utils import secure_filename
+
+
+#------------------ SETTINGS ------------------
 DEFAULT_SETTINGS = {
     "flow_restratio": 5,
     "pom_worklength": 25,
@@ -58,7 +63,6 @@ def register():
     form = RegisterForm()
     
     if form.validate_on_submit():
-        #HASH PASSWORDS?
 
         hashed_password = generate_password_hash(form.password.data)
 
@@ -108,7 +112,6 @@ def forgot_password():
 # ------------------ DASHBOARD ------------------
 @app.route("/dashboard")
 @login_required
-@login_required
 def dashboard():
     user = current_user
 
@@ -117,14 +120,19 @@ def dashboard():
     total_tasks=len(tasks)
     done_tasks=sum(1 for t in tasks if t.status)
 
-    return render_template("dashboard.html", user=user,total_tasks=total_tasks,done_tasks=done_tasks)
+    avatar_form = profileform()
+
+    return render_template("dashboard.html", 
+    user=user,
+    total_tasks=total_tasks,
+    done_tasks=done_tasks,
+    avatar_form=avatar_form)
 
 
 # ------------------ LOGOUT ------------------
 @app.route("/logout")
 @login_required
 def logout():
-    logout_user()
     logout_user()
     return redirect(url_for('login'))
 
@@ -178,7 +186,6 @@ def add_task():
 
 @app.route('/delete_tasks/<int:id>', methods=['DELETE'])
 @login_required
-@login_required
 def delete_tasks(id):
 
     task = Task.query.filter_by(id=id, user_id=current_user.id).first()
@@ -216,6 +223,7 @@ def toggle_status(id):
 # ------------------ TIMER ------------------
 @app.route("/timer", methods = ['GET'])
 @login_required
+
 def timer():
     return render_template("timer.html", **get_user_settings_values())
 
@@ -286,3 +294,29 @@ def calculate():
     today_total = sessionsum[0] or 0
 
     return jsonify({'sessiondate': sessiondate, 'today_total': today_total})
+
+# ------------------UPDATE AVATAR ------------------
+@app.route("/update_avatar", methods=['POST'])
+@login_required
+def update_avatar():
+    form = profileform()
+    if form.validate_on_submit():
+        avatar_file = form.avatar.data
+        
+        if avatar_file:
+            filename = secure_filename(avatar_file.filename)
+            # Set allowed file extensions
+            extension = filename.rsplit('.',1)[1].lower()
+
+            avatar_filename = f"user_{current_user.id}.{extension}"
+
+            upload_folder= os.path.join(app.root_path, 'static', 'uploads','avatar')
+            if not os.path.exists(upload_folder):
+                os.makedirs(upload_folder)
+
+            avatar_file.save(os.path.join(upload_folder, avatar_filename))
+
+            current_user.avatar = f"uploads/avatar/{avatar_filename}"
+            db.session.commit()
+
+    return redirect(url_for('dashboard'))

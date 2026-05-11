@@ -1,4 +1,5 @@
 from flask_wtf import FlaskForm
+from flask_wtf.file import FileField, FileAllowed
 from wtforms import StringField, PasswordField, SubmitField, IntegerField
 from wtforms.validators import DataRequired, Email, EqualTo
 
@@ -22,4 +23,11 @@ class SettingsForm(FlaskForm):
     pom_worklength = IntegerField('Pomodoro Work Length', validators=[DataRequired()])
     pom_short_break = IntegerField('Pomodoro Short Break Length', validators=[DataRequired()])
     pom_long_break = IntegerField('Pomodoro Long Break Length', validators=[DataRequired()])
+    submit = SubmitField('Save')
+
+class profileform(FlaskForm):
+    avatar= FileField(
+        'Avatar', 
+        validators=[FileAllowed(['jpg', 'png','jpeg'], 'Images only')]
+        )
     submit = SubmitField('Save')
