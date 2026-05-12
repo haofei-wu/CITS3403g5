@@ -34,12 +34,69 @@
     margin-bottom: 22px;
 }
 
+.settings-toggle-field {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    margin-bottom: 22px;
+    padding: 16px 18px;
+    border: 1px solid #e5e5e5;
+    border-radius: 12px;
+    background: #f8f8f8;
+}
+
 .settings-label {
     display: block;
     margin-bottom: 8px;
     color: #222;
     font-size: 17px;
     font-weight: 700;
+}
+
+.settings-help {
+    margin: 0;
+    color: #666;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.settings-checkbox {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.settings-switch {
+    display: inline-flex;
+    cursor: pointer;
+}
+
+.settings-switch-track {
+    width: 46px;
+    height: 26px;
+    padding: 3px;
+    border: 1px solid #e5e5e5;
+    border-radius: 999px;
+    background: #ffffff;
+}
+
+.settings-switch-thumb {
+    display: block;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #d1d5db;
+}
+
+.settings-checkbox:checked + .settings-switch-track {
+    border-color: #ff6b6b;
+    background: #ff6b6b;
+}
+
+.settings-checkbox:checked + .settings-switch-track .settings-switch-thumb {
+    margin-left: 20px;
+    background: #ffffff;
 }
 
 .settings-input {

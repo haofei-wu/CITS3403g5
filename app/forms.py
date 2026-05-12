@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
-from wtforms import StringField, PasswordField, SubmitField, IntegerField
+from wtforms import StringField, PasswordField, SubmitField, IntegerField, BooleanField
 from wtforms.validators import DataRequired, Email, EqualTo, Length
 
 class LoginForm(FlaskForm):
@@ -28,6 +28,7 @@ class ForgotPasswordForm(FlaskForm):
 
 class SettingsForm(FlaskForm):
     nickname = StringField('Nickname', validators=[DataRequired(), Length(min=1, max=64)])
+    show_leaderboard = BooleanField('Show me on the leaderboard')
     flow_restratio = IntegerField('Flow Rest Ratio', validators=[DataRequired()])
     pom_worklength = IntegerField('Pomodoro Work Length', validators=[DataRequired()])
     pom_short_break = IntegerField('Pomodoro Short Break Length', validators=[DataRequired()])

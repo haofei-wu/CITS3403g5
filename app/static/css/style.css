@@ -379,13 +379,59 @@ body.delete-mode .delete-btn {
     left: 2px;
 }
 
+.task-search {
+    position: relative;
+    margin-bottom: 10px;
+}
+
 #task-input {
     width: 100%;
     padding: 8px 12px;
     border: 1px solid #e5e5e5;
     border-radius: 6px;
     font-size: 18px;
-    margin-bottom: 10px;
+}
+
+.task-suggestions {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    right: 0;
+    z-index: 20;
+    display: none;
+    max-height: 190px;
+    overflow-y: auto;
+    border: 1px solid #e5e5e5;
+    border-radius: 12px;
+    background: #ffffff;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
+}
+
+.task-suggestions.show {
+    display: flex;
+    flex-direction: column;
+}
+
+.task-suggestion {
+    width: 100%;
+    padding: 10px 12px;
+    border: none;
+    border-bottom: 1px solid #f0f0f0;
+    border-radius: 0;
+    background: #ffffff;
+    color: #222;
+    font-size: 16px;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+}
+
+.task-suggestion:last-child {
+    border-bottom: none;
+}
+
+.task-suggestion:hover {
+    background: #f0f0f0;
 }
 
 .statusbar{

@@ -92,7 +92,10 @@
                     </div>
                 </h1>
 
-                <input type="text" id="task-input" class="form-control" placeholder="Add a new task...">
+                <div class="task-search">
+                    <input type="text" id="task-input" class="form-control" placeholder="Add a new task...">
+                    <div id="task-suggestions" class="task-suggestions"></div>
+                </div>
                 <button id="add-task-btn" class="add-btn">Add Task</button>
                 <button id="delete-task-btn" class="add-btn">Delete Task</button>
 
@@ -137,6 +140,10 @@
         -->
     </div>
 </div>
+
+<!-- for search functionality -->
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@7.0.0"></script>
+
 
 <script src="{{ url_for('static', filename='js/timer.js') }}"></script>
 <script src="{{ url_for('static', filename='js/script.js') }}"></script>

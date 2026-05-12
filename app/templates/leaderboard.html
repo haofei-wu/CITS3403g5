@@ -14,17 +14,21 @@
 
             <div class="filter-buttons">
 
-                <button class="filter-btn">
+                <a class="filter-btn {% if period == 'day' %}active{% endif %}"
+                    href="{{ url_for('leaderboard', period='day') }}">
                     Day
-                </button>
+                </a>
 
-                <button class="filter-btn active">
+                <a class="filter-btn {% if period == 'week' %}active{% endif %}"
+                    href="{{ url_for('leaderboard', period='week') }}">
                     Week
-                </button>
+                </a>
 
-                <button class="filter-btn">
+                <a class="filter-btn {% if period == 'month' %}active{% endif %}"
+                    href="{{ url_for('leaderboard', period='month') }}">
                     Month
-                </button>
+                </a>
+
 
             </div>  
 
@@ -78,18 +82,15 @@
                                 <span class="leaderboard-nickname">
                                     {{ user.nickname }}
                                 </span>
-                                <span class="leaderboard-user-id">
-                                    #{{ user.id }}
-                                </span>
                             </div>
                         </div>
                     </td>
                     <td>
                         <!-- TEMP PLACEHOLDER -->
-                        <span class="study-time"
-                            data-seconds="0">
+                        <span class="study-time" data-seconds="{{ user.total_time // 1000 }}">
                             0 hrs
                         </span>
+
                     </td>
                 </tr>
                 {% endfor %}

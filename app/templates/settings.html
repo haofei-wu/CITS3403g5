@@ -24,6 +24,19 @@
                 {{ form.nickname(class="settings-input", placeholder="Enter your nickname") }}
             </div>
 
+            <div class="settings-toggle-field">
+                <div>
+                    {{ form.show_leaderboard.label(class="settings-label") }}
+                    <p class="settings-help">Allow your nickname and study time to appear in rankings.</p>
+                </div>
+                <label class="settings-switch">
+                    {{ form.show_leaderboard(class="settings-checkbox") }}
+                    <span class="settings-switch-track">
+                        <span class="settings-switch-thumb"></span>
+                    </span>
+                </label>
+            </div>
+
             <div class="settings-field">
                 {{ form.flow_restratio.label(class="settings-label") }}
                 {{ form.flow_restratio(class="settings-input", min="1") }}

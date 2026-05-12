@@ -16,7 +16,7 @@ async function commitSessionTimes() {
         startTime: livetime.startTime,
         endTime: livetime.endTime,
         task: selectedTask,
-        sessiondate: new Date().toISOString().split('T')[0]
+        sessiondate: getLocal()
     })
 });
 };
@@ -51,10 +51,6 @@ document.getElementById("flow-start-btn").addEventListener("click", function() {
         let timeElapsed = (livetime.endTime - livetime.startTime);
         document.querySelector("#timer-display").innerHTML = formatMs(timeElapsed)}, 1000);
      }, 1000);
-
-    
-
-
 
 
 function countdownTimer() {
@@ -101,3 +97,13 @@ document.getElementById("flow-end-btn").addEventListener("click", function() {
 //     return timepassed;
 // }
 
+// UTC -----> Local_Time
+function getLocal() {
+    const now = new Date();
+
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
+}

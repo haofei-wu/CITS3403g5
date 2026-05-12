@@ -4,6 +4,7 @@ from app.models import *
 from app.forms import *
 from flask_login import *
 from werkzeug.security import *
+from app.timecost import *
 
 #------------------ IMAGE IMPORT ------------------
 import os
@@ -199,11 +200,16 @@ def logout():
 @app.route("/leaderboard")
 @login_required
 def leaderboard():
-    users = User.query.all()
+    period = request.args.get('period', 'week')
+    if period not in ('day', 'week', 'month'):
+        period = 'week'
+
+    users = get_leaderboard(period)
 
     return render_template(
         "leaderboard.html",
         users=users,
+        period=period,
     )
 
 
@@ -211,13 +217,38 @@ def leaderboard():
 @app.route('/get_tasks', methods=['GET'])
 @login_required
 def get_tasks():
-
-    tasks = Task.query.filter_by(user_id=current_user.id).all()
+    taskdate = request.args.get('taskdate')
+    tasks = Task.query.filter_by(user_id=current_user.id, taskdate=taskdate).all()
 
     return jsonify({
         "tasks": [{"id": t.id, "content": t.content, "status": t.status} for t in tasks]
     })
 
+# get tasks history and add back to todays task
+@app.route('/task_history', methods=['GET'])
+@login_required
+def task_history():
+    tasks = (
+        Task.query
+        .filter_by(user_id=current_user.id)
+        .order_by(Task.taskdate.desc(), Task.id.desc())
+        .all()
+    )
+
+    seen = set()
+    history = []
+    for t in tasks:
+        key = t.content.strip().lower()  # Normalize the content for comparison
+        if key not in seen:
+            seen.add(key)
+            history.append({
+                "id" : t.id,
+                "content": t.content,
+            })
+
+    return jsonify({
+        "tasks": history
+    })
 
 @app.route('/add_task', methods=['POST'])
 @login_required
@@ -225,14 +256,19 @@ def add_task():
 
     data = request.get_json()
     content = data.get('task')
+    taskdate = data.get('taskdate')
 
-    if content:
+    if content and taskdate:
         new_task = Task(content=content, 
-                    user_id=current_user.id)
+                    user_id=current_user.id,
+                    taskdate=taskdate)
         db.session.add(new_task)
         db.session.commit()
 
-    tasks = Task.query.filter_by(user_id=current_user.id).all()
+    tasks = Task.query.filter_by(
+        user_id=current_user.id, 
+        taskdate=taskdate,
+    ).all()
 
     return jsonify({
         "tasks": [{"id": t.id, "content": t.content, "status": t.status} for t in tasks]
@@ -242,16 +278,15 @@ def add_task():
 @app.route('/delete_tasks/<int:id>', methods=['DELETE'])
 @login_required
 def delete_tasks(id):
+    taskdate = request.args.get('taskdate')
 
-    task = Task.query.filter_by(id=id, user_id=current_user.id).first()
     task = Task.query.filter_by(id=id, user_id=current_user.id).first()
 
     if task:
         db.session.delete(task)
         db.session.commit()
 
-    tasks = Task.query.filter_by(user_id=current_user.id).all()
-    tasks = Task.query.filter_by(user_id=current_user.id).all()
+    tasks = Task.query.filter_by(user_id=current_user.id, taskdate=taskdate).all()
     
     return jsonify({
         "tasks": [{"id": t.id, "content": t.content, "status": t.status} for t in tasks]
@@ -262,12 +297,14 @@ def delete_tasks(id):
 @login_required
 
 def toggle_status(id):
+    taskdate = request.args.get('taskdate')
 
     task = Task.query.filter_by(id=id, user_id=current_user.id).first()
-    task.status = not task.status
-    db.session.commit()
+    if task:
+        task.status = not task.status
+        db.session.commit()
 
-    tasks = Task.query.filter_by(user_id=current_user.id).all()
+    tasks = Task.query.filter_by(user_id=current_user.id, taskdate=taskdate).all()
 
     return jsonify(tasks=[{
         "id": t.id,
@@ -325,6 +362,7 @@ def settings():
         s.pom_worklength = form.pom_worklength.data
         s.pom_short_break = form.pom_short_break.data
         s.pom_long_break = form.pom_long_break.data
+        s.show_leaderboard = form.show_leaderboard.data
 
         db.session.commit()
         flash("Settings saved successfully")
@@ -333,6 +371,8 @@ def settings():
     if request.method == 'GET':
         form.nickname.data = current_user.nickname
         current_settings = get_user_settings_values()
+        user_settings = Settings.query.get(current_user.id)
+        form.show_leaderboard.data = True if user_settings is None else user_settings.show_leaderboard
         form.flow_restratio.data = current_settings["flow_restratio"]
         form.pom_worklength.data = current_settings["pom_worklength"]
         form.pom_short_break.data = current_settings["pom_short_break"]
