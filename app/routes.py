@@ -3,7 +3,9 @@ from app import app, db
 from app.models import *
 from app.forms import *
 from flask_login import *
-
+from datetime import date, timedelta
+from sqlalchemy import func
+from dateutil.relativedelta import relativedelta
 from werkzeug.security import *
 
 DEFAULT_SETTINGS = {
@@ -286,3 +288,60 @@ def calculate():
     today_total = sessionsum[0] or 0
 
     return jsonify({'sessiondate': sessiondate, 'today_total': today_total})
+
+# ------------------ ANALYTICS PAGE ------------------
+@app.route("/analyticday", methods=['GET'])
+@login_required
+def analyticday():
+    tasks = db.session.query(
+        TimerSession.taskforsession,
+        (func.sum(TimerSession.timeCost)/3600000).label('totalhrs'),
+        ).filter(
+            TimerSession.sessiondate == date.today(),
+            TimerSession.user_id == current_user.id,
+        ).group_by(TimerSession.taskforsession).all()
+    chart_data = {
+        "labels": [task.taskforsession for task in tasks],
+        "data": [task.totalhrs for task in tasks]
+    }
+    return render_template("analyticday.html", chart_data=chart_data)
+
+@app.route("/analyticweek", methods=['GET'])
+@login_required
+def analyticweek():
+    tasks = db.session.query(
+        TimerSession.taskforsession,
+        (func.sum(TimerSession.timeCost)/3600000).label('totalhrs'),
+        ).filter(
+            TimerSession.sessiondate >= date.today() - timedelta(days=7),
+            TimerSession.user_id == current_user.id,
+        ).group_by(TimerSession.taskforsession).all()
+    chart_data = {
+            "labels": [task.taskforsession for task in tasks],
+            "data": [task.totalhrs for task in tasks]
+        }
+
+    return render_template("analyticweek.html", chart_data=chart_data)
+
+@app.route("/analyticmonth", methods=['GET'])
+@login_required
+def analyticmonth():
+    tasks = db.session.query(
+        TimerSession.taskforsession,
+        (func.sum(TimerSession.timeCost)/3600000).label('totalhrs'),
+        ).filter(
+            TimerSession.sessiondate >= date.today() - relativedelta(months=1),
+            TimerSession.user_id == current_user.id,
+        ).group_by(TimerSession.taskforsession).all()
+    chart_data = {
+        "labels": [task.taskforsession for task in tasks],
+        "data": [task.totalhrs for task in tasks]
+    }
+    return render_template("analyticmonth.html", chart_data=chart_data)
+
+
+#     [
+#     ('CITS3403 project', 1.5),
+#     ('Fluids revision', 0.5),
+# ]
+# List of row objects
