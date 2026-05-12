@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+.vscode/
+.venv/
+venv/
+app/*.db
+echo "app/app.db" >> .gitignore

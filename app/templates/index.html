@@ -140,6 +140,13 @@
     </div>
 </div>
 
+<button id="analyticsbutton" class="btn btn-primary">Analytics</button>
+<script>
+    document.getElementById('analyticsbutton').addEventListener('click', () => {
+        window.location.href = '/analyticday';
+    });
+
+</script>
 <script src="{{ url_for('static', filename='js/timer.js') }}"></script>
 <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 
