@@ -40,6 +40,8 @@ document.getElementById("flow-start-btn").addEventListener("click", function() {
 
     // keytimes.startTime = Date.now()
     // console.log("working")
+    document.getElementById("flow-task-name").style.display = "flex";
+    document.getElementById("restTime").style.display = "none";
     document.getElementById("flow-start-btn").style.display = "none";
     document.getElementById("flow-end-btn").style.display = "block";
     livetime.startTime = Date.now()
@@ -59,10 +61,12 @@ function countdownTimer() {
     let resttime = Date.now() + (livetime.endTime - livetime.startTime)/document.getElementById("flow-restratio").innerHTML;
     let countdown = setInterval(() => {     
             if (Date.now() < resttime)   {
-                document.querySelector("#timer-display").innerHTML = formatMs(resttime - Date.now()) + "s remaining";
+                document.querySelector("#timer-display").innerHTML = formatMs(resttime - Date.now());
             } else {
                 clearInterval(countdown);
                 document.querySelector("#timer-display").innerHTML = "00:00";
+                document.getElementById("restTime").style.display = "none";
+                document.getElementById("flow-task-name").style.display = "flex";
                 return;
             }
     }, 1000);
@@ -76,8 +80,9 @@ document.getElementById("flow-end-btn").addEventListener("click", function() {
     clearInterval(timerrefresh);
     console.log("killed timer");
     commitSessionTimes();
+    document.getElementById("flow-task-name").style.display = "none";
     document.getElementById("restTime").style.display = "flex";
-    document.querySelector("#timer-display").innerHTML = formatMs((livetime.endTime - livetime.startTime)/document.getElementById("flow-restratio").innerHTML) + "s remaining";
+    document.querySelector("#timer-display").innerHTML = formatMs((livetime.endTime - livetime.startTime)/document.getElementById("flow-restratio").innerHTML);
     countdownTimer();
     //countdown ment.getElementById("restTime").innerHTML = formatTime((livetime.endTime - livetime.startTime)/document.getElementById("flow-restratio").innerHTML);
     

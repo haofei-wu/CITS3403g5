@@ -11,7 +11,7 @@ class User(db.Model, UserMixin):
 
     #wait to hash
     password = db.Column(db.String(200), nullable=False)
-    study_hours = db.Column(db.Float, default=0.0)
+    study_seconds = db.Column(db.Integer, default=0)
 
     #connection to Task table and lazyloading
     task = db.relationship('Task', backref='user', lazy=True)

@@ -39,13 +39,15 @@
                     {{ form.hidden_tag() }}
 
                     <div class="mb-3">
-                        {{ form.email.label(class="form-label") }}
                         {{ form.email(class="form-control", placeholder="Enter your email") }}
                     </div>
 
                     <div class="mb-3">
-                        {{ form.password.label(class="form-label") }}
                         {{ form.password(class="form-control", placeholder="Enter your password") }}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form.confirm_password(class="form-control", placeholder="Confirm your password") }}
                     </div>
 
                     <button type="submit" class="login-btn2">

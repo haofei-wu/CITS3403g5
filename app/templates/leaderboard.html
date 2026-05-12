@@ -3,90 +3,89 @@
 
 <link rel="stylesheet" href="{{ url_for('static', filename='css/leaderboard.css') }}">
 <div class="container mt-5">
+    <div class="leaderboard-container">
 
-    <h2 class="text-center mb-4">Leaderboard 🏆</h2>
+        <!-- HEADER -->
+        <div class="leaderboard-header">
 
-    <!-- 🔥 TOP 3 SECTION -->
-    <div class="row text-center mb-5">
+            <h1 class="leaderboard-title">
+                LEADERBOARD
+            </h1>
 
-        <!-- 🥈 Second Place -->
-        <div class="col-md-4">
-            <div class="top-card silver">
-                <h2>🥈</h2>
-                {% if top_users|length > 1 %}
-                    <h4>{{ top_users[1].email }}</h4>
-                    <p>{{ top_users[1].study_hours }} hrs</p>
-                {% else %}
-                    <p class="text-muted">No user yet</p>
-                {% endif %}
-            </div>
+            <div class="filter-buttons">
+
+                <button class="filter-btn">
+                    Day
+                </button>
+
+                <button class="filter-btn active">
+                    Week
+                </button>
+
+                <button class="filter-btn">
+                    Month
+                </button>
+
+            </div>  
+
+        </div>
+        <!-- CONTROLS -->
+        <div class="table-controls">
+
+            <h4 class="rankings-title">
+                Rankings
+            </h4>
+
+            <select id="unitSelect"
+                    class="unit-dropdown">
+
+                <option value="hours">
+                    Hours
+                </option>
+
+                <option value="minutes">
+                    Minutes
+                </option>
+
+                <option value="seconds">
+                    Seconds
+                </option>
+
+            </select>
         </div>
 
-        <!-- 🥇 First Place -->
-        <div class="col-md-4">
-            <div class="top-card gold">
-                <h1>🥇</h1>
-                {% if top_users|length > 0 %}
-                    <h3>{{ top_users[0].email }}</h3>
-                    <p>{{ top_users[0].study_hours }} hrs</p>
-                {% else %}
-                    <p class="text-muted">No users yet</p>
-                {% endif %}
-            </div>
-        </div>
-
-        <!-- 🥉 Third Place -->
-        <div class="col-md-4">
-            <div class="top-card bronze">
-                <h2>🥉</h2>
-                {% if top_users|length > 2 %}
-                    <h4>{{ top_users[2].email }}</h4>
-                    <p>{{ top_users[2].study_hours }} hrs</p>
-                {% else %}
-                    <p class="text-muted">No user yet</p>
-                {% endif %}
-            </div>
-        </div>
+        <!-- TABLE -->
+        <table class="leaderboard-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Email</th>
+                    <th>Time studied</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td class="rank-number">
+                        {{ loop.index }}
+                    </td>
+                    <td class="user-email">
+                        {{ user.email }}
+                    </td>
+                    <td>
+                        <!-- TEMP PLACEHOLDER -->
+                        <span class="study-time"
+                            data-seconds="0">
+                            0 hrs
+                        </span>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
 
     </div>
-
-    <!-- 📊 TABLE -->
-    <table class="table table-hover leaderboard-table">
-
-        <thead>
-            <tr>
-                <th>Rank</th>
-                <th>User</th>
-                <th>Study Hours</th>
-                <th>Streak 🔥</th>
-            </tr>
-        </thead>
-
-        <tbody>
-            {% for user in users %}
-            <tr>
-                <td>
-                    {% if loop.index == 1 %} 🥇
-                    {% elif loop.index == 2 %} 🥈
-                    {% elif loop.index == 3 %} 🥉
-                    {% else %} {{ loop.index }}
-                    {% endif %}
-                </td>
-                <td>{{ user.email }}</td>
-                <td>{{ user.study_hours }} hrs</td>
-                <td>🔥 0</td>
-            </tr>
-            {% else %}
-            <tr>
-                <td colspan="4" class="text-center text-muted">
-                    No users available yet
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-
-    </table>
-
 </div>
 
+<script src="{{ url_for('static', filename='js/leaderboard.js') }}"></script>
 {% endblock %}

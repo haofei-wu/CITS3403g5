@@ -156,7 +156,7 @@ function updateModeUI() {
 function selectFlowTask(task) {
     if (selectedFlowTaskId === task.id) {
         selectedFlowTaskId = null;
-        document.getElementById('flow-task-name').textContent = 'No task selected';
+        document.getElementById('flow-task-name').textContent = 'Task: No task selected';
         document.getElementById('flow-task-value').textContent = '';
         document.getElementById('flow-start-btn').disabled = true;
 
@@ -169,7 +169,7 @@ function selectFlowTask(task) {
 
     selectedFlowTaskId = task.id;
 
-    document.getElementById('flow-task-name').textContent = task.content;
+    document.getElementById('flow-task-name').textContent = `Task: ${task.content}`;
     document.getElementById('flow-task-value').textContent = task.content;
     document.getElementById('flow-start-btn').disabled = false;
 
@@ -196,6 +196,15 @@ const getcsrfToken = document.querySelector('meta[name="csrf-token"]').getAttrib
 const addBtn = document.getElementById('add-task-btn');
 const deleteBtn = document.getElementById('delete-task-btn');
 
+function redirectToLoginIfNeeded(response) {
+    if (response.status === 401 || response.redirected && response.url.includes('/login')) {
+        window.location.href = '/login';
+        return true;
+    }
+
+    return false;
+}
+
 addBtn.addEventListener('click', () => {
     taskmode = 'add';
     updateModeUI();
@@ -212,7 +221,13 @@ deleteBtn.addEventListener('click', () => {
 
 window.onload = function() {
     fetch('/get_tasks')
-    .then(response => response.json())
+    .then(response => {
+        if (response.status === 401 || response.redirected && response.url.includes('/login')) {
+            return { tasks: [] };
+        }
+
+        return response.json();
+    })
     .then(data => {
         renderTasks(data.tasks);
     });
@@ -231,13 +246,17 @@ document.getElementById('add-task-btn').addEventListener('click', () => {
         body: JSON.stringify({ task: taskInput })
     })
     .then(response => {
-        if (response.status === 401) {
-            window.location.href = "/login";
+        if (redirectToLoginIfNeeded(response)) {
             return;
         }
-        return response.json()
+
+        return response.json();
     })
     .then(data => {
+        if (!data) {
+            return;
+        }
+
         renderTasks(data.tasks);
         document.getElementById('task-input').value = '';   
     }); 
@@ -251,7 +270,7 @@ function renderTasks(tasks) {
 
     if (selectedFlowTaskId !== null && !taskCache.some(task => task.id === selectedFlowTaskId)) {
         selectedFlowTaskId = null;
-        document.getElementById('flow-task-name').textContent = 'No task selected';
+        document.getElementById('flow-task-name').textContent = 'Task: No task selected';
         document.getElementById('flow-task-value').textContent = '';
         document.getElementById('flow-start-btn').disabled = true;
     }

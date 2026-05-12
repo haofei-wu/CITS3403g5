@@ -46,13 +46,37 @@ def index():
 def login():
     form = LoginForm()
 
+    if request.method == 'POST' and not form.validate_on_submit():
+        errors = []
+        for field_errors in form.errors.values():
+            errors.extend(field_errors)
+
+        return render_template(
+            "login.html",
+            form=form,
+            error=errors[0] if errors else "Please check your login details"
+        )
+
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
-        if user and check_password_hash(user.password, form.password.data):
-            
-            login_user(user, remember=True)
 
-            return redirect(url_for('index'))
+        if not user:
+            return render_template(
+                "login.html",
+                form=form,
+                error="Email not found"
+            )
+
+        if not check_password_hash(user.password, form.password.data):
+            return render_template(
+                "login.html",
+                form=form,
+                error="Incorrect password"
+            )
+            
+        login_user(user, remember=True)
+
+        return redirect(url_for('index'))
 
     return render_template("login.html", form = form)
 
@@ -62,7 +86,26 @@ def login():
 def register():
     form = RegisterForm()
     
+    if request.method == 'POST' and not form.validate_on_submit():
+        errors = []
+        for field_errors in form.errors.values():
+            errors.extend(field_errors)
+
+        return render_template(
+            "register.html",
+            form=form,
+            error=errors[0] if errors else "Please check your registration details"
+        )
+
     if form.validate_on_submit():
+        existing_user = User.query.filter_by(email=form.email.data).first()
+
+        if existing_user:
+            return render_template(
+                "register.html",
+                form=form,
+                error="Email is already registered"
+            )
 
         hashed_password = generate_password_hash(form.password.data)
 
@@ -74,6 +117,9 @@ def register():
         db.session.add(new_user)
         db.session.commit()
 
+        if current_user.is_authenticated:
+            logout_user()
+            
         return redirect(url_for('login'))
 
     return render_template("register.html", form = form)
@@ -83,6 +129,17 @@ def register():
 @app.route('/forgot-password', methods=['GET', 'POST'])
 def forgot_password():
     form = ForgotPasswordForm()
+
+    if request.method == 'POST' and not form.validate_on_submit():
+        errors = []
+        for field_errors in form.errors.values():
+            errors.extend(field_errors)
+
+        return render_template(
+            "forgot_password.html",
+            form=form,
+            error=errors[0] if errors else "Please check your password reset details"
+        )
 
     if form.validate_on_submit():
 
@@ -141,13 +198,11 @@ def logout():
 @app.route("/leaderboard")
 @login_required
 def leaderboard():
-    users = User.query.order_by(User.study_hours.desc()).all()
-    top_users = users[:3]
+    users = User.query.all()
 
     return render_template(
         "leaderboard.html",
         users=users,
-        top_users=top_users
     )
 
 
@@ -164,7 +219,6 @@ def get_tasks():
 
 
 @app.route('/add_task', methods=['POST'])
-@login_required
 @login_required
 def add_task():
 

@@ -11,11 +11,19 @@ class LoginForm(FlaskForm):
 class RegisterForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[DataRequired()])
+    confirm_password = PasswordField(
+        'Confirm Password',
+        validators=[DataRequired(), EqualTo('password', message='Passwords must match')]
+    )
     submit = SubmitField('Register')
 
 class ForgotPasswordForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
     new_password = PasswordField('New Password', validators=[DataRequired()])
+    confirm_password = PasswordField(
+        'Confirm Password',
+        validators=[DataRequired(), EqualTo('new_password', message='Passwords must match')]
+    )
     submit = SubmitField('Reset Password')
 
 class SettingsForm(FlaskForm):

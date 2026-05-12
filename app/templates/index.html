@@ -7,7 +7,7 @@
 
     <div class="dashboard-flow">
             
-        <div class="card">
+        <div class="card timer-card">
 
             <!-- TIMER CARD-->
             
@@ -43,17 +43,19 @@
                         </div>
                     </div>
 
-                    <p id="pom-worklength" style="display:none">{{ pom_worklength }}</p>
-                    <p id="pom-short-break" style="display:none">{{ pom_short_break }}</p>
-                    <p id="pom-long-break" style="display:none">{{ pom_long_break }}</p>
+                    <div class="timer-main">
+                        <p id="pom-worklength" style="display:none">{{ pom_worklength }}</p>
+                        <p id="pom-short-break" style="display:none">{{ pom_short_break }}</p>
+                        <p id="pom-long-break" style="display:none">{{ pom_long_break }}</p>
 
-                    <p class="timerset" id="simple-timer">
-                        {{ "%02d:00"|format(pom_worklength) }}
-                    </p>
+                        <p class="timerset" id="simple-timer">
+                            {{ "%02d:00"|format(pom_worklength) }}
+                        </p>
 
-                    <div class="button-timers">
-                        <button id="start-btn" class="btn start-btn">Start</button>
-                        <button id="reset-btn" class="btn start-btn">Reset</button>
+                        <div class="button-timers">
+                            <button id="start-btn" class="btn start-btn">Start</button>
+                            <button id="reset-btn" class="btn start-btn">Reset</button>
+                        </div>
                     </div>
                 </div>
 
@@ -62,23 +64,19 @@
                 
                 <!-------------- FLOWDORO TIMER -------------->               
                 <div id="flowdoro">
-                    <header id="flowtitle"> Flowmodoro </header>
-                    <p id="focusbox"> Focusing/not</p>
+                    <p id="flow-task-name">Task: No task selected</p>
+                    <div id="restTime" style="display:none">Rest Time</div>
                 
                     <p id="flow-restratio" style="display:none">{{ flow_restratio }}</p>
-                    <div id="timer-container">
+                    <div id="timer-container" class="timer-main">
                         <p id="timer-display">00:00</p>
-                        <button id="flow-start-btn" disabled>Start</button>
-                        <button id="flow-end-btn" style="display:none">End</button>
+                        <div class="button-timers">
+                            <button id="flow-start-btn" disabled>Start</button>
+                            <button id="flow-end-btn" style="display:none">End</button>
+                        </div>
                     </div>
-                
-                    <div id = "restTime" style="display:none"> Rest Time</div>
-                
-                    <p id="flow-task-name">No task selected</p>
                     <p id="flow-task-value" style="display:none"></p>
                 
-                    <p class="maininfo">Todays total</p>
-                    <p class="maininfo">Daily avg</p>
                 </div>
                 <!-------------- END FLOWDORO TIMER -------------->
             </div>

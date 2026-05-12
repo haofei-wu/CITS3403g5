@@ -1,74 +1,199 @@
-/* Animation */
-.login-card {
-    animation: fadeIn 0.6s ease-in-out;
+.leaderboard-container {
+    min-height: 80vh;
+    max-width: 1000px;
+    background: #ffffff;
+    border-radius: 16px;
+    margin:0 auto;
+    padding: 32px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
 }
 
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+
+.leaderboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 35px;
 }
-:root {
-    --primary: #6f7cff;
-    --secondary: #6aa8ff;
-    --bg: #f5f7fb;
-    --card-bg: rgba(255, 255, 255, 0.8);
-    --text-dark: #2c2c2c;
+
+.leaderboard-title {
+    font-size: 40px;
+    font-weight: 700;
+    color: #555;
+    letter-spacing: 1px;
+    margin: 0;
 }
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+
+
+.filter-buttons {
+    display: flex;
+    gap: 12px;
 }
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(25px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+
+.filter-btn {
+    border: 1px solid #e5e5e5;
+    background:#ffffff;
+    color:#333333;
+    padding:8px 14px;
+    border-radius:12px;
+    font-size:16px;
+    font-weight:500;
+    cursor:pointer;
+    transition:all 0.2s ease;
 }
+
+.filter-btn:hover,
+.filter-btn.active {
+    background: #ff6b6b;
+    color:#ffffff;
+    border-color:#ff6b6b;
+}
+
+.table-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 18px;
+}
+
+.rankings-title {
+    font-size: 22px;
+    font-weight: 700;
+    margin: 0;
+}
+
+.unit-dropdown {
+    padding: 10px 16px;
+    border-radius: 12px;
+    border: 1px solid #e5e5e5;
+    background: #ffffff;
+    cursor: pointer;
+    outline: none;
+}
+
+.unit-dropdown:focus {
+    border-color: #ff6b6b;
+    box-shadow:
+        0 0 0 4px rgba(255, 107, 107, 0.2);
+}
+
+
+.leaderboard-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #ffffff;
+}
+
+.leaderboard-table th {
+    padding: 20px;
+    font-size: 16px;
+    font-weight: 700;
+    color: #555;
+    border-bottom: 2px solid #e5e5e5;
+    text-align: left;
+}
+
+.leaderboard-table td {
+    padding: 20px;
+    font-size: 16px;
+    border-bottom: 1px solid #e5e5e5;
+    vertical-align: middle;
+}
+
 .leaderboard-table tr {
     transition: all 0.2s ease;
 }
 
-.leaderboard-table tr:hover {
-    background: #f1f5ff;
-    transform: scale(1.01);
+.leaderboard-table tbody tr:hover {
+    background: #f6f8fa;
 }
-/* TOP 3 LEADERBOARD CARDS */
+
+.rank-number {
+    font-weight: 800;
+    color: #ff6b6b;
+    font-size: 18px;
+}
+
+.user-email {
+    font-weight: 600;
+}
+
+
 .top-card {
-    padding: 20px;
-    border-radius: 16px;
+    padding: 25px;
+    border-radius: 22px;
+    box-shadow:
+        0 6px 18px rgba(0, 0, 0, 0.08);
     transition: all 0.3s ease;
+    animation: fadeIn 0.5s ease;
 }
 
 .top-card:hover {
-    transform: translateY(-6px) scale(1.03);
+
+    transform:
+        translateY(-6px)
+        scale(1.03);
 }
 
-/* COLORS */
+/* COLORS (not used)*/
 .gold {
-    background: linear-gradient(135deg, #fff3cd, #ffe69c);
+    background:
+        linear-gradient(
+            135deg,
+            #fff3cd,
+            #ffe69c
+        );
 }
 
 .silver {
-    background: linear-gradient(135deg, #e2e3e5, #d6d8db);
+    background:
+        linear-gradient(
+            135deg,
+            #e2e3e5,
+            #d6d8db
+        );
 }
 
 .bronze {
-    background: linear-gradient(135deg, #f8d7da, #f5c2c7);
+    background:
+        linear-gradient(
+            135deg,
+            #f8d7da,
+            #f5c2c7
+        );
 }
 
+@media (max-width: 992px) {
+    .leaderboard-header {
+        flex-direction: column;
+        gap: 20px;
+        align-items: flex-start;
+    }
+
+    .table-controls {
+        flex-direction: column;
+        gap: 15px;
+        align-items: flex-start;
+    }
+}
+
+
+@media (max-width: 768px) {
+    .leaderboard-container {
+        padding: 20px;
+    }
+
+    .leaderboard-title {
+        font-size: 34px;
+    }
+
+    .leaderboard-table th,
+    .leaderboard-table td {
+        padding: 14px;
+        font-size: 14px;
+    }
+
+    .filter-buttons {
+        flex-wrap: wrap;
+    }
+}
