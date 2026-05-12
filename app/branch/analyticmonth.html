@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/analytics.css') }}">
+<script>
+    window.chartData = {{ chart_data | tojson }};
+</script>
+<button id="daybutton" class="btn btn-primary">Day</button>
+<button id="weekbutton" class="btn btn-primary">Week</button>
+<button id="monthbutton" class="btn btn-primary">Month</button>
+<div id = chartsize>
+    <canvas id="analyticsChart"></canvas>
+</div>
+<script src="{{ url_for('static', filename='js/analytics.js') }}"></script>
+
+{% endblock %}

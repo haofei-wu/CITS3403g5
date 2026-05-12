@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+<meta name="csrf-token" content="{{ csrf_token() }}">
+<div class="container py-4">
+
+    <div class="dashboard-flow">
+            
+        <div class="card">
+
+            <!-- TIMER CARD-->
+            
+            <div class="timer_mode_switch">
+                <button id="mode-pomo" class="seg-btn active">Pomo</button>    
+                <button id="mode-flow" class="seg-btn">FLow</button>
+            </div>
+
+            <div class="card-body">
+
+
+
+
+                <!------------ POMODORO TIMER -------------->
+
+                <div id="pomodoro" class="active">
+                    {#
+                    <div id="custom-modal" class="custom-modal hidden">
+                        <div class="custom-box">
+                            <p>Custom Timer</p>
+                            <input type="number" id="custom-input" placeholder="Minutes" min="0">
+                            <button id="custom-set">Set</button>
+                        </div>
+                    </div>
+                    #}
+
+                    <div class="timer-modes">
+                        {# <button id="custom-btn" class="gear-btn">⚙</button> #}
+                        <div class="modeset">
+                            <button class="mode-btn active" id="pomo_length">Pomodoro</button>
+                            <button class="mode-btn" id="sbreak_length">Short Break</button>
+                            <button class="mode-btn" id="lbreak_length">Long Break</button>
+                        </div>
+                    </div>
+
+                    <p id="pom-worklength" style="display:none">{{ pom_worklength }}</p>
+                    <p id="pom-short-break" style="display:none">{{ pom_short_break }}</p>
+                    <p id="pom-long-break" style="display:none">{{ pom_long_break }}</p>
+
+                    <p class="timerset" id="simple-timer">
+                        {{ "%02d:00"|format(pom_worklength) }}
+                    </p>
+
+                    <div class="button-timers">
+                        <button id="start-btn" class="btn start-btn">Start</button>
+                        <button id="reset-btn" class="btn start-btn">Reset</button>
+                    </div>
+                </div>
+
+                <!--------------END POMODORO TIMER -------------->
+                
+                
+                <!-------------- FLOWDORO TIMER -------------->               
+                <div id="flowdoro">
+                    <header id="flowtitle"> Flowmodoro </header>
+                    <p id="focusbox"> Focusing/not</p>
+                
+                    <p id="flow-restratio" style="display:none">{{ flow_restratio }}</p>
+                    <div id="timer-container">
+                        <p id="timer-display">00:00</p>
+                        <button id="flow-start-btn" disabled>Start</button>
+                        <button id="flow-end-btn" style="display:none">End</button>
+                    </div>
+                
+                    <div id = "restTime" style="display:none"> Rest Time</div>
+                
+                    <p id="flow-task-name">No task selected</p>
+                    <p id="flow-task-value" style="display:none"></p>
+                
+                    <p class="maininfo">Todays total</p>
+                    <p class="maininfo">Daily avg</p>
+                </div>
+                <!-------------- END FLOWDORO TIMER -------------->
+            </div>
+        </div>
+
+        <!--Today's Tasks Card -->
+        <div class="card">
+            <div class="card-body" >
+
+                <h1 class="card-title">
+                    <div class="card-link">
+                        Today's Tasks
+                    </div>
+                </h1>
+
+                <input type="text" id="task-input" class="form-control" placeholder="Add a new task...">
+                <button id="add-task-btn" class="add-btn">Add Task</button>
+                <button id="delete-task-btn" class="add-btn">Delete Task</button>
+
+                <hr>
+
+                <ul id = "taskList"></ul>
+            </div>
+        </div>
+
+        <!--No need to show focus time and Leaderborad
+
+        <div class="card">
+            <div class="card-body">
+                <h1 class="card-title">
+                    <a href="focus_time.html" class="card-link">
+                        Today's Focus Time→ 
+                    </a>
+                </h1>
+
+                <p class="show-time">
+                    1 h 36 min  dynamic(future)
+                </p>
+
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body" >
+                <h1 class="card-title">
+                    <a href="leaderboard.html" class="card-link">
+                        Leaderboard→ 
+                    </a>
+                </h1>
+
+                <p class="content_text">
+                    Display the current top three leaders!!!!!!
+                </p>
+
+            </div>
+        </div>
+
+        -->
+    </div>
+</div>
+
+<button id="analyticsbutton" class="btn btn-primary">Analytics</button>
+<script>
+    document.getElementById('analyticsbutton').addEventListener('click', () => {
+        window.location.href = '/analyticday';
+    });
+
+</script>
+<script src="{{ url_for('static', filename='js/timer.js') }}"></script>
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+{% endblock %}

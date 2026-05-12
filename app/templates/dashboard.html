@@ -8,7 +8,17 @@
     <div class="dashboard-card">
 
         <div class="plot-placeholder">
-            <span>Plot Area</span>
+            <div class="analytics-panel">
+                <div class="analytics-controls">
+                    <button id="daybutton" class="btn btn-primary" type="button">Day</button>
+                    <button id="weekbutton" class="btn btn-primary" type="button">Week</button>
+                    <button id="monthbutton" class="btn btn-primary" type="button">Month</button>
+                </div>
+
+                <div id="chartsize">
+                    <canvas id="analyticsChart"></canvas>
+                </div>
+            </div>
         </div>
 
         <div class="dashboard-summary-card">
@@ -33,6 +43,13 @@
     </div>
 
 </div>
+
+<script>
+    window.chartData = {{ chart_data | tojson }};
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{{ url_for('static', filename='js/analytics.js') }}"></script>
 <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
 {% endblock %}
 

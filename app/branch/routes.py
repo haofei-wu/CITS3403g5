@@ -3,18 +3,11 @@ from app import app, db
 from app.models import *
 from app.forms import *
 from flask_login import *
-from werkzeug.security import *
-from app.timecost import *
 from datetime import date, timedelta
 from sqlalchemy import func
 from dateutil.relativedelta import relativedelta
+from werkzeug.security import *
 
-#------------------ IMAGE IMPORT ------------------
-import os
-from werkzeug.utils import secure_filename
-
-
-#------------------ SETTINGS ------------------
 DEFAULT_SETTINGS = {
     "flow_restratio": 5,
     "pom_worklength": 25,
@@ -50,37 +43,13 @@ def index():
 def login():
     form = LoginForm()
 
-    if request.method == 'POST' and not form.validate_on_submit():
-        errors = []
-        for field_errors in form.errors.values():
-            errors.extend(field_errors)
-
-        return render_template(
-            "login.html",
-            form=form,
-            error=errors[0] if errors else "Please check your login details"
-        )
-
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
-
-        if not user:
-            return render_template(
-                "login.html",
-                form=form,
-                error="Email not found"
-            )
-
-        if not check_password_hash(user.password, form.password.data):
-            return render_template(
-                "login.html",
-                form=form,
-                error="Incorrect password"
-            )
+        if user and check_password_hash(user.password, form.password.data):
             
-        login_user(user, remember=True)
+            login_user(user, remember=True)
 
-        return redirect(url_for('index'))
+            return redirect(url_for('index'))
 
     return render_template("login.html", form = form)
 
@@ -90,41 +59,19 @@ def login():
 def register():
     form = RegisterForm()
     
-    if request.method == 'POST' and not form.validate_on_submit():
-        errors = []
-        for field_errors in form.errors.values():
-            errors.extend(field_errors)
-
-        return render_template(
-            "register.html",
-            form=form,
-            error=errors[0] if errors else "Please check your registration details"
-        )
-
     if form.validate_on_submit():
-        existing_user = User.query.filter_by(email=form.email.data).first()
-
-        if existing_user:
-            return render_template(
-                "register.html",
-                form=form,
-                error="Email is already registered"
-            )
+        #HASH PASSWORDS?
 
         hashed_password = generate_password_hash(form.password.data)
 
         new_user = User(
             email=form.email.data,
-            nickname=form.email.data.split('@', 1)[0],
             password=hashed_password
         )
 
         db.session.add(new_user)
         db.session.commit()
 
-        if current_user.is_authenticated:
-            logout_user()
-            
         return redirect(url_for('login'))
 
     return render_template("register.html", form = form)
@@ -134,17 +81,6 @@ def register():
 @app.route('/forgot-password', methods=['GET', 'POST'])
 def forgot_password():
     form = ForgotPasswordForm()
-
-    if request.method == 'POST' and not form.validate_on_submit():
-        errors = []
-        for field_errors in form.errors.values():
-            errors.extend(field_errors)
-
-        return render_template(
-            "forgot_password.html",
-            form=form,
-            error=errors[0] if errors else "Please check your password reset details"
-        )
 
     if form.validate_on_submit():
 
@@ -174,6 +110,7 @@ def forgot_password():
 # ------------------ DASHBOARD ------------------
 @app.route("/dashboard")
 @login_required
+@login_required
 def dashboard():
     user = current_user
 
@@ -182,33 +119,14 @@ def dashboard():
     total_tasks=len(tasks)
     done_tasks=sum(1 for t in tasks if t.status)
 
-    avatar_form = profileform()
-
-    analytics_tasks = db.session.query(
-        TimerSession.taskforsession,
-        (func.sum(TimerSession.timeCost) / 3600000).label('totalhrs'),
-    ).filter(
-        TimerSession.sessiondate >= (date.today() - timedelta(days=7)).isoformat(),
-        TimerSession.user_id == current_user.id,
-    ).group_by(TimerSession.taskforsession).all()
-
-    chart_data = {
-        "labels": [task.taskforsession for task in analytics_tasks],
-        "data": [task.totalhrs for task in analytics_tasks]
-    }
-
-    return render_template("dashboard.html", 
-    user=user,
-    total_tasks=total_tasks,
-    done_tasks=done_tasks,
-    avatar_form=avatar_form,
-    chart_data=chart_data)
+    return render_template("dashboard.html", user=user,total_tasks=total_tasks,done_tasks=done_tasks)
 
 
 # ------------------ LOGOUT ------------------
 @app.route("/logout")
 @login_required
 def logout():
+    logout_user()
     logout_user()
     return redirect(url_for('login'))
 
@@ -217,16 +135,13 @@ def logout():
 @app.route("/leaderboard")
 @login_required
 def leaderboard():
-    period = request.args.get('period', 'week')
-    if period not in ('day', 'week', 'month'):
-        period = 'week'
-
-    users = get_leaderboard(period)
+    users = User.query.order_by(User.study_hours.desc()).all()
+    top_users = users[:3]
 
     return render_template(
         "leaderboard.html",
         users=users,
-        period=period,
+        top_users=top_users
     )
 
 
@@ -234,58 +149,29 @@ def leaderboard():
 @app.route('/get_tasks', methods=['GET'])
 @login_required
 def get_tasks():
-    taskdate = request.args.get('taskdate')
-    tasks = Task.query.filter_by(user_id=current_user.id, taskdate=taskdate).all()
+
+    tasks = Task.query.filter_by(user_id=current_user.id).all()
 
     return jsonify({
         "tasks": [{"id": t.id, "content": t.content, "status": t.status} for t in tasks]
     })
 
-# get tasks history and add back to todays task
-@app.route('/task_history', methods=['GET'])
-@login_required
-def task_history():
-    tasks = (
-        Task.query
-        .filter_by(user_id=current_user.id)
-        .order_by(Task.taskdate.desc(), Task.id.desc())
-        .all()
-    )
-
-    seen = set()
-    history = []
-    for t in tasks:
-        key = t.content.strip().lower()  # Normalize the content for comparison
-        if key not in seen:
-            seen.add(key)
-            history.append({
-                "id" : t.id,
-                "content": t.content,
-            })
-
-    return jsonify({
-        "tasks": history
-    })
 
 @app.route('/add_task', methods=['POST'])
+@login_required
 @login_required
 def add_task():
 
     data = request.get_json()
     content = data.get('task')
-    taskdate = data.get('taskdate')
 
-    if content and taskdate:
+    if content:
         new_task = Task(content=content, 
-                    user_id=current_user.id,
-                    taskdate=taskdate)
+                    user_id=current_user.id)
         db.session.add(new_task)
         db.session.commit()
 
-    tasks = Task.query.filter_by(
-        user_id=current_user.id, 
-        taskdate=taskdate,
-    ).all()
+    tasks = Task.query.filter_by(user_id=current_user.id).all()
 
     return jsonify({
         "tasks": [{"id": t.id, "content": t.content, "status": t.status} for t in tasks]
@@ -294,16 +180,18 @@ def add_task():
 
 @app.route('/delete_tasks/<int:id>', methods=['DELETE'])
 @login_required
+@login_required
 def delete_tasks(id):
-    taskdate = request.args.get('taskdate')
 
+    task = Task.query.filter_by(id=id, user_id=current_user.id).first()
     task = Task.query.filter_by(id=id, user_id=current_user.id).first()
 
     if task:
         db.session.delete(task)
         db.session.commit()
 
-    tasks = Task.query.filter_by(user_id=current_user.id, taskdate=taskdate).all()
+    tasks = Task.query.filter_by(user_id=current_user.id).all()
+    tasks = Task.query.filter_by(user_id=current_user.id).all()
     
     return jsonify({
         "tasks": [{"id": t.id, "content": t.content, "status": t.status} for t in tasks]
@@ -314,14 +202,12 @@ def delete_tasks(id):
 @login_required
 
 def toggle_status(id):
-    taskdate = request.args.get('taskdate')
 
     task = Task.query.filter_by(id=id, user_id=current_user.id).first()
-    if task:
-        task.status = not task.status
-        db.session.commit()
+    task.status = not task.status
+    db.session.commit()
 
-    tasks = Task.query.filter_by(user_id=current_user.id, taskdate=taskdate).all()
+    tasks = Task.query.filter_by(user_id=current_user.id).all()
 
     return jsonify(tasks=[{
         "id": t.id,
@@ -332,7 +218,6 @@ def toggle_status(id):
 # ------------------ TIMER ------------------
 @app.route("/timer", methods = ['GET'])
 @login_required
-
 def timer():
     return render_template("timer.html", **get_user_settings_values())
 
@@ -363,8 +248,6 @@ def sessiontimes():
 def settings():
     form = SettingsForm()
     if form.validate_on_submit():
-        current_user.nickname = form.nickname.data.strip()
-
         #validation
         if form.pom_short_break.data >= form.pom_long_break.data:
             flash("Short break must be less than long break")
@@ -379,17 +262,13 @@ def settings():
         s.pom_worklength = form.pom_worklength.data
         s.pom_short_break = form.pom_short_break.data
         s.pom_long_break = form.pom_long_break.data
-        s.show_leaderboard = form.show_leaderboard.data
 
         db.session.commit()
         flash("Settings saved successfully")
         return redirect(url_for('index'))
 
     if request.method == 'GET':
-        form.nickname.data = current_user.nickname
         current_settings = get_user_settings_values()
-        user_settings = Settings.query.get(current_user.id)
-        form.show_leaderboard.data = True if user_settings is None else user_settings.show_leaderboard
         form.flow_restratio.data = current_settings["flow_restratio"]
         form.pom_worklength.data = current_settings["pom_worklength"]
         form.pom_short_break.data = current_settings["pom_short_break"]
@@ -410,70 +289,59 @@ def calculate():
 
     return jsonify({'sessiondate': sessiondate, 'today_total': today_total})
 
-#-------------------- Task Cost ------------------
-@app.route("/analytics", methods=['GET'])
+# ------------------ ANALYTICS PAGE ------------------
+@app.route("/analyticday", methods=['GET'])
 @login_required
-def analytics():
-    period = request.args.get("period", "week")
-
-    if period == "day":
-        start_date = date.today().isoformat()
-
-    elif period == "month":
-        start_date = (date.today() - relativedelta(months=1)).isoformat()
-
-    else:
-        period = "week"
-        start_date = (date.today() - timedelta(days=7)).isoformat()
-
+def analyticday():
     tasks = db.session.query(
         TimerSession.taskforsession,
-        (func.sum(TimerSession.timeCost) / 3600000).label('totalhrs'),
-    ).filter(
-        TimerSession.sessiondate >= start_date,
-        TimerSession.user_id == current_user.id,
-    ).group_by(TimerSession.taskforsession).all()
-
+        (func.sum(TimerSession.timeCost)/3600000).label('totalhrs'),
+        ).filter(
+            TimerSession.sessiondate == date.today(),
+            TimerSession.user_id == current_user.id,
+        ).group_by(TimerSession.taskforsession).all()
     chart_data = {
         "labels": [task.taskforsession for task in tasks],
         "data": [task.totalhrs for task in tasks]
     }
+    return render_template("analyticday.html", chart_data=chart_data)
 
-    total_tasks = Task.query.filter_by(user_id=current_user.id).count()
-    done_tasks = Task.query.filter_by(user_id=current_user.id, status=True).count()
-
-    return render_template(
-        "dashboard.html",
-        user=current_user,
-        total_tasks=total_tasks,
-        done_tasks=done_tasks,
-        avatar_form=profileform(),
-        chart_data=chart_data,
-        analytics_period=period
-    )
-
-# ------------------UPDATE AVATAR ------------------
-@app.route("/update_avatar", methods=['POST'])
+@app.route("/analyticweek", methods=['GET'])
 @login_required
-def update_avatar():
-    form = profileform()
-    if form.validate_on_submit():
-        avatar_file = form.avatar.data
-        
-        if avatar_file:
-            filename = secure_filename(avatar_file.filename)
-            # Set allowed file extensions
-            extension = filename.rsplit('.',1)[1].lower()
+def analyticweek():
+    tasks = db.session.query(
+        TimerSession.taskforsession,
+        (func.sum(TimerSession.timeCost)/3600000).label('totalhrs'),
+        ).filter(
+            TimerSession.sessiondate >= date.today() - timedelta(days=7),
+            TimerSession.user_id == current_user.id,
+        ).group_by(TimerSession.taskforsession).all()
+    chart_data = {
+            "labels": [task.taskforsession for task in tasks],
+            "data": [task.totalhrs for task in tasks]
+        }
 
-            avatar_filename = f"user_{current_user.id}.{extension}"
+    return render_template("analyticweek.html", chart_data=chart_data)
 
-            upload_folder= os.path.join(app.root_path, 'static', 'uploads','avatar')
-            if not os.path.exists(upload_folder):
-                os.makedirs(upload_folder)
+@app.route("/analyticmonth", methods=['GET'])
+@login_required
+def analyticmonth():
+    tasks = db.session.query(
+        TimerSession.taskforsession,
+        (func.sum(TimerSession.timeCost)/3600000).label('totalhrs'),
+        ).filter(
+            TimerSession.sessiondate >= date.today() - relativedelta(months=1),
+            TimerSession.user_id == current_user.id,
+        ).group_by(TimerSession.taskforsession).all()
+    chart_data = {
+        "labels": [task.taskforsession for task in tasks],
+        "data": [task.totalhrs for task in tasks]
+    }
+    return render_template("analyticmonth.html", chart_data=chart_data)
 
-            avatar_file.save(os.path.join(upload_folder, avatar_filename))
 
-            current_user.avatar = f"uploads/avatar/{avatar_filename}"
-            db.session.commit()
-
-    return redirect(request.referrer or url_for('dashboard'))
+#     [
+#     ('CITS3403 project', 1.5),
+#     ('Fluids revision', 0.5),
+# ]
+# List of row objects

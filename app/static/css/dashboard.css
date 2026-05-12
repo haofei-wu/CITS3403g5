@@ -16,14 +16,42 @@
     border-radius: 12px;
     border: 2px dashed #d8dde3;
     background: #f8fafc;
-    color: #9aa4b2;
+    color:#111;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 28px;
-    font-weight: 800;
+    font-size: 16px;
+    font-weight: 400;
     margin-bottom: 22px;
 }
+
+.analytics-panel {
+    width: 100%;
+    height: 100%;
+    min-height: 390px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.analytics-controls {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+#chartsize {
+    flex: 1;
+    min-height: 330px;
+    width: 100%;
+    position: relative;
+}
+
+#analyticsChart {
+    width: 100% !important;
+    height: 100% !important;
+}
+
 
 .dashboard-summary-card {
     display: grid;

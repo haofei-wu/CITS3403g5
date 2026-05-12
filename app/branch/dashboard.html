@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+
+<div class="container mt-5">
+
+    <div class="dashboard-card">
+
+        <div class="profile-stats-layout">
+
+            <!-- Profile Stats -->
+            <div class="profile-stats">
+                <img class="avatar" src="{{ url_for('static', filename='images/avatar.png') }}" alt="Avatar">
+                
+                <h3 class="username"> {{ current_user.email }}</h3>
+
+                <button class="edit-btn">Edit Profile</button>
+            </div>
+            <!-- Settings for display units -->
+            <div>
+                <div>timeframe</div>
+                <button id = pastweek>Week</button>
+                <button id = pastday>Day</button>
+                <button id = pastmonth>Month</button>
+                </div>
+
+
+            </div>
+
+            <div class="stats-grid">
+
+                <div class="stat-card">
+                    <h4>Daily Focus</h4>
+                    <div class="divider"></div>
+                    <div id="total_focus"></div>
+                </div>
+
+                <div class="stat-card">
+                    <h4>Weekly Trend</h4>
+                    <div class="divider"></div>
+                    <div class="stat-placeholder">1111</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="task-summary-card">
+                        <h4>Today's Tasks</h4>
+                        <span class="task-count">
+                            {{done_tasks}}/{{total_tasks}}
+                        </span>
+                    </div>
+                    <div class="divider"></div>
+
+                    <ol class="task-summary"></ol>
+                </div>
+
+                <div class="stat-card">
+                    <h4>Leaderboard</h4>
+                    <div class="divider"></div>
+                    <div class="stat-placeholder">1111</div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
+
