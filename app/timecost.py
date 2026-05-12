@@ -1,15 +1,16 @@
 from datetime import date, timedelta
 from app import db
 from app.models import Settings, TimerSession, User
+from dateutil.relativedelta import relativedelta
 
 def get_date_range(period):
     today = date.today()
     if period == 'week':
-        start_date = today - timedelta(days=today.weekday())  # Monday
+        start_date = today - timedelta(days=7)
         end_date = today
 
     elif period == 'month':
-        start_date = today.replace(day=1)  # First day of the month
+        start_date = today- relativedelta(months=1)
         end_date = today
 
     elif period == 'day':
@@ -45,6 +46,7 @@ def get_leaderboard(period):
         )
         .outerjoin(totals, User.id == totals.c.user_id)
         .outerjoin(Settings, User.id == Settings.id)
+        # Only include users who have show_leaderboard set to True or have no settings
         .filter(db.or_(Settings.id.is_(None), Settings.show_leaderboard.is_(True)))
         .order_by(db.desc('total_time'))
         .all()
