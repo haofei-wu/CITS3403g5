@@ -4,9 +4,13 @@ from flask_login import UserMixin
 # The first argument defines the type of the column, then the rest you can defineoptional columns in any order after.
 #foreign key references table name, not class name -> table name is tolower in the database automatically. 
 
+def default_nickname(context):
+    email = context.get_current_parameters().get("email", "")
+    return email.split("@", 1)[0] if "@" in email else "User"
+
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
-
+    nickname = db.Column(db.String(64), nullable=False, default=default_nickname)
     email = db.Column(db.String(120), unique=True, nullable=False)
 
     #wait to hash

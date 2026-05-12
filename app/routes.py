@@ -111,6 +111,7 @@ def register():
 
         new_user = User(
             email=form.email.data,
+            nickname=form.email.data.split('@', 1)[0],
             password=hashed_password
         )
 
@@ -308,6 +309,8 @@ def sessiontimes():
 def settings():
     form = SettingsForm()
     if form.validate_on_submit():
+        current_user.nickname = form.nickname.data.strip()
+
         #validation
         if form.pom_short_break.data >= form.pom_long_break.data:
             flash("Short break must be less than long break")
@@ -328,6 +331,7 @@ def settings():
         return redirect(url_for('index'))
 
     if request.method == 'GET':
+        form.nickname.data = current_user.nickname
         current_settings = get_user_settings_values()
         form.flow_restratio.data = current_settings["flow_restratio"]
         form.pom_worklength.data = current_settings["pom_worklength"]
@@ -373,4 +377,4 @@ def update_avatar():
             current_user.avatar = f"uploads/avatar/{avatar_filename}"
             db.session.commit()
 
-    return redirect(url_for('dashboard'))
+    return redirect(request.referrer or url_for('dashboard'))

@@ -44,7 +44,23 @@
     <div class="header-right">
         <div class="d-flex align-items-center gap-3">
             {% if current_user.is_authenticated  %}
-                <span class="userinfo">{{ current_user.email }}</span>
+                <form id="nav-avatar-form"
+                    method="POST"
+                    action="{{ url_for('update_avatar') }}"
+                    enctype="multipart/form-data">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <label class="nav-user" for="nav-avatar-input">
+                        <img class="nav-avatar"
+                            src="{{ url_for('static', filename=current_user.avatar) }}"
+                            alt="Avatar">
+                        <span class="userinfo">{{ current_user.nickname }}</span>
+                    </label>
+                    <input id="nav-avatar-input"
+                        class="nav-avatar-input"
+                        type="file"
+                        name="avatar"
+                        accept=".jpg,.jpeg,.png">
+                </form>
                 <a href="{{ url_for('logout') }}" class="btn login-btn">Logout</a>
             {% else %}
                 <a href="{{ url_for('login') }}" class="btn login-btn">Login</a>

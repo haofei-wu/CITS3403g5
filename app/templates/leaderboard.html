@@ -59,7 +59,7 @@
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>Email</th>
+                    <th>User</th>
                     <th>Time studied</th>
                 </tr>
             </thead>
@@ -69,8 +69,20 @@
                     <td class="rank-number">
                         {{ loop.index }}
                     </td>
-                    <td class="user-email">
-                        {{ user.email }}
+                    <td>
+                        <div class="leaderboard-user">
+                            <img class="leaderboard-avatar"
+                                src="{{ url_for('static', filename=user.avatar) }}"
+                                alt="Avatar">
+                            <div class="leaderboard-user-info">
+                                <span class="leaderboard-nickname">
+                                    {{ user.nickname }}
+                                </span>
+                                <span class="leaderboard-user-id">
+                                    #{{ user.id }}
+                                </span>
+                            </div>
+                        </div>
                     </td>
                     <td>
                         <!-- TEMP PLACEHOLDER -->

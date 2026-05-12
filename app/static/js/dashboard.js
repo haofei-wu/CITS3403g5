@@ -50,8 +50,10 @@ fetch(`/calculate?sessiondate=${sessiondate}`)
 const avatarInput = document.getElementById('avatar-input');
 const avatarForm = document.getElementById('avatar-form');
 
-avatarInput.addEventListener('change', function() {
-    if (avatarInput.files.length > 0) {
-        avatarForm.submit();
-    }
-});
+if (avatarInput && avatarForm) {
+    avatarInput.addEventListener('change', function() {
+        if (avatarInput.files.length > 0) {
+            avatarForm.submit();
+        }
+    });
+}

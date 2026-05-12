@@ -1,36 +1,52 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<div class="container mt-5">
-    <h1>Settings</h1>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/settings.css') }}">
 
-    <form method="POST" action="{{ url_for('settings') }}">
-        {{ form.hidden_tag() }} 
-        <!-- CSRF PROTECTION? -->
-        <div>
-        {{ form.flow_restratio.label}} 
-        {{form.flow_restratio()}}
-        </div>
+<div class="settings-page">
+    <div class="settings-card">
+        <h1 class="settings-title">Settings</h1>
+        <p class="settings-subtitle">Tune your focus and break rhythm.</p>
 
-        <div>
-        {{ form.pom_worklength.label}} 
-        {{form.pom_worklength()}}
-        </div>
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="settings-alert">
+                    {{ messages[0] }}
+                </div>
+            {% endif %}
+        {% endwith %}
 
-        <div>
-        {{ form.pom_short_break.label}} 
-        {{form.pom_short_break()}}
-        </div>
+        <form method="POST" action="{{ url_for('settings') }}">
+            {{ form.hidden_tag() }}
 
-        <div>
-        {{ form.pom_long_break.label}} 
-        {{form.pom_long_break()}}
-        </div>
+            <div class="settings-field">
+                {{ form.nickname.label(class="settings-label") }}
+                {{ form.nickname(class="settings-input", placeholder="Enter your nickname") }}
+            </div>
 
-        <div>
-        {{ form.submit()}}
-        </div>
-    </form>
+            <div class="settings-field">
+                {{ form.flow_restratio.label(class="settings-label") }}
+                {{ form.flow_restratio(class="settings-input", min="1") }}
+            </div>
+
+            <div class="settings-field">
+                {{ form.pom_worklength.label(class="settings-label") }}
+                {{ form.pom_worklength(class="settings-input", min="1") }}
+            </div>
+
+            <div class="settings-field">
+                {{ form.pom_short_break.label(class="settings-label") }}
+                {{ form.pom_short_break(class="settings-input", min="1") }}
+            </div>
+
+            <div class="settings-field">
+                {{ form.pom_long_break.label(class="settings-label") }}
+                {{ form.pom_long_break(class="settings-input", min="1") }}
+            </div>
+
+            {{ form.submit(class="settings-submit") }}
+        </form>
+    </div>
 </div>
 
 {% endblock %}

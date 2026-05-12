@@ -7,58 +7,29 @@
 
     <div class="dashboard-card">
 
-        <div class="profile-stats-layout">
-
-            <!-- Profile Stats -->
-            <div class="profile-stats">
-                
-                <h3 class="username"> {{ current_user.email }}</h3>
-                <form id = "avatar-form"
-                    method="POST"
-                    action="{{ url_for('update_avatar') }}"
-                    enctype="multipart/form-data">
-
-                    {{ avatar_form.hidden_tag() }}
-
-                    <img class="avatar"
-                        src="{{ url_for('static', filename=current_user.avatar) }}"
-                        alt="Avatar">
-
-                    <label class="edit-btn" for="avatar-input">Edit Avatar</label>
-                    {{ avatar_form.avatar(id="avatar-input",class="avatar-input") }}
-
-                </form>
-
-            </div>
-
-            <div class="stats-grid">
-
-                <div class="stat-card">
-                    <h4>Daily Focus</h4>
-                    <div class="divider"></div>
-                    <div id="total_focus"></div>
-                </div>
-
-                <div class="stat-card">
-                    <h4>Weekly Trend</h4>
-                    <div class="divider"></div>
-                    <div class="stat-placeholder">1111</div>
-                </div>
-
-                <div class="stat-card">
-                    <div class="task-summary-card">
-                        <h4>Today's Tasks</h4>
-                        <span class="task-count">
-                            {{done_tasks}}/{{total_tasks}}
-                        </span>
-                    </div>
-                    <div class="divider"></div>
-
-                    <ol class="task-summary"></ol>
-                </div>
-
+        <div class="plot-placeholder">
+            <span>Plot Area</span>
         </div>
 
+        <div class="dashboard-summary-card">
+            <section class="summary-panel focus-panel">
+                <h4>Daily Focus</h4>
+                <div class="divider"></div>
+                <div id="total_focus"></div>
+            </section>
+
+            <section class="summary-panel task-panel">
+                <div class="task-summary-card">
+                    <h4>Today's Tasks</h4>
+                    <span class="task-count">
+                        {{done_tasks}}/{{total_tasks}}
+                    </span>
+                </div>
+                <div class="divider"></div>
+
+                <ol class="task-summary"></ol>
+            </section>
+        </div>
     </div>
 
 </div>

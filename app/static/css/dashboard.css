@@ -11,87 +11,33 @@
     margin: 0 auto;
 }
 
-.profile-stats-layout {
-    display: grid;
-    grid-template-columns: 0.7fr 1.3fr;
-    gap: 28px;
-}
-
-.profile-stats {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    padding: 10px;
-}
-
-#avatar-form {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.avatar {
-    width: 140px;
-    height: 140px;
-
-    border-radius: 50%;
-    object-fit: cover;
-
-    margin-bottom: 14px;
-
-    border: 3px solid #f6f8fa;
-}
-
-.username {
-    font-size: 20px;
-    font-weight: 600;
-
-    margin-bottom: 10px;
-}
-
-.edit-btn {
-    padding: 8px 14px;
-
-    border: 1px solid #e5e5e5;
-    border-radius: 16px;
-    background:white;
-    color:#333333;
-    cursor: pointer;
-    font-weight: 500;
-}
-
-.edit-btn:hover {
-    background-color: #f0f0f0;
-}
-
-.stats-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-
-    gap: 16px;
-}
-
-
-.stat-card {
-    min-height:30vh;
-
+.plot-placeholder {
+    min-height: 430px;
     border-radius: 12px;
-
-    padding: 18px;
-
-    transition: all 0.2s ease;
-
-    border: 2px solid rgba(0,0,0,0.15);
+    border: 2px dashed #d8dde3;
+    background: #f8fafc;
+    color: #9aa4b2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    font-weight: 800;
+    margin-bottom: 22px;
 }
 
+.dashboard-summary-card {
+    display: grid;
+    grid-template-columns: 0.9fr 1.1fr;
+    gap: 20px;
+    border: 2px solid rgba(0,0,0,0.12);
+    border-radius: 12px;
+    padding: 20px;
+    background: #ffffff;
+}
 
-.stat-card:hover {
-    border-color: rgba(0, 0, 0, 0.15);
-
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
-
-    transform: translateY(-2px);
+.summary-panel {
+    min-height: 240px;
+    padding: 8px;
 }
 
 .divider {
@@ -102,27 +48,17 @@
     margin: 10px 0 12px 0;
 }
 
-.stat-card h4 {
+.summary-panel h4 {
     font-size: 25px;
     font-weight: 700;
     color: #555;
 }
 
-.stat-card h2 {
+.summary-panel h2 {
     font-size: 24px;
     font-weight: 700;
 
     margin-top: 10px;
-}
-
-.stat-placeholder {
-    height: 40px;
-
-    margin-top: 10px;
-
-    background: #eaecef;
-
-    border-radius: 8px;
 }
 
 #total_focus {
@@ -174,19 +110,12 @@
 
 @media (max-width: 768px) {
 
-    .profile-stats-layout {
+    .dashboard-summary-card {
         grid-template-columns: 1fr;
     }
 
-    .stats-grid {
-        grid-template-columns: 1fr 1fr;
-    }
-}
-
-@media (max-width: 480px) {
-
-    .stats-grid {
-        grid-template-columns: 1fr;
+    .plot-placeholder {
+        min-height: 300px;
     }
 }
 
