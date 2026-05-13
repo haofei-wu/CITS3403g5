@@ -145,6 +145,16 @@ let taskmode = 'add';
 let selectedFlowTaskId = null;
 let taskCache = [];
 
+function getLocal() {
+    const now = new Date();
+
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
+}
+
 // Modechange
 function updateModeUI() {
     document.body.classList.toggle('delete-mode', taskmode === 'delete');
@@ -156,7 +166,7 @@ function updateModeUI() {
 function selectFlowTask(task) {
     if (selectedFlowTaskId === task.id) {
         selectedFlowTaskId = null;
-        document.getElementById('flow-task-name').textContent = 'No task selected';
+        document.getElementById('flow-task-name').textContent = 'Task: No task selected';
         document.getElementById('flow-task-value').textContent = '';
         document.getElementById('flow-start-btn').disabled = true;
 
@@ -169,7 +179,7 @@ function selectFlowTask(task) {
 
     selectedFlowTaskId = task.id;
 
-    document.getElementById('flow-task-name').textContent = task.content;
+    document.getElementById('flow-task-name').textContent = `Task: ${task.content}`;
     document.getElementById('flow-task-value').textContent = task.content;
     document.getElementById('flow-start-btn').disabled = false;
 
@@ -196,6 +206,15 @@ const getcsrfToken = document.querySelector('meta[name="csrf-token"]').getAttrib
 const addBtn = document.getElementById('add-task-btn');
 const deleteBtn = document.getElementById('delete-task-btn');
 
+function redirectToLoginIfNeeded(response) {
+    if (response.status === 401 || response.redirected && response.url.includes('/login')) {
+        window.location.href = '/login';
+        return true;
+    }
+
+    return false;
+}
+
 addBtn.addEventListener('click', () => {
     taskmode = 'add';
     updateModeUI();
@@ -211,8 +230,14 @@ deleteBtn.addEventListener('click', () => {
 });
 
 window.onload = function() {
-    fetch('/get_tasks')
-    .then(response => response.json())
+    fetch(`/get_tasks?taskdate=${getLocal()}`)
+    .then(response => {
+        if (response.status === 401 || response.redirected && response.url.includes('/login')) {
+            return { tasks: [] };
+        }
+
+        return response.json();
+    })
     .then(data => {
         renderTasks(data.tasks);
     });
@@ -228,16 +253,23 @@ document.getElementById('add-task-btn').addEventListener('click', () => {
             'Content-Type': 'application/json',
             'X-CSRFToken': getcsrfToken
         },
-        body: JSON.stringify({ task: taskInput })
+        body: JSON.stringify({
+            task: taskInput,
+            taskdate: getLocal()
+        })
     })
     .then(response => {
-        if (response.status === 401) {
-            window.location.href = "/login";
+        if (redirectToLoginIfNeeded(response)) {
             return;
         }
-        return response.json()
+
+        return response.json();
     })
     .then(data => {
+        if (!data) {
+            return;
+        }
+
         renderTasks(data.tasks);
         document.getElementById('task-input').value = '';   
     }); 
@@ -251,7 +283,7 @@ function renderTasks(tasks) {
 
     if (selectedFlowTaskId !== null && !taskCache.some(task => task.id === selectedFlowTaskId)) {
         selectedFlowTaskId = null;
-        document.getElementById('flow-task-name').textContent = 'No task selected';
+        document.getElementById('flow-task-name').textContent = 'Task: No task selected';
         document.getElementById('flow-task-value').textContent = '';
         document.getElementById('flow-start-btn').disabled = true;
     }
@@ -289,7 +321,7 @@ function deleteTask(id) {
         return;
     }
 
-    fetch(`/delete_tasks/${id}`, {
+    fetch(`/delete_tasks/${id}?taskdate=${getLocal()}`, {
         method: 'DELETE',
         headers: {
             'X-CSRFToken': getcsrfToken
@@ -303,7 +335,7 @@ function deleteTask(id) {
 
 // status of task
 function toggleStatus(id) {
-    fetch(`/toggle_status/${id}`, {
+    fetch(`/toggle_status/${id}?taskdate=${getLocal()}`, {
         method: 'POST',
         headers: {
             'X-CSRFToken': getcsrfToken
@@ -356,3 +388,67 @@ flowbtn.addEventListener('click', () => {
 pomobtn.addEventListener('click', () => {
     modeswitch('pomo');
 });
+
+// ============Search Functionality===============
+let taskHistory = [];
+let taskFuse = null;
+
+fetch("/task_history")
+    .then(res => {
+        if (res.status === 401 || res.redirected && res.url.includes('/login')) {
+            return;
+        }
+
+        return res.json();
+    })
+    .then(data => {
+        if (!data) {
+            return;
+        }
+
+        taskHistory = data.tasks;
+        taskFuse = new Fuse(taskHistory, {
+            keys: ["content"],
+            threshold: 0.35
+        });
+    });
+
+const taskInput = document.getElementById("task-input");
+
+taskInput.addEventListener("input", () => {
+    const query = taskInput.value.trim();
+
+    if (!query || !taskFuse) {
+        hideSuggestions();
+        return;
+    }
+
+    const results = taskFuse.search(query).slice(0, 5);
+    renderSuggestions(results.map(r => r.item));
+});
+
+function selectSuggestion(task) {
+    taskInput.value = task.content;
+    hideSuggestions();
+}
+
+function hideSuggestions() {
+    const container = document.getElementById("task-suggestions");
+    container.innerHTML = "";
+    container.classList.remove("show");
+}
+
+function renderSuggestions(tasks) {
+    const container = document.getElementById("task-suggestions");
+    container.innerHTML = "";
+    container.classList.toggle("show", tasks.length > 0);
+
+    tasks.forEach(task => {
+        const item = document.createElement("button");
+        item.type = "button";
+        item.className = "task-suggestion";
+        item.textContent = task.content;
+        item.addEventListener("click", () => selectSuggestion(task));
+        container.appendChild(item);
+    });
+}

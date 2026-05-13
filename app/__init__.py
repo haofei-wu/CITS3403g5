@@ -2,30 +2,31 @@ from flask import Flask
 from flask_wtf import CSRFProtect
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-from app.config import Config
 from flask_login import LoginManager
 
-app = Flask(__name__)
-app.config.from_object(Config)
-csrf = CSRFProtect(app)
+db = SQLAlchemy()
+migrate = Migrate()
+csrf = CSRFProtect()
+login_manager = LoginManager()
+login_manager.login_view = 'main.login'
 
-db = SQLAlchemy(app)
-migrate = Migrate(app, db)
-
-# initiate login manager, and define to flask how to get current user id based on our models. 
-login_manager = LoginManager(app)
-#Redirect unauthenticated users to loginpage
-login_manager.login_view = 'login'
-
-#import models after db is initiated
-from app.models import Task, User
 @login_manager.user_loader
 def load_user(user_id):
-    return User.query.get(int(user_id))
-#populates current_user object based on user_id
-@login_manager.user_loader
-def load_user(user_id):
+    from app.models import User
     return User.query.get(int(user_id))
 
+def create_app(config):
+    flaskApp = Flask(__name__)
 
-from app import routes
+    flaskApp.config.from_object(config)
+
+    db.init_app(flaskApp)
+    migrate.init_app(flaskApp, db)
+    csrf.init_app(flaskApp)
+    login_manager.init_app(flaskApp)
+
+    from app import routes
+    from app.blueprints import main
+    flaskApp.register_blueprint(main)
+
+    return flaskApp

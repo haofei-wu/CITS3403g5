@@ -19,14 +19,58 @@
     margin-top:10px;
 }
 
+.start-btn {
+    padding: 10px 28px;
+    border: 1px solid #e5e5e5;
+    border-radius: 12px;
+    background: #ffffff;
+    color: #222;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.start-btn:hover {
+    background-color: #f0f0f0;
+}
+
+#flow-start-btn,
+#flow-end-btn {
+    padding: 10px 28px;
+    border: 1px solid #e5e5e5;
+    border-radius: 12px;
+    background: #ffffff;
+    color: #222;
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1.5;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+#flow-start-btn:hover,
+#flow-end-btn:hover {
+    background-color: #f0f0f0;
+}
+
+#flow-start-btn:disabled,
+#flow-end-btn:disabled {
+    background: #f0f0f0;
+    border-color: #e5e5e5;
+    color: #999;
+    cursor: not-allowed;
+}
+
 .mode-btn {
     padding: 10px 20px;
     border: 1px solid #e5e5e5;
     border-radius: 12px;
     background-color: #ffffff;
-    color: #333;
+    color: #222;
     font-size: 18px;
-    font-weight: 500;
+    font-weight: 600;
+    line-height: 1.5;
     cursor: pointer;
     transition: background-color 0.2s ease;
 }
@@ -46,8 +90,8 @@
     border: 1px solid #e5e5e5;
     border-radius: 12px;
     background-color: #ffffff;
-    color: #333;
-    font-weight: 500;
+    color: #222;
+    font-weight: 600;
     cursor: pointer;
     transition: background-color 0.2s ease;
 }
@@ -113,9 +157,9 @@ body.delete-mode .delete-btn {
     border-radius: 999px;
     background: transparent;
     cursor: pointer;
-    font-weight: 500;
+    font-weight: 600;
     transition: all 0.25s ease;
-    color: #555;
+    color: #333;
 }
 
 .seg-btn.active {
@@ -148,6 +192,15 @@ body.delete-mode .delete-btn {
     transition: all 0.2s ease;
 }
 
+.timer-card {
+    height: 500px;
+    min-height: 500px;
+}
+
+.timer-card .card-body {
+    height: calc(100% - 70px);
+}
+
 .card-body {
     position: relative;
     padding:20px;
@@ -159,7 +212,7 @@ body.delete-mode .delete-btn {
 }
 
 .card-title {
-    font-weight:600;
+    font-weight:700;
     margin-bottom:12px; 
     text-align: center;
 }
@@ -228,7 +281,18 @@ body.delete-mode .delete-btn {
     position: relative;
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 10px;
+    min-height: 58px;
+    margin: 0 auto 20px;
+}
+
+.timer-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 .card-link {
@@ -287,7 +351,9 @@ body.delete-mode .delete-btn {
     padding: 14px 20px;
     margin-bottom: 12px;
 
+    color: #222;
     font-size : 18px;
+    font-weight: 600;
     background: #fff;
     border: 1px solid #eee;
     border-radius: 16px;
@@ -305,12 +371,17 @@ body.delete-mode .delete-btn {
 }
 
 .task-item.completed .statusbox::after {
-    content: "✔";
+    content: "\2713";
     color: rgb(255, 255, 255);
     font-size: 19px;
     position: absolute;
     top: -2px;
     left: 2px;
+}
+
+.task-search {
+    position: relative;
+    margin-bottom: 10px;
 }
 
 #task-input {
@@ -319,7 +390,48 @@ body.delete-mode .delete-btn {
     border: 1px solid #e5e5e5;
     border-radius: 6px;
     font-size: 18px;
-    margin-bottom: 10px;
+}
+
+.task-suggestions {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    right: 0;
+    z-index: 20;
+    display: none;
+    max-height: 190px;
+    overflow-y: auto;
+    border: 1px solid #e5e5e5;
+    border-radius: 12px;
+    background: #ffffff;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
+}
+
+.task-suggestions.show {
+    display: flex;
+    flex-direction: column;
+}
+
+.task-suggestion {
+    width: 100%;
+    padding: 10px 12px;
+    border: none;
+    border-bottom: 1px solid #f0f0f0;
+    border-radius: 0;
+    background: #ffffff;
+    color: #222;
+    font-size: 16px;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+}
+
+.task-suggestion:last-child {
+    border-bottom: none;
+}
+
+.task-suggestion:hover {
+    background: #f0f0f0;
 }
 
 .statusbar{
@@ -343,7 +455,8 @@ body.delete-mode .delete-btn {
 
 #simple-timer {
     font-size: 8rem;
-    font-weight: bold;
+    font-weight: 800;
+    line-height: 1.1;
 
     border-radius: 12px;
     padding: 20px 40px;
@@ -351,17 +464,111 @@ body.delete-mode .delete-btn {
     display: block;
     width:fit-content;
     text-align: center;
-    margin: 20px auto;
+    margin: 0 auto 20px;
+}
+
+/* Flowdoro Timer */
+#flowdoro {
+    position: relative;
+    text-align: center;
+}
+
+#flowtitle {
+    margin: 8px 0 6px;
+    font-size: 32px;
+    font-weight: 600;
+}
+
+#timer-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#timer-display {
+    display: block;
+    width: fit-content;
+    min-width: 430px;
+    margin: 0 auto 20px;
+    padding: 20px 40px;
+    border-radius: 12px;
+    font-size: 8rem;
+    font-weight: 800;
+    line-height: 1.1;
+    text-align: center;
+}
+
+#flow-start-btn,
+#flow-end-btn {
+    margin: 0 auto;
+}
+
+#restTime {
+    align-items: center;
+    justify-content: center;
+    width: fit-content;
+    max-width: 100%;
+    min-height: 58px;
+    margin: 0 auto 20px;
+    padding: 9px 28px;
+    border: 1px solid #ffb3b3;
+    border-radius: 12px;
+    background: #fff5f5;
+    color: #ff6b6b;
+    font-size: 18px;
+    font-weight: 700;
+    box-shadow: 0 6px 16px rgba(255, 107, 107, 0.12);
+}
+
+#flow-task-name {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: fit-content;
+    max-width: 100%;
+    min-height: 58px;
+    margin: 0 auto 20px;
+    padding: 9px 28px;
+    border: 1px solid #e5e5e5;
+    border-radius: 12px;
+    background: #f8f8f8;
+    color: #222;
+    font-size: 18px;
+    font-weight: 700;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+}
+
+@media (max-width: 640px) {
+    #simple-timer,
+    #timer-display {
+        min-width: 0;
+        width: 100%;
+        padding: 16px 12px;
+        font-size: 5rem;
+    }
+
+    .modeset {
+        flex-wrap: wrap;
+    }
+
+    .mode-btn {
+        font-size: 16px;
+    }
 }
 
 /* Pomodoro Page */
 #pomodoro,
 #flowdoro {
     display: none;
+    height: 100%;
 }
 
 #pomodoro.active,
 #flowdoro.active {
-    display: block;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    overflow: hidden;
 }
 

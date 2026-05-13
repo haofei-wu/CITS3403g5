@@ -16,7 +16,7 @@ async function commitSessionTimes() {
         startTime: livetime.startTime,
         endTime: livetime.endTime,
         task: selectedTask,
-        sessiondate: new Date().toISOString().split('T')[0]
+        sessiondate: getLocal()
     })
 });
 };
@@ -40,6 +40,8 @@ document.getElementById("flow-start-btn").addEventListener("click", function() {
 
     // keytimes.startTime = Date.now()
     // console.log("working")
+    document.getElementById("flow-task-name").style.display = "flex";
+    document.getElementById("restTime").style.display = "none";
     document.getElementById("flow-start-btn").style.display = "none";
     document.getElementById("flow-end-btn").style.display = "block";
     livetime.startTime = Date.now()
@@ -50,19 +52,17 @@ document.getElementById("flow-start-btn").addEventListener("click", function() {
         document.querySelector("#timer-display").innerHTML = formatMs(timeElapsed)}, 1000);
      }, 1000);
 
-    
-
-
-
 
 function countdownTimer() {
     let resttime = Date.now() + (livetime.endTime - livetime.startTime)/document.getElementById("flow-restratio").innerHTML;
     let countdown = setInterval(() => {     
             if (Date.now() < resttime)   {
-                document.querySelector("#timer-display").innerHTML = formatMs(resttime - Date.now()) + "s remaining";
+                document.querySelector("#timer-display").innerHTML = formatMs(resttime - Date.now());
             } else {
                 clearInterval(countdown);
                 document.querySelector("#timer-display").innerHTML = "00:00";
+                document.getElementById("restTime").style.display = "none";
+                document.getElementById("flow-task-name").style.display = "flex";
                 return;
             }
     }, 1000);
@@ -76,8 +76,9 @@ document.getElementById("flow-end-btn").addEventListener("click", function() {
     clearInterval(timerrefresh);
     console.log("killed timer");
     commitSessionTimes();
+    document.getElementById("flow-task-name").style.display = "none";
     document.getElementById("restTime").style.display = "flex";
-    document.querySelector("#timer-display").innerHTML = formatMs((livetime.endTime - livetime.startTime)/document.getElementById("flow-restratio").innerHTML) + "s remaining";
+    document.querySelector("#timer-display").innerHTML = formatMs((livetime.endTime - livetime.startTime)/document.getElementById("flow-restratio").innerHTML);
     countdownTimer();
     //countdown ment.getElementById("restTime").innerHTML = formatTime((livetime.endTime - livetime.startTime)/document.getElementById("flow-restratio").innerHTML);
     
@@ -96,3 +97,13 @@ document.getElementById("flow-end-btn").addEventListener("click", function() {
 //     return timepassed;
 // }
 
+// UTC -----> Local_Time
+function getLocal() {
+    const now = new Date();
+
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
+}
