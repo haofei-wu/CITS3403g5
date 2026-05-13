@@ -132,7 +132,7 @@ def register():
 
 
 # ------------------ FORGOT PASSWORD ------------------
-@main.route('/forgot-password', methods=['GET', 'POST'])
+@main.route('/forgot_password', methods=['GET', 'POST'])
 def forgot_password():
     form = ForgotPasswordForm()
 
