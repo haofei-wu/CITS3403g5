@@ -1,5 +1,6 @@
-from flask import render_template, request, redirect, url_for, jsonify, flash
-from app import app, db
+from flask import render_template, request, redirect, url_for, jsonify, flash, current_app as app
+from app import db
+from app.blueprints import main
 from app.models import *
 from app.forms import *
 from flask_login import *
@@ -40,13 +41,13 @@ def get_user_settings_values():
 
 
 # ------------------ HOME ------------------
-@app.route('/')
+@main.route('/')
 def index():
     return render_template('index.html', **get_user_settings_values())
 
 
 # ------------------ LOGIN ------------------
-@app.route('/login', methods=['GET', 'POST'])
+@main.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
 
@@ -80,13 +81,13 @@ def login():
             
         login_user(user, remember=True)
 
-        return redirect(url_for('index'))
+        return redirect(url_for('main.index'))
 
     return render_template("login.html", form = form)
 
 
 # ------------------ REGISTER ------------------
-@app.route('/register', methods=['GET', 'POST'])
+@main.route('/register', methods=['GET', 'POST'])
 def register():
     form = RegisterForm()
     
@@ -125,13 +126,13 @@ def register():
         if current_user.is_authenticated:
             logout_user()
             
-        return redirect(url_for('login'))
+        return redirect(url_for('main.login'))
 
     return render_template("register.html", form = form)
 
 
 # ------------------ FORGOT PASSWORD ------------------
-@app.route('/forgot-password', methods=['GET', 'POST'])
+@main.route('/forgot-password', methods=['GET', 'POST'])
 def forgot_password():
     form = ForgotPasswordForm()
 
@@ -172,7 +173,7 @@ def forgot_password():
 
 
 # ------------------ DASHBOARD ------------------
-@app.route("/dashboard")
+@main.route("/dashboard")
 @login_required
 def dashboard():
     user = current_user
@@ -206,15 +207,15 @@ def dashboard():
 
 
 # ------------------ LOGOUT ------------------
-@app.route("/logout")
+@main.route("/logout")
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for('login'))
+    return redirect(url_for('main.login'))
 
 
 # ------------------ LEADERBOARD ------------------
-@app.route("/leaderboard")
+@main.route("/leaderboard")
 @login_required
 def leaderboard():
     period = request.args.get('period', 'week')
@@ -231,7 +232,7 @@ def leaderboard():
 
 
 # ------------------ TASK SYSTEM ------------------
-@app.route('/get_tasks', methods=['GET'])
+@main.route('/get_tasks', methods=['GET'])
 @login_required
 def get_tasks():
     taskdate = request.args.get('taskdate')
@@ -242,7 +243,7 @@ def get_tasks():
     })
 
 # get tasks history and add back to todays task
-@app.route('/task_history', methods=['GET'])
+@main.route('/task_history', methods=['GET'])
 @login_required
 def task_history():
     tasks = (
@@ -267,7 +268,7 @@ def task_history():
         "tasks": history
     })
 
-@app.route('/add_task', methods=['POST'])
+@main.route('/add_task', methods=['POST'])
 @login_required
 def add_task():
 
@@ -292,7 +293,7 @@ def add_task():
     })
 
 
-@app.route('/delete_tasks/<int:id>', methods=['DELETE'])
+@main.route('/delete_tasks/<int:id>', methods=['DELETE'])
 @login_required
 def delete_tasks(id):
     taskdate = request.args.get('taskdate')
@@ -310,7 +311,7 @@ def delete_tasks(id):
     })
 
 # ------------------ STATUS ------------------
-@app.route('/toggle_status/<int:id>', methods=['POST'])
+@main.route('/toggle_status/<int:id>', methods=['POST'])
 @login_required
 
 def toggle_status(id):
@@ -330,7 +331,7 @@ def toggle_status(id):
     } for t in tasks])
     
 # ------------------ TIMER ------------------
-@app.route("/timer", methods = ['GET'])
+@main.route("/timer", methods = ['GET'])
 @login_required
 
 def timer():
@@ -338,7 +339,7 @@ def timer():
 
 #can write inline if else in 
 
-@app.route("/sessiontimes", methods=['POST'])
+@main.route("/sessiontimes", methods=['POST'])
 @login_required
 def sessiontimes():
     data = request.get_json()
@@ -358,7 +359,7 @@ def sessiontimes():
     return jsonify({'message': 'Session times committed successfully'})
 
 # ------------------ SETTINGS ------------------
-@app.route("/settings", methods=['GET', 'POST'])
+@main.route("/settings", methods=['GET', 'POST'])
 @login_required
 def settings():
     form = SettingsForm()
@@ -383,7 +384,7 @@ def settings():
 
         db.session.commit()
         flash("Settings saved successfully")
-        return redirect(url_for('index'))
+        return redirect(url_for('main.index'))
 
     if request.method == 'GET':
         form.nickname.data = current_user.nickname
@@ -398,7 +399,7 @@ def settings():
     return render_template("settings.html", form = form)
 
 # ------------------ TIMERSESSION CAUCULATE ------------------
-@app.route("/calculate", methods=['GET'])
+@main.route("/calculate", methods=['GET'])
 @login_required
 def calculate():
     sessiondate = request.args.get('sessiondate')
@@ -411,7 +412,7 @@ def calculate():
     return jsonify({'sessiondate': sessiondate, 'today_total': today_total})
 
 #-------------------- Task Cost ------------------
-@app.route("/analytics", methods=['GET'])
+@main.route("/analytics", methods=['GET'])
 @login_required
 def analytics():
     period = request.args.get("period", "week")
@@ -453,7 +454,7 @@ def analytics():
     )
 
 # ------------------UPDATE AVATAR ------------------
-@app.route("/update_avatar", methods=['POST'])
+@main.route("/update_avatar", methods=['POST'])
 @login_required
 def update_avatar():
     form = profileform()
@@ -476,4 +477,4 @@ def update_avatar():
             current_user.avatar = f"uploads/avatar/{avatar_filename}"
             db.session.commit()
 
-    return redirect(request.referrer or url_for('dashboard'))
+    return redirect(request.referrer or url_for('main.dashboard'))

@@ -16,7 +16,7 @@
             {% endif %}
         {% endwith %}
 
-        <form method="POST" action="{{ url_for('settings') }}">
+        <form method="POST" action="{{ url_for('main.settings') }}">
             {{ form.hidden_tag() }}
 
             <div class="settings-field">

@@ -15,17 +15,17 @@
             <div class="filter-buttons">
 
                 <a class="filter-btn {% if period == 'day' %}active{% endif %}"
-                    href="{{ url_for('leaderboard', period='day') }}">
+                    href="{{ url_for('main.leaderboard', period='day') }}">
                     Day
                 </a>
 
                 <a class="filter-btn {% if period == 'week' %}active{% endif %}"
-                    href="{{ url_for('leaderboard', period='week') }}">
+                    href="{{ url_for('main.leaderboard', period='week') }}">
                     Week
                 </a>
 
                 <a class="filter-btn {% if period == 'month' %}active{% endif %}"
-                    href="{{ url_for('leaderboard', period='month') }}">
+                    href="{{ url_for('main.leaderboard', period='month') }}">
                     Month
                 </a>
 
