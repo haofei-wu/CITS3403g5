@@ -3,22 +3,22 @@ from unittest import TestCase
 from app import create_app, db
 from app.config import TestConfig
 from app.models import *
-
+from werkzeug.security import generate_password_hash, check_password_hash
 
 def add_test_data_to_db():
     users = [
         User(
             email="A123@example.com", 
             nickname="A123", 
-            password="password1"),
+            password=generate_password_hash("password1")),
         User(
             email="B123@example.com", 
             nickname="B123", 
-            password="password2"),
+            password=generate_password_hash("password2")),
         User(
             email="C123@example.com", 
             nickname="C123", 
-            password="password3"),
+            password=generate_password_hash("password3")),
     ]
     db.session.add_all(users)
     db.session.commit()
@@ -43,7 +43,7 @@ def add_test_data_to_db():
         Task(
             content="iiiiiiii",
             user_id=users[2].id,
-            taskdate="2026-05-15",
+            taskdate="2025-04-15",
         ),
     ]
     db.session.add_all(tasks)
@@ -133,3 +133,166 @@ class BasicTests(TestCase):
         db.drop_all()
         self.app_context.pop()
 
+    def login(self, email, password):
+        return self.client.post('/login', data={
+            "email":email,
+            "password":password})
+
+
+# ---------TASK TESTS--------------------
+class TaskModelTest(BasicTests):
+
+    #--------MODEL PART------
+    def test_task_saved_correctly(self):
+        task = Task.query.filter_by(content="ABCDEF").first()
+        self.assertIsNotNone(task)
+        self.assertEqual(task.content, "ABCDEF")
+        self.assertFalse(task.status)
+        self.assertEqual(task.taskdate, "2026-05-13")
+
+    def test_task_user_relationship(self):
+        user = User.query.filter_by(email="A123@example.com").first()
+        task = Task.query.filter_by(content="ABCDEF").first()
+
+        self.assertIsNotNone(user)
+        self.assertIsNotNone(task)
+        self.assertEqual(task.user_id, user.id)
+    
+    #--------ROUTE PART------
+    def test_get_tasks(self):
+        self.login("A123@example.com", "password1")
+
+        response = self.client.get('/get_tasks?taskdate=2026-05-13')
+        data = response.get_json()
+
+        self.assertIn("tasks", data)
+        self.assertEqual(len(data["tasks"]), 1)
+        self.assertEqual(data["tasks"][0]["content"], "ABCDEF")
+        self.assertFalse(data["tasks"][0]["status"])  
+    
+    def test_task_history(self):
+        self.login("A123@example.com", "password1")
+
+        response = self.client.get('/task_history')
+        data = response.get_json()
+
+        contents = [t["content"] for t in data["tasks"]]
+
+        self.assertIn("ABCDEF", contents)
+        self.assertIn("123456", contents)
+        self.assertNotIn("!@#$%%", contents)
+        self.assertNotIn("iiiiiiii", contents)
+
+    def test_add_task(self):
+        self.login("A123@example.com", "password1")
+
+        response = self.client.post('/add_task', json={
+            "task": "New Task Test",
+            "taskdate": "2026-05-13"
+        })
+
+        task = Task.query.filter_by(content="New Task Test").first()
+
+        self.assertIsNotNone(task)
+        self.assertEqual(task.content, "New Task Test")
+        self.assertEqual(task.taskdate, "2026-05-13")
+
+    def test_delete_task(self):
+        self.login("B123@example.com", "password2")
+
+        task = Task.query.filter_by(content="!@#$%%").first()
+
+        response = self.client.delete(f"/delete_tasks/{task.id}?taskdate=2026-05-05")
+        #SQL recommand to instead of using Task.query.get(task.id)
+        deleted_task = db.session.get(Task, task.id)
+
+        self.assertIsNone(deleted_task)
+    
+    def test_toggle_task_status(self):
+        self.login("B123@example.com", "password2")
+
+        task = Task.query.filter_by(content="!@#$%%").first()
+        self.assertFalse(task.status)
+
+        response = self.client.post(f"/toggle_status/{task.id}?taskdate=2026-05-05")
+        updated_task = db.session.get(Task, task.id)
+
+        self.assertIsNotNone(updated_task)
+        self.assertTrue(updated_task.status)
+
+
+# ---------LOGIN & REGISTER TESTS--------------------
+class AuthenTest(BasicTests):
+
+    #--------LOGIN TESTS------
+    def test_login_wrong_password(self):
+        response = self.login("A123@example.com", "password_wrong")
+
+        self.assertIn(b"Incorrect password", response.data)
+
+    def test_login_wrong_email(self):
+        response = self.login("wrong_email@example.com", "password1")
+
+        self.assertIn(b"Email not found", response.data)
+
+    #--------REGISTER TESTS------
+    def test_register_success(self):
+        response = self.client.post('/register', data={
+            "email": "newuser@example.com",
+            "password": "newpassword",
+            "confirm_password": "newpassword"
+        })
+
+        user = User.query.filter_by(email="newuser@example.com").first()
+        self.assertIsNotNone(user)
+        self.assertEqual(user.email, "newuser@example.com")
+        self.assertEqual(user.nickname, "newuser")
+        self.assertTrue(check_password_hash(user.password, "newpassword"))
+
+    def test_register_exist_email(self):
+        response = self.client.post('/register', data={
+            "email": "A123@example.com",
+            "password": "password1",
+            "confirm_password": "password1"
+        })
+
+        self.assertIn(b"Email is already registered", response.data)
+
+    def test_register_wrong_confirm(self):
+        response = self.client.post('/register', data={
+            "email": "newuser@example.com",
+            "password": "newpassword",
+            "confirm_password": "newpassword_wrong"
+        })
+
+        self.assertIn(b"Passwords must match", response.data)
+
+    #------------FORGET PASSWORD TESTS------
+    def test_forgot_password_success(self):
+        response = self.client.post('/forgot_password', data={
+            "email": "A123@example.com",
+            "new_password": "newpassword1",
+            "confirm_password": "newpassword1"
+        }) 
+        user = User.query.filter_by(email="A123@example.com").first()
+        self.assertIsNotNone(user)
+        self.assertTrue(check_password_hash(user.password, "newpassword1"))
+        self.assertIn(b"Password reset successfully", response.data)
+
+    def test_forgot_password_wrong_email(self):
+        response = self.client.post('/forgot_password', data={
+            "email": "wrong_email@example.com",
+            "new_password": "newpassword1",
+            "confirm_password": "newpassword1"
+        })
+
+        self.assertIn(b"Email not found", response.data)
+
+    def test_forgot_password_wrong_confirm(self):
+        response = self.client.post('/forgot_password', data={
+            "email": "A123@example.com",
+            "new_password": "newpassword1",
+            "confirm_password": "newpassword_wrong"
+        })
+
+        self.assertIn(b"Passwords must match", response.data)
