@@ -1,5 +1,13 @@
 from unittest import TestCase
 
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.service import Service
+
+from webdriver_manager.chrome import ChromeDriverManager
+
+import multiprocessing
+import time
 from app import create_app, db
 from app.config import TestConfig
 from app.models import *
@@ -133,3 +141,26 @@ class BasicTests(TestCase):
         db.drop_all()
         self.app_context.pop()
 
+    def test_login_page_loads(self):
+
+        response = self.client.get('/login')
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_register_page_loads(self):
+
+        response = self.client.get('/register')
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_forgot_password_page_loads(self):
+
+        response = self.client.get('/forgot-password')
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_leaderboard_page_loads(self):
+
+        response = self.client.get('/leaderboard')
+
+        self.assertEqual(response.status_code, 302)
