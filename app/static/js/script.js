@@ -3,6 +3,7 @@ const mode_btns = document.querySelectorAll('.mode-btn:not(#custom-btn)');
 // const custom_btn = document.getElementById('custom-btn');
 const timerDisplay = document.getElementById('simple-timer');
 const startBtn = document.getElementById('start-btn');
+startBtn.disabled = true;
 const resetBtn = document.getElementById('reset-btn');
 
 let timer= null;
@@ -13,12 +14,41 @@ let long_break = document.getElementById('pom-long-break').textContent;
 let modetime = worklength * 60;
 let time_left = modetime;
 
-// Format time in MM:SS
+//SEND DATA TO TIMERSESSIONS TABLE
+async function commitPomodoroSession() {
+    const task = document.querySelector("#flow-task-value").textContent;
+
+    const timeCost = workSegment.accumulatedMs;
+    workSegment.accumulatedMs = 0;
+    workSegment.runningSince = null;
+
+    await fetch("/sessiontimes", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": getcsrfToken
+        },
+        body: JSON.stringify({
+            startTime: null,
+            endTime: null,
+            task: task,
+            sessiondate: getLocal(),
+            timeCost: timeCost
+        })
+    });
+}
+
+
+
 function formatTime(sec){
     const minutes = Math.floor(sec / 60);
     const seconds = sec % 60;
     return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`; 
 }
+
+//Pomodoro Timer Session Storage:
+let workSegment = { accumulatedMs: 0, runningSince: null };
+let activeMode = "work";
 
 // update timer display
 function timeupdate(){
@@ -35,7 +65,14 @@ function clearActiveState() {
     // custom_btn.classList.remove('active');
 }
 
-function length_change(length, button) {
+function length_change(length, button, mode) {
+    if (activeMode === "work" && workSegment.runningSince !== null) {
+        workSegment.accumulatedMs += Date.now() - workSegment.runningSince;
+        workSegment.runningSince = null;
+    }
+    if (activeMode === "work") {
+        commitPomodoroSession();
+    }
     modetime = length * 60;
     time_left = modetime;
 
@@ -48,7 +85,7 @@ function length_change(length, button) {
     timer = null;
 
     startBtn.textContent = 'Start';
-    
+    activeMode = mode;
     timeupdate();
 }
 const workbtn = document.getElementById('pomo_length');
@@ -56,13 +93,13 @@ const shortbtn = document.getElementById('sbreak_length');
 const longbtn = document.getElementById('lbreak_length');
 
 workbtn.addEventListener('click', () => {
-    length_change(worklength, workbtn);
+    length_change(worklength, workbtn, "work");
 })
 shortbtn.addEventListener('click', () => {
-    length_change(short_break, shortbtn);
+    length_change(short_break, shortbtn, "short");
 })
 longbtn.addEventListener('click', () => {
-    length_change(long_break, longbtn); 
+    length_change(long_break, longbtn, "long"); 
 })
 
 
@@ -108,7 +145,9 @@ startBtn.addEventListener('click', () => {
     if (!is_running) {
         is_running = true;
         startBtn.textContent = 'Pause';
-
+        if (activeMode === "work") {
+            workSegment.runningSince = Date.now();
+        }
         timer = setInterval(() => {
             if (time_left > 0) {
                 time_left--;
@@ -117,6 +156,11 @@ startBtn.addEventListener('click', () => {
                 clearInterval(timer);
                 is_running = false;
                 startBtn.textContent = 'Start';
+                if (activeMode === "work" && workSegment.runningSince !== null) {
+                    workSegment.accumulatedMs += Date.now() - workSegment.runningSince;
+                    workSegment.runningSince = null;
+                }
+                commitPomodoroSession();
             }
         },1000);
 
@@ -126,18 +170,27 @@ startBtn.addEventListener('click', () => {
         timer = null;
         is_running = false;
         startBtn.textContent = 'Resume';
+        if (activeMode === "work" && workSegment.runningSince !== null) {
+            workSegment.accumulatedMs += Date.now() - workSegment.runningSince;
+            workSegment.runningSince = null;
+        }
+        commitPomodoroSession();
     }
 });
 
 
 // reset timer
 document.getElementById('reset-btn').addEventListener('click', () => {
+    if (activeMode === "work" && workSegment.runningSince !== null) {
+        workSegment.accumulatedMs += Date.now() - workSegment.runningSince;
+        workSegment.runningSince = null;
+    }
+    commitPomodoroSession();
     clearInterval(timer);
     timer = null;
     is_running = false;
     time_left = modetime; // reset to 15 minutes
     document.getElementById('start-btn').textContent = 'Start';
-
     timeupdate();
 });
 
@@ -169,7 +222,7 @@ function selectFlowTask(task) {
         document.getElementById('flow-task-name').textContent = 'Task: No task selected';
         document.getElementById('flow-task-value').textContent = '';
         document.getElementById('flow-start-btn').disabled = true;
-
+        startBtn.disabled = true;
         document.querySelectorAll('.task-item').forEach(item => {
             item.classList.remove('selected');
         });
@@ -182,12 +235,13 @@ function selectFlowTask(task) {
     document.getElementById('flow-task-name').textContent = `Task: ${task.content}`;
     document.getElementById('flow-task-value').textContent = task.content;
     document.getElementById('flow-start-btn').disabled = false;
+    startBtn.disabled = false;
 
     document.querySelectorAll('.task-item').forEach(item => {
         item.classList.toggle('selected', Number(item.dataset.taskId) === selectedFlowTaskId);
     });
 
-    modeswitch('flow');
+    // modeswitch('flow');
 }
 
 function selectFlowTaskFromList(id) {
@@ -286,6 +340,7 @@ function renderTasks(tasks) {
         document.getElementById('flow-task-name').textContent = 'Task: No task selected';
         document.getElementById('flow-task-value').textContent = '';
         document.getElementById('flow-start-btn').disabled = true;
+        startBtn.disabled = true;
     }
 
     const taskList = document.getElementById('taskList');

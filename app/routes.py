@@ -337,17 +337,18 @@ def toggle_status(id):
 def timer():
     return render_template("timer.html", **get_user_settings_values())
 
-#can write inline if else in 
-
+#-------flow + pomodoro timer sessions commit to database------------------
 @main.route("/sessiontimes", methods=['POST'])
 @login_required
 def sessiontimes():
     data = request.get_json()
-    startTime = data['startTime']
-    endTime = data['endTime']
+    startTime = data.get('startTime')
+    endTime = data.get('endTime')
     task = data['task']
     sessiondate = data['sessiondate']
-    timeCost = endTime - startTime
+    timeCost = data.get('timeCost')
+    if timeCost is None:
+        timeCost = endTime - startTime
     new_session = TimerSession(user_id=current_user.id,
                                start_time=startTime,
                                end_time=endTime,
