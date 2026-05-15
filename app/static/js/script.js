@@ -223,6 +223,7 @@ function selectFlowTask(task) {
         document.getElementById('flow-task-value').textContent = '';
         document.getElementById('flow-start-btn').disabled = true;
         startBtn.disabled = true;
+        document.getElementById('pomo-task-prompt').style.display = '';
         document.querySelectorAll('.task-item').forEach(item => {
             item.classList.remove('selected');
         });
@@ -236,6 +237,7 @@ function selectFlowTask(task) {
     document.getElementById('flow-task-value').textContent = task.content;
     document.getElementById('flow-start-btn').disabled = false;
     startBtn.disabled = false;
+    document.getElementById('pomo-task-prompt').style.display = 'none';
 
     document.querySelectorAll('.task-item').forEach(item => {
         item.classList.toggle('selected', Number(item.dataset.taskId) === selectedFlowTaskId);
@@ -341,6 +343,7 @@ function renderTasks(tasks) {
         document.getElementById('flow-task-value').textContent = '';
         document.getElementById('flow-start-btn').disabled = true;
         startBtn.disabled = true;
+        document.getElementById('pomo-task-prompt').style.display = '';
     }
 
     const taskList = document.getElementById('taskList');
