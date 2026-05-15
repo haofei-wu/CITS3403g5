@@ -413,34 +413,40 @@ def calculate():
     return jsonify({'sessiondate': sessiondate, 'today_total': today_total})
 
 #-------------------- Task Cost ------------------
+def findstartdate(period):
+    if period == "day":
+        return date.today().isoformat()
+    elif period == "month":
+        return (date.today() - relativedelta(months=1)).isoformat()
+    else:
+        return (date.today() - timedelta(days=7)).isoformat()
+
+
+def formatchartdata(start_date):
+    tasks = db.session.query(
+        TimerSession.taskforsession,
+        (func.sum(TimerSession.timeCost) / 3600000).label('totalhrs'),
+    ).filter(
+        TimerSession.sessiondate >= start_date,
+        TimerSession.user_id == current_user.id,
+    ).group_by(
+        TimerSession.taskforsession,
+    ).order_by(
+        func.max(TimerSession.sessiondate).desc(),
+        func.min(TimerSession.id).asc(),
+    ).all()
+
+    return {
+        "labels": [task.taskforsession for task in tasks],
+        "data": [float(task.totalhrs) for task in tasks],
+    }
+
+
 @main.route("/analytics", methods=['GET'])
 @login_required
 def analytics():
     period = request.args.get("period", "week")
-
-    def findstartdate(period):
-        if period == "day":
-            return date.today().isoformat()
-        elif period == "month":
-            return (date.today() - relativedelta(months=1)).isoformat()
-        else:
-            return (date.today() - timedelta(days=7)).isoformat()
     start_date = findstartdate(period)
-
-    def formatchartdata(start_date):
-        tasks = db.session.query(
-            TimerSession.taskforsession,
-            (func.sum(TimerSession.timeCost) / 3600000).label('totalhrs'),
-        ).filter(
-            TimerSession.sessiondate >= start_date,
-            TimerSession.user_id == current_user.id,
-        ).group_by(TimerSession.taskforsession).all()
-
-        chart_data = {
-                "labels": [task.taskforsession for task in tasks],
-                "data": [task.totalhrs for task in tasks]
-            }
-        return chart_data
     chart_data = formatchartdata(start_date)
 
     total_tasks = Task.query.filter_by(user_id=current_user.id).count()
