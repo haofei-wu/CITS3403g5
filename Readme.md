@@ -51,7 +51,7 @@ python -m venv venv
 venv\scripts\activate #window
 source venv/bin/activate #Mac/Linux
 
-#instal dependencies
+#install dependencies
 pip install -r requirements.txt
 
 #update database
