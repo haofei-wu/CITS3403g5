@@ -1,19 +1,22 @@
-from flask import render_template, request, redirect, url_for, jsonify, flash, current_app as app
-from app import db
-from app.blueprints import main
-from app.models import *
-from app.forms import *
-from flask_login import *
-from werkzeug.security import *
-from app.timecost import *
+import os
+
 from datetime import date, timedelta
-from sqlalchemy import func
 from dateutil.relativedelta import relativedelta
 
-#------------------ IMAGE IMPORT ------------------
-import os
+from werkzeug.security import *
 from werkzeug.utils import secure_filename
 
+from flask import current_app as app
+from flask import flash, jsonify, redirect, render_template, request, url_for
+from flask_login import current_user, login_required, login_user, logout_user
+
+from sqlalchemy import func
+
+from app import db
+from app.blueprints import main
+from app.models import Settings, Task, TimerSession, User
+from app.forms import ForgotPasswordForm, LoginForm, ProfileForm, RegisterForm, SettingsForm
+from app.timecost import get_leaderboard
 
 #------------------ SETTINGS ------------------
 DEFAULT_SETTINGS = {
@@ -23,12 +26,13 @@ DEFAULT_SETTINGS = {
     "pom_long_break": 15
 }
 
-
 def get_user_settings_values():
+    # Return timer settings values for the current user or default values
     values = DEFAULT_SETTINGS.copy()
 
     if current_user.is_authenticated:
         user_settings = Settings.query.get(current_user.id)
+
         if user_settings:
             values.update({
                 "flow_restratio": user_settings.flow_restratio,
@@ -43,14 +47,17 @@ def get_user_settings_values():
 # ------------------ HOME ------------------
 @main.route('/')
 def index():
+    # Render the public homepage with timer settings values (if user is logged in)
     return render_template('index.html', **get_user_settings_values())
 
 
 # ------------------ LOGIN ------------------
 @main.route('/login', methods=['GET', 'POST'])
 def login():
+    # Login form handling with validation and error messages
     form = LoginForm()
 
+    # Collect validation errors if form is submitted but not valid
     if request.method == 'POST' and not form.validate_on_submit():
         errors = []
         for field_errors in form.errors.values():
@@ -65,6 +72,7 @@ def login():
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
 
+        # Check if user exists
         if not user:
             return render_template(
                 "login.html",
@@ -72,6 +80,7 @@ def login():
                 error="Email not found"
             )
 
+        # Check if password is correct
         if not check_password_hash(user.password, form.password.data):
             return render_template(
                 "login.html",
@@ -176,15 +185,18 @@ def forgot_password():
 @main.route("/dashboard")
 @login_required
 def dashboard():
+
     user = current_user
 
+    # Calculate total tasks and done tasks for the user
     tasks = Task.query.filter_by(user_id=user.id).all()
 
     total_tasks=len(tasks)
     done_tasks=sum(1 for t in tasks if t.status)
 
-    avatar_form = profileform()
-
+    avatar_form = ProfileForm()
+    
+    # Calculate the total hours spent on each task in the last 7 days for the user
     analytics_tasks = db.session.query(
         TimerSession.taskforsession,
         (func.sum(TimerSession.timeCost) / 3600000).label('totalhrs'),
@@ -193,17 +205,20 @@ def dashboard():
         TimerSession.user_id == current_user.id,
     ).group_by(TimerSession.taskforsession).all()
 
+    # Prepare data for the analytics chart
     chart_data = {
         "labels": [task.taskforsession for task in analytics_tasks],
         "data": [task.totalhrs for task in analytics_tasks]
     }
 
-    return render_template("dashboard.html", 
-    user=user,
-    total_tasks=total_tasks,
-    done_tasks=done_tasks,
-    avatar_form=avatar_form,
-    chart_data=chart_data)
+    return render_template(
+        "dashboard.html", 
+        user=user,
+        total_tasks=total_tasks,
+        done_tasks=done_tasks,
+        avatar_form=avatar_form,
+        chart_data=chart_data
+    )
 
 
 # ------------------ LOGOUT ------------------
@@ -218,6 +233,8 @@ def logout():
 @main.route("/leaderboard")
 @login_required
 def leaderboard():
+
+    # Get the selected period, default to 'week'
     period = request.args.get('period', 'week')
     if period not in ('day', 'week', 'month'):
         period = 'week'
@@ -235,6 +252,8 @@ def leaderboard():
 @main.route('/get_tasks', methods=['GET'])
 @login_required
 def get_tasks():
+
+    # Get tasks for the current user and specified date
     taskdate = request.args.get('taskdate')
     tasks = Task.query.filter_by(user_id=current_user.id, taskdate=taskdate).all()
 
@@ -242,17 +261,19 @@ def get_tasks():
         "tasks": [{"id": t.id, "content": t.content, "status": t.status} for t in tasks]
     })
 
-# get tasks history and add back to todays task
 @main.route('/task_history', methods=['GET'])
 @login_required
 def task_history():
+
+    # Get all tasks for the current user
     tasks = (
         Task.query
         .filter_by(user_id=current_user.id)
         .order_by(Task.taskdate.desc(), Task.id.desc())
         .all()
     )
-
+    
+    # Create a set to track task names
     seen = set()
     history = []
     for t in tasks:
@@ -283,11 +304,13 @@ def add_task():
         db.session.add(new_task)
         db.session.commit()
 
+    # Return the updated list of tasks for the specified date
     tasks = Task.query.filter_by(
         user_id=current_user.id, 
         taskdate=taskdate,
     ).all()
 
+    # Return as JSON data
     return jsonify({
         "tasks": [{"id": t.id, "content": t.content, "status": t.status} for t in tasks]
     })
@@ -298,6 +321,7 @@ def add_task():
 def delete_tasks(id):
     taskdate = request.args.get('taskdate')
 
+    # Find the task by ID and ensure it belongs to the current user
     task = Task.query.filter_by(id=id, user_id=current_user.id).first()
 
     if task:
@@ -318,6 +342,7 @@ def toggle_status(id):
     taskdate = request.args.get('taskdate')
 
     task = Task.query.filter_by(id=id, user_id=current_user.id).first()
+    # Toggle the status of the task
     if task:
         task.status = not task.status
         db.session.commit()
@@ -337,7 +362,6 @@ def toggle_status(id):
 def timer():
     return render_template("timer.html", **get_user_settings_values())
 
-#can write inline if else in 
 
 @main.route("/sessiontimes", methods=['POST'])
 @login_required
@@ -402,6 +426,7 @@ def settings():
 @main.route("/calculate", methods=['GET'])
 @login_required
 def calculate():
+    # Get the session date from the query parameters
     sessiondate = request.args.get('sessiondate')
     sessionsum = db.session.query(
         db.func.sum(TimerSession.timeCost)).filter_by(
@@ -447,7 +472,7 @@ def analytics():
         user=current_user,
         total_tasks=total_tasks,
         done_tasks=done_tasks,
-        avatar_form=profileform(),
+        avatar_form=profileForm(),
         chart_data=chart_data,
         analytics_period=period
     )
@@ -456,18 +481,22 @@ def analytics():
 @main.route("/update_avatar", methods=['POST'])
 @login_required
 def update_avatar():
-    form = profileform()
+
+    #create profile form instance to handle avatar upload
+    form = ProfileForm()
     if form.validate_on_submit():
         avatar_file = form.avatar.data
         
         if avatar_file:
+            # Generate a secure filename
             filename = secure_filename(avatar_file.filename)
             # Set allowed file extensions
             extension = filename.rsplit('.',1)[1].lower()
-
+            # rename
             avatar_filename = f"user_{current_user.id}.{extension}"
 
             upload_folder= os.path.join(app.root_path, 'static', 'uploads','avatar')
+
             if not os.path.exists(upload_folder):
                 os.makedirs(upload_folder)
 
@@ -475,5 +504,6 @@ def update_avatar():
 
             current_user.avatar = f"uploads/avatar/{avatar_filename}"
             db.session.commit()
-
+            
+    # Redirect back to the dashboard or the referring page after updating the avatar
     return redirect(request.referrer or url_for('main.dashboard'))
