@@ -426,18 +426,21 @@ def analytics():
             return (date.today() - timedelta(days=7)).isoformat()
     start_date = findstartdate(period)
 
-    tasks = db.session.query(
-        TimerSession.taskforsession,
-        (func.sum(TimerSession.timeCost) / 3600000).label('totalhrs'),
-    ).filter(
-        TimerSession.sessiondate >= start_date,
-        TimerSession.user_id == current_user.id,
-    ).group_by(TimerSession.taskforsession).all()
+    def formatchartdata(start_date):
+        tasks = db.session.query(
+            TimerSession.taskforsession,
+            (func.sum(TimerSession.timeCost) / 3600000).label('totalhrs'),
+        ).filter(
+            TimerSession.sessiondate >= start_date,
+            TimerSession.user_id == current_user.id,
+        ).group_by(TimerSession.taskforsession).all()
 
-    chart_data = {
-        "labels": [task.taskforsession for task in tasks],
-        "data": [task.totalhrs for task in tasks]
-    }
+        chart_data = {
+                "labels": [task.taskforsession for task in tasks],
+                "data": [task.totalhrs for task in tasks]
+            }
+        return chart_data
+    chart_data = formatchartdata(start_date)
 
     total_tasks = Task.query.filter_by(user_id=current_user.id).count()
     done_tasks = Task.query.filter_by(user_id=current_user.id, status=True).count()
