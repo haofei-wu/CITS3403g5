@@ -1,5 +1,8 @@
 const chartdata = window.chartData;
 const ctx = document.getElementById('analyticsChart');
+const colors = chartdata.data.map((_, i) =>
+    `hsl(${i * 360 / chartdata.data.length}, 70%, 60%)`
+  );
 
 if (ctx && window.Chart)
     new Chart(ctx, {
@@ -9,16 +12,24 @@ if (ctx && window.Chart)
             datasets: [{
                 label: 'Hrs Studied Per Task',
                 data: chartdata.data,
-                borderWidth: 1
+                borderWidth: 1,
+                backgroundColor: colors
             }]
         },
         options: {
             //autofitting
             responsive: true,
             maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false }
+            },
             scales: {
                 y: {
-                    beginAtZero: true
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Hrs Studied Per Task'
+                    }
                 }
             }
         }

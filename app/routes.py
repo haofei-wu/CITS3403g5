@@ -132,7 +132,7 @@ def register():
 
 
 # ------------------ FORGOT PASSWORD ------------------
-@main.route('/forgot-password', methods=['GET', 'POST'])
+@main.route('/forgot_password', methods=['GET', 'POST'])
 def forgot_password():
     form = ForgotPasswordForm()
 
@@ -417,15 +417,14 @@ def calculate():
 def analytics():
     period = request.args.get("period", "week")
 
-    if period == "day":
-        start_date = date.today().isoformat()
-
-    elif period == "month":
-        start_date = (date.today() - relativedelta(months=1)).isoformat()
-
-    else:
-        period = "week"
-        start_date = (date.today() - timedelta(days=7)).isoformat()
+    def findstartdate(period):
+        if period == "day":
+            return date.today().isoformat()
+        elif period == "month":
+            return (date.today() - relativedelta(months=1)).isoformat()
+        else:
+            return (date.today() - timedelta(days=7)).isoformat()
+    start_date = findstartdate(period)
 
     tasks = db.session.query(
         TimerSession.taskforsession,

@@ -12,3 +12,9 @@ class TestConfig(Config):
     WTF_CSRF_ENABLED = False
     SQLALCHEMY_DATABASE_URI = "sqlite:///:memory:"
     SECRET_KEY ="test3403"
+
+class SeleniumTestConfig(TestConfig):
+    TESTING = True
+    WTF_CSRF_ENABLED = False
+    SQLALCHEMY_DATABASE_URI = "sqlite:///" + os.path.join(basedir, "selenium_test.db")
+    SECRET_KEY ="seleniumtest3403"
