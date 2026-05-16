@@ -296,3 +296,69 @@ class AuthenTest(BasicTests):
         })
 
         self.assertIn(b"Passwords must match", response.data)
+
+    # ---------LEADERBOARD TESTS--------------------
+
+class LeaderboardTest(BasicTests):
+
+    def test_total_time_calculation(self):
+
+        sessions = TimerSession.query.filter_by(user_id=1).all()
+
+        total = sum(session.timeCost for session in sessions)
+
+        self.assertEqual(total, 5500000)
+
+
+    def test_leaderboard_ranking_order(self):
+
+        users = User.query.all()
+
+        leaderboard = []
+
+        for user in users:
+
+            total = sum(
+                session.timeCost
+                for session in TimerSession.query.filter_by(
+                    user_id=user.id
+                ).all()
+            )
+
+            leaderboard.append((user.nickname, total))
+
+        leaderboard.sort(
+            key=lambda x: x[1],
+            reverse=True
+        )
+
+        self.assertEqual(leaderboard[0][0], "C123")
+
+        self.assertEqual(leaderboard[1][0], "A123")
+
+        self.assertEqual(leaderboard[2][0], "B123")
+
+
+    def test_hidden_user_setting(self):
+
+        settings = Settings.query.get(2)
+
+        self.assertFalse(settings.show_leaderboard)
+
+
+    def test_highest_study_time_user(self):
+
+        user = User.query.filter_by(
+            nickname="C123"
+        ).first()
+
+        total = sum(
+            session.timeCost
+            for session in TimerSession.query.filter_by(
+                user_id=user.id
+            ).all()
+        )
+
+        self.assertEqual(total, 6099000)
+
+        
