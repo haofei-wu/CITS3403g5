@@ -3,29 +3,38 @@ from flask_wtf.file import FileField, FileAllowed
 from wtforms import StringField, PasswordField, SubmitField, IntegerField, BooleanField
 from wtforms.validators import DataRequired, Email, EqualTo, Length
 
+# Forms For Login
 class LoginForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[DataRequired()])
     submit = SubmitField('Login')
 
+# Forms For Register
 class RegisterForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[DataRequired()])
     confirm_password = PasswordField(
         'Confirm Password',
-        validators=[DataRequired(), EqualTo('password', message='Passwords must match')]
+        validators=[
+            DataRequired(), 
+            EqualTo('password', message='Passwords must match')]
     )
     submit = SubmitField('Register')
 
+# Forms For Forgot Password
 class ForgotPasswordForm(FlaskForm):
+
     email = StringField('Email', validators=[DataRequired(), Email()])
     new_password = PasswordField('New Password', validators=[DataRequired()])
     confirm_password = PasswordField(
         'Confirm Password',
-        validators=[DataRequired(), EqualTo('new_password', message='Passwords must match')]
+        validators=[
+            DataRequired(), 
+            EqualTo('new_password', message='Passwords must match')]
     )
     submit = SubmitField('Reset Password')
 
+# Forms For Settings
 class SettingsForm(FlaskForm):
     nickname = StringField('Nickname', validators=[DataRequired(), Length(min=1, max=64)])
     show_leaderboard = BooleanField('Show me on the leaderboard')
@@ -35,8 +44,9 @@ class SettingsForm(FlaskForm):
     pom_long_break = IntegerField('Pomodoro Long Break Length', validators=[DataRequired()])
     submit = SubmitField('Save')
 
-class profileform(FlaskForm):
-    avatar= FileField(
+# Forms For Profile
+class ProfileForm(FlaskForm):
+    avatar = FileField(
         'Avatar', 
         validators=[FileAllowed(['jpg', 'png','jpeg'], 'Images only')]
         )

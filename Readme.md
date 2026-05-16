@@ -77,5 +77,5 @@ pip install -r requirements.txt
 #update database
 flask db upgrade
 
-flask run
+python run.py
 

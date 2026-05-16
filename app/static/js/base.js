@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
         overlay.classList.remove('show');
     });
 
+    // Avatar upload
     if (navAvatarInput && navAvatarForm) {
         navAvatarInput.addEventListener('change', () => {
             if (navAvatarInput.files.length > 0) {

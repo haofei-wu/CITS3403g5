@@ -1,7 +1,13 @@
+#Python cache files
 __pycache__/
 *.pyc
-.vscode/
+
+#Virtual environments
 .venv/
 venv/
+
+#Local database files
 app/*.db
-echo "app/app.db" >> .gitignore
+
+config.bat
+node_modules

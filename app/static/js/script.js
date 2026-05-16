@@ -1,16 +1,23 @@
 // Timer
+// Get elements
 const mode_btns = document.querySelectorAll('.mode-btn:not(#custom-btn)');
-// const custom_btn = document.getElementById('custom-btn');
+
 const timerDisplay = document.getElementById('simple-timer');
 const startBtn = document.getElementById('start-btn');
 const resetBtn = document.getElementById('reset-btn');
 
+// Store timer interval id
 let timer= null;
+
 let is_running = false;
+
+// Get timer lengths from HTML
 let worklength = document.getElementById('pom-worklength').textContent;
 let short_break = document.getElementById('pom-short-break').textContent;
 let long_break = document.getElementById('pom-long-break').textContent;
+
 let modetime = worklength * 60;
+
 let time_left = modetime;
 
 // Format time in MM:SS
@@ -27,14 +34,13 @@ function timeupdate(){
 
 timeupdate();
 
-// timer mode change
-
 // clear active state
 function clearActiveState() {
     mode_btns.forEach(btn => btn.classList.remove('active'));
     // custom_btn.classList.remove('active');
 }
 
+// change timer length when mode button is clicked
 function length_change(length, button) {
     modetime = length * 60;
     time_left = modetime;
@@ -64,44 +70,6 @@ shortbtn.addEventListener('click', () => {
 longbtn.addEventListener('click', () => {
     length_change(long_break, longbtn); 
 })
-
-
-// custom timer
-// const customInput = document.getElementById('custom-input');
-// const customSetBtn = document.getElementById('custom-set');
-// const customModal = document.getElementById('custom-modal');
-
-// custom_btn.addEventListener('click', () => {
-
-//     clearActiveState();
-
-//     custom_btn.classList.add('active');
-//     customModal.classList.remove('hidden');
-
-//     clearInterval(timer);
-//     is_running = false;
-//     timer = null;
-//     startBtn.textContent = 'Start';
-// });
-
-// customSetBtn.addEventListener('click', () => {
-//     const minutes = parseInt(customInput.value);
-//     if (!isNaN(minutes) && minutes > 0) {
-//         modetime = minutes * 60;
-//         time_left = modetime;
-//         customModal.classList.add('hidden');
-//     }
-//     timeupdate();
-// });
-
-//close window
-// customModal.addEventListener('click', (e) => {
-//     if (e.target === customModal) {
-//         customModal.classList.add('hidden');
-//     }
-// });
-
-
 
 // start/pause timer
 startBtn.addEventListener('click', () => {
@@ -201,6 +169,7 @@ function selectFlowTaskFromList(id) {
         selectFlowTask(task);
     }
 }
+
 // Task management
 const getcsrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 const addBtn = document.getElementById('add-task-btn');
@@ -389,10 +358,14 @@ pomobtn.addEventListener('click', () => {
     modeswitch('pomo');
 });
 
+
+
 // ============Search Functionality===============
 let taskHistory = [];
+// Store Fuse search object for task search
 let taskFuse = null;
 
+// Fetch task history for search suggestions
 fetch("/task_history")
     .then(res => {
         if (res.status === 401 || res.redirected && res.url.includes('/login')) {
@@ -407,26 +380,34 @@ fetch("/task_history")
         }
 
         taskHistory = data.tasks;
+
+        // Create a fuse search 
         taskFuse = new Fuse(taskHistory, {
             keys: ["content"],
             threshold: 0.35
         });
     });
 
+// Get task input element
 const taskInput = document.getElementById("task-input");
 
+//listen for typing input element
 taskInput.addEventListener("input", () => {
+
     const query = taskInput.value.trim();
 
+    // Hide suggestions if query is empty
     if (!query || !taskFuse) {
         hideSuggestions();
         return;
     }
 
+    // Keep top 5 results
     const results = taskFuse.search(query).slice(0, 5);
     renderSuggestions(results.map(r => r.item));
 });
 
+// Fill input
 function selectSuggestion(task) {
     taskInput.value = task.content;
     hideSuggestions();
