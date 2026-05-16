@@ -1,7 +1,12 @@
+#Python cache files
 __pycache__/
 *.pyc
+
+#Virtual environments
 .vscode/
 .venv/
 venv/
+
+#Local database files
 app/*.db
-echo "app/app.db" >> .gitignore
+

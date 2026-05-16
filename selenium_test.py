@@ -9,6 +9,8 @@ import time
 from app import create_app, db
 from app.config import SeleniumTestConfig
 
+from app.models import *
+from werkzeug.security import generate_password_hash, check_password_hash
 
 
 localHost = "http://localhost:5000"
@@ -200,4 +202,98 @@ class TestIndex(seleniumTests):
         self.assertIsNone(
             self.driver.find_element(By.ID, "flow-start-btn").get_attribute("disabled")
         )
+
+#-----------Authentication Tests -----------------
+class TestAuthentication(seleniumTests):
+
+    #----------Login Page----------------
+    #login_success already tested in index test, so not repeated here
+
+    def test_login_wrong_password(self):
+        self.driver.get(localHost + "/login")
+
+        self.driver.find_element(By.ID, "email").send_keys("A123@example.com")
+        self.driver.find_element(By.ID, "password").send_keys("wrong_password")
+        self.driver.find_element(By.ID, "login-submit-btn").click()
+
+        time.sleep(2)  # Wait for the page to load
+
+        self.assertIn("Incorrect password", self.driver.page_source)
+    
+    def test_login_wrong_email(self):
+        self.driver.get(localHost + "/login")
+
+        self.driver.find_element(By.ID, "email").send_keys("wrong_email@example.com")
+        self.driver.find_element(By.ID, "password").send_keys("password1")
+        self.driver.find_element(By.ID, "login-submit-btn").click()
+
+        time.sleep(2)  # Wait for the page to load
+
+        self.assertIn("Email not found", self.driver.page_source)
+
+    #----------Register Page----------------
+    def test_register_success(self):
+        self.driver.get(localHost + "/register")
+
+        self.driver.find_element(By.ID, "email").send_keys("selenium_test@example.com")
+        self.driver.find_element(By.ID, "password").send_keys("testpassword")
+        self.driver.find_element(By.ID, "confirm_password").send_keys("testpassword")
+        self.driver.find_element(By.CSS_SELECTOR, "button[type='submit']").click()
+
+        time.sleep(2)  # Wait for the page to load
+
+        self.assertIn("/login", self.driver.current_url)
+
+    def test_register_exist_email(self):
+        self.driver.get(localHost + "/register")
+
+        self.driver.find_element(By.ID, "email").send_keys("A123@example.com")
+        self.driver.find_element(By.ID, "password").send_keys("testpassword")
+        self.driver.find_element(By.ID, "confirm_password").send_keys("testpassword")
+        self.driver.find_element(By.CSS_SELECTOR, "button[type='submit']").click()
+
+        time.sleep(2)  # Wait for the page to load
+
+        self.assertIn("Email is already registered", self.driver.page_source)
+
+    def test_register_wrong_confirm(self):
+        self.driver.get(localHost + "/register")
+
+        self.driver.find_element(By.ID, "email").send_keys("selenium_test@example.com")
+        self.driver.find_element(By.ID, "password").send_keys("testpassword")
+        self.driver.find_element(By.ID, "confirm_password").send_keys("wrong_confirm")
+        self.driver.find_element(By.CSS_SELECTOR, "button[type='submit']").click()
+
+        time.sleep(2)  # Wait for the page to load
+
+        self.assertIn("Passwords must match", self.driver.page_source)
+    
+    #----------Forgot Password Page----------------
+    def test_forgot_password_success(self):
+        self.driver.get(localHost + "/forgot_password")
+
+        self.driver.find_element(By.ID, "email").send_keys("A123@example.com")
+        self.driver.find_element(By.ID, "new_password").send_keys("newpassword1")
+        self.driver.find_element(By.ID, "confirm_password").send_keys("newpassword1")
+        self.driver.find_element(By.CSS_SELECTOR, "button[type='submit']").click()
+
+        time.sleep(2)  # Wait for the page to load
+        self.assertIn("Password reset successfully", self.driver.page_source)
+
+    def test_forgot_password_wrong_email(self):
+        self.driver.get(localHost + "/forgot_password")
+
+        self.driver.find_element(By.ID, "email").send_keys("wrong_email@example.com")
+        self.driver.find_element(By.ID, "new_password").send_keys("newpassword1")
+        self.driver.find_element(By.ID, "confirm_password").send_keys("newpassword1")
+        self.driver.find_element(By.CSS_SELECTOR, "button[type='submit']").click()
+
+        time.sleep(2)  # Wait for the page to load
+
+        self.assertIn("Email not found", self.driver.page_source)
+
+    #wrong confirm password case is same as register wrong confirm, so not repeated here
+
+
+
 
