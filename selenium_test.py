@@ -25,7 +25,9 @@ class seleniumTests(TestCase):
         self.app_context = self.testApp.app_context()
         self.app_context.push()
 
+        db.drop_all()
         db.create_all()
+
         add_test_data_to_db()
 
         self.server_thread = multiprocessing.Process(target=run_test_server)
