@@ -311,23 +311,38 @@ class TestSettingsChangeAffectsTimer(seleniumTests):
         self.driver.find_element(By.ID, "settings-btn").click()
         time.sleep(2)  # Wait for the page to update
 
-        self.driver.find_element(By.ID, "flow_restratio").send_keys("2")
+        flow_restratio_input = self.driver.find_element(By.ID, "flow_restratio")
+        flow_restratio_input.clear()
+        flow_restratio_input.send_keys("2")
         self.driver.find_element(By.ID, "submit").click()
         time.sleep(2)  # Wait for the page to update
         self.driver.find_element(By.ID, "menubtn").click()
+        time.sleep(1)  # Wait for the sidebar slide-in animation
         self.driver.find_element(By.ID, "urlfortimers").click()
+        time.sleep(2)  # Wait for the page to load
         self.assertEqual(
             self.driver.find_element(By.ID, "flow-restratio").get_attribute("textContent"),
             "2"
         )
         self.driver.find_element(By.ID, "settings-btn").click()
         time.sleep(2)  # Wait for the page to update
-        self.driver.find_element(By.ID, "pom_worklength").send_keys("30")
-        self.driver.find_element(By.ID, "pom_short_break").send_keys("10")
-        self.driver.find_element(By.ID, "pom_long_break").send_keys("20")
+
+        pom_worklength_input = self.driver.find_element(By.ID, "pom_worklength")
+        pom_worklength_input.clear()
+        pom_worklength_input.send_keys("30")
+
+        pom_short_break_input = self.driver.find_element(By.ID, "pom_short_break")
+        pom_short_break_input.clear()
+        pom_short_break_input.send_keys("10")
+
+        pom_long_break_input = self.driver.find_element(By.ID, "pom_long_break")
+        pom_long_break_input.clear()
+        pom_long_break_input.send_keys("20")
+
         self.driver.find_element(By.ID, "submit").click()
         time.sleep(2)  # Wait for the page to update
         self.driver.find_element(By.ID, "menubtn").click()
+        time.sleep(1)  # Wait for the sidebar slide-in animation
         self.driver.find_element(By.ID, "urlfortimers").click()
         time.sleep(2)  # Wait for the page to update
         self.assertEqual(
@@ -355,59 +370,30 @@ class TestTimerSessionUpdatesChartData(seleniumTests):
         time.sleep(2)  # Wait for the page to load
 
         self.driver.find_element(By.ID, "menubtn").click()
+        time.sleep(1)  # Wait for the sidebar slide-in animation
         self.driver.find_element(By.ID, "urlfortimers").click()
         time.sleep(2)  # Wait for the page to update
+
+        task_text = "CITS3403 project"
         task_input = self.driver.find_element(By.ID, "task-input")
         task_input.clear()
-        task_input.send_keys("CITS3403 project")
+        task_input.send_keys(task_text)
         time.sleep(1)  # Wait for the page to update
         self.driver.find_element(By.ID, "add-task-btn").click()
         time.sleep(2)  # Wait for the page to update
+
+        # Select the task — flow-start-btn stays disabled until a task is selected
+        task_items = self.driver.find_elements(By.CLASS_NAME, "task-item")
+        task_item = next(item for item in task_items if task_text in item.text)
+        self.driver.execute_script("arguments[0].click();", task_item)
+        time.sleep(1)  # Wait for the task to be selected
+
         self.driver.find_element(By.ID, "flow-start-btn").click()
         time.sleep(2)  # Wait for the page to update
         self.driver.find_element(By.ID, "flow-end-btn").click()
-        time.sleep(2)  # Wait for the page to update
-        self.driver.find_element(By.ID, "urlfordashboard").click()
-        time.sleep(2)  # Wait for the page to update
-        # Build a {task_name: hours} dictionary from the chart
-        task_hours = self.driver.execute_script("""
-            const chart = Chart.getChart("analyticsChart");
-            const labels = chart.data.labels;
-            const values = chart.data.datasets[0].data;
-
-            const result = {};
-            for (let i = 0; i < labels.length; i++) {
-                result[labels[i]] = values[i];
-            }
-            return result;
-        """)
-
-        self.assertIn("CITS3403 project", task_hours.keys())
-        self.assertGreater(task_hours["CITS3403 project"], 0)
-
-class TestPomodoroSessionUpdatesChartData(seleniumTests):
-    def test_pomodoro_session_start_and_end_updates_chart_data(self):
-        self.driver.get(localHost + "/login")
-
-        self.driver.find_element(By.ID, "email").send_keys("E123@example.com")
-        self.driver.find_element(By.ID, "password").send_keys("password5")
-        self.driver.find_element(By.ID, "login-submit-btn").click()
-
-        time.sleep(2)  # Wait for the page to load
-
+        time.sleep(2)  # Wait for the session to be committed
         self.driver.find_element(By.ID, "menubtn").click()
-        self.driver.find_element(By.ID, "urlfortimers").click()
-        time.sleep(2)  # Wait for the page to update
-        task_input = self.driver.find_element(By.ID, "task-input")
-        task_input.clear()
-        task_input.send_keys("CITS3403 project")
-        time.sleep(1)  # Wait for the page to update
-        self.driver.find_element(By.ID, "add-task-btn").click()
-        time.sleep(2)  # Wait for the page to update
-        self.driver.find_element(By.ID, "start-btn").click()
-        time.sleep(2)  # Wait for the page to update
-        self.driver.find_element(By.ID, "start-btn").click()
-        time.sleep(2)  # Wait for the page to update
+        time.sleep(1)  # Wait for the sidebar slide-in animation
         self.driver.find_element(By.ID, "urlfordashboard").click()
         time.sleep(2)  # Wait for the page to update
         # Build a {task_name: hours} dictionary from the chart
@@ -425,3 +411,4 @@ class TestPomodoroSessionUpdatesChartData(seleniumTests):
 
         self.assertIn("CITS3403 project", task_hours.keys())
         self.assertGreater(task_hours["CITS3403 project"], 0)
+

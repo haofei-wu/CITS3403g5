@@ -245,8 +245,6 @@ document.getElementById('add-task-btn').addEventListener('click', () => {
 
 // Render tasks
 function renderTasks(tasks) {
-    console.log(tasks);
-    console.log(tasks[0]);
     taskCache = tasks;
 
     if (selectedFlowTaskId !== null && !taskCache.some(task => task.id === selectedFlowTaskId)) {

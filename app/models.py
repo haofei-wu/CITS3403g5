@@ -39,20 +39,7 @@ class Task(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     taskdate = db.Column(db.String(10), nullable=False)
     
-# # trigger to automatically insert timecost into timer_session table after insert
-# trigger = DDL("""
-#     CREATE TRIGGER timeCostTrigger AFTER INSERT ON timer_session
-#     FOR EACH ROW
-#     BEGIN
-#         UPDATE timer_session SET timeCost = (end_time - start_time)
-#     WHERE id = NEW.id;
-#     END;
-# """)
 
-# # 2. Attach it to the table using 'event'
-# # This ensures it runs automatically during metadata.create_all()
-# event.listen(TimerSession.__table__, 'after_create', trigger)
-# dont need trigger, can do it server side in route. 
 
 class Settings(db.Model):
     
@@ -63,10 +50,6 @@ class Settings(db.Model):
     pom_long_break = db.Column(db.Integer, nullable=False, default= 15)
     show_leaderboard = db.Column(db.Boolean, nullable=False, default=True)
 
-# Initialise: python3 -m venv application-env
-# .
-# Activate: source application-env/bin/activate
-# .
 
 
 
