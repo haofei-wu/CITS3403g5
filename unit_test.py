@@ -4,6 +4,9 @@ from app import create_app, db
 from app.config import TestConfig
 from app.models import *
 from werkzeug.security import generate_password_hash, check_password_hash
+from datetime import date, timedelta
+from dateutil.relativedelta import relativedelta
+from app.routes import *
 
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
@@ -93,8 +96,36 @@ def add_test_data_to_db():
             sessiondate="2025-04-15",
             timeCost=6099000,
         ),
+        
     ]
     db.session.add_all(sessions)
+    db.session.commit()
+    
+    today = date.today()
+    d123_sessions = [
+        TimerSession(user_id=users[3].id, taskforsession="CITS3403 project",
+                     start_time=0, end_time=7_200_000, timeCost=7_200_000,
+                     sessiondate=today.isoformat()),                            # 120 min, today
+        TimerSession(user_id=users[3].id, taskforsession="CITS3403 project",
+                     start_time=0, end_time=5_400_000, timeCost=5_400_000,
+                     sessiondate=today.isoformat()),                            #  90 min, today
+        TimerSession(user_id=users[3].id, taskforsession="Fluids revision",
+                     start_time=0, end_time=5_400_000, timeCost=5_400_000,
+                     sessiondate=today.isoformat()),                            #  90 min, today
+        TimerSession(user_id=users[3].id, taskforsession="Dynamics tutorial",
+                     start_time=0, end_time=1_800_000, timeCost=1_800_000,
+                     sessiondate=(today - timedelta(days=2)).isoformat()),      #  30 min, 2d ago
+        TimerSession(user_id=users[3].id, taskforsession="Reading",
+                     start_time=0, end_time=1_500_000, timeCost=1_500_000,
+                     sessiondate=(today - timedelta(days=8)).isoformat()),      #  25 min, 8d ago
+        TimerSession(user_id=users[3].id, taskforsession="CITS1402 SQL",
+                     start_time=0, end_time=1_800_000, timeCost=1_800_000,
+                     sessiondate=(today - timedelta(days=15)).isoformat()),     #  30 min, 15d ago
+        TimerSession(user_id=users[3].id, taskforsession="Reading",
+                     start_time=0, end_time=1_200_000, timeCost=1_200_000,
+                     sessiondate=(today - timedelta(days=22)).isoformat()),     #  20 min, 22d ago
+    ]
+    db.session.add_all(d123_sessions)
     db.session.commit()
 
     today = date.today()
@@ -177,6 +208,7 @@ class BasicTests(TestCase):
             "email":email,
             "password":password})
 
+    
 
 # ---------TASK TESTS--------------------
 class TaskModelTest(BasicTests):
@@ -399,8 +431,10 @@ class LeaderboardTest(BasicTests):
         )
 
         self.assertEqual(total, 6099000)
-    
-    #---------ANALYTICS TESTS--------------------
+
+        
+
+#---------ANALYTICS TESTS--------------------
 class AnalyticsTest(BasicTests):
     def setUp(self):
         super().setUp()                                  # parent BasicTests builds app/DB/client

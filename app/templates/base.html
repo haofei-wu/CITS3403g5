@@ -25,9 +25,9 @@
     <!-- Sidebar -->
     <div id="menusidebar" class="menu-sidebar">
         <b>StudyFlow 📚</b>
-        <a id="urlfortimers" href="{{ url_for('main.index') }}"
+        <a id = "urlfortimers" href="{{ url_for('main.index') }}"
         class="{% if request.endpoint == 'main.index' %}active{% endif %}">Home</a>
-        <a id="urlfordashboard" href="{{ url_for('main.dashboard') }}"
+        <a id = "urlfordashboard" href="{{ url_for('main.dashboard') }}"
         class="{% if request.endpoint == 'main.dashboard' %}active{% endif %}">Dashboard</a>
         <a id="urlforleaderboard" href="{{ url_for('main.leaderboard') }}"
         class="{% if request.endpoint == 'main.leaderboard' %}active{% endif %}">Leaderboard</a>
