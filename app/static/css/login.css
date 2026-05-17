@@ -65,6 +65,8 @@ background: linear-gradient(
     align-items: flex-start;
 
     background:white;
+    position: relative;
+    overflow: hidden;
 }
 
 /* LOGIN CARD */
@@ -239,5 +241,71 @@ background: linear-gradient(
         opacity: 1;
 
         transform: translateY(0);
+    }
+}
+
+.study-decor {
+
+    position: absolute;
+
+    width: 100%;
+    height: 100%;
+
+    top: 0;
+    left: 0;
+
+    pointer-events: none;
+}
+
+.floating-book,
+.floating-light,
+.floating-note,
+.floating-plane {
+
+    position: absolute;
+
+    font-size: 40px;
+
+    opacity: 0.75;
+
+    animation: floaty 4s ease-in-out infinite;
+}
+
+.floating-book {
+
+    top: 12%;
+    right: 28%;
+}
+
+.floating-light {
+
+    top: 8%;
+    right: 15%;
+}
+
+.floating-note {
+
+    top: 28%;
+    right: 10%;
+}
+
+.floating-plane {
+
+    top: 18%;
+    right: 40%;
+}
+
+@keyframes floaty {
+
+    0% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+
+    100% {
+        transform: translateY(0px);
     }
 }
