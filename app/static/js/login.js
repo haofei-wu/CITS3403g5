@@ -1,13 +1,13 @@
 
-function togglePassword() {
-    const passwordInput = document.getElementById("password");
-    const button = document.querySelector(".login-show-btn");
+function togglePassword(inputId = "password", button) {
+    const passwordInput = document.getElementById(inputId);
+    const toggleButton = button || document.querySelector(".login-show-btn");
 
     if (passwordInput.type === "password") {
         passwordInput.type = "text";
-        button.textContent = "Hide";
+        toggleButton.textContent = "Hide";
     } else {
         passwordInput.type = "password";
-        button.textContent = "Show";
+        toggleButton.textContent = "Show";
     }
 }

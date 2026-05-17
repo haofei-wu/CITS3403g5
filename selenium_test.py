@@ -460,3 +460,23 @@ class TestTimerSessionUpdatesChartData(seleniumTests):
 
         self.assertIn("CITS3403 project", task_hours.keys())
         self.assertGreater(task_hours["CITS3403 project"], 0)
+
+class TestLeaderboardUpdates(seleniumTests):
+    def test_leaderboard_ranking_order(self):
+        self.driver.get(localHost + "/login")
+
+        self.driver.find_element(By.ID, "email").send_keys("A123@example.com")
+        self.driver.find_element(By.ID, "password").send_keys("password1")
+        self.driver.find_element(By.ID, "login-submit-btn").click()
+
+        self.driver.get(localHost + "/leaderboard")
+
+        time.sleep(2)
+
+        nicknames = [
+            el.text
+            for el in self.driver.find_elements(By.CSS_SELECTOR, ".leaderboard-nickname")
+        ]
+
+        self.assertGreaterEqual(len(nicknames), 3)
+        self.assertEqual(nicknames[:3], ["D123", "A123", "C123"])
