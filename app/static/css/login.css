@@ -309,3 +309,67 @@ background: linear-gradient(
         transform: translateY(0px);
     }
 }
+
+.decor-path {
+
+    position: absolute;
+
+    top: 18%;
+    right: 8%;
+
+    width: 380px;
+    height: 280px;
+
+    border: 3px dashed rgba(123, 188, 255, 0.35);
+
+    border-color:
+        rgba(123,188,255,0.35)
+        transparent
+        transparent
+        transparent;
+
+    border-radius: 50%;
+
+    transform: rotate(15deg);
+
+    animation: pathFloat 6s ease-in-out infinite;
+}
+
+@keyframes pathFloat {
+
+    0% {
+        transform: rotate(15deg) translateY(0px);
+    }
+
+    50% {
+        transform: rotate(18deg) translateY(-8px);
+    }
+
+    100% {
+        transform: rotate(15deg) translateY(0px);
+    }
+}
+
+.tiny-star,
+.tiny-star2 {
+
+    position: absolute;
+
+    color: #8fc7ff;
+
+    font-size: 18px;
+
+    animation: floaty 5s ease-in-out infinite;
+}
+
+.tiny-star {
+
+    top: 14%;
+    right: 22%;
+}
+
+.tiny-star2 {
+
+    top: 32%;
+    right: 30%;
+}
