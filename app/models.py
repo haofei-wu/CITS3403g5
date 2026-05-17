@@ -25,8 +25,8 @@ class TimerSession(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    start_time = db.Column(db.Integer, nullable=True)
-    end_time = db.Column(db.Integer, nullable=True)
+    start_time = db.Column(db.Integer, nullable=False)
+    end_time = db.Column(db.Integer, nullable=False)
     taskforsession = db.Column(db.ForeignKey('task.content'), nullable=False)
     sessiondate = db.Column(db.String(10), nullable=False)
     timeCost = db.Column(db.Integer, nullable=False)

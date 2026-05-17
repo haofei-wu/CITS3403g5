@@ -362,7 +362,7 @@ def toggle_status(id):
 def timer():
     return render_template("timer.html", **get_user_settings_values())
 
-#-------flow + pomodoro timer sessions commit to database------------------
+#-------flow timer sessions commit to database (removed pomo link)------------------
 @main.route("/sessiontimes", methods=['POST'])
 @login_required
 def sessiontimes():

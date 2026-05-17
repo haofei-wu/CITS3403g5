@@ -4,7 +4,6 @@ const mode_btns = document.querySelectorAll('.mode-btn:not(#custom-btn)');
 
 const timerDisplay = document.getElementById('simple-timer');
 const startBtn = document.getElementById('start-btn');
-startBtn.disabled = true;
 const resetBtn = document.getElementById('reset-btn');
 
 // Store timer interval id
@@ -21,30 +20,6 @@ let modetime = worklength * 60;
 
 let time_left = modetime;
 
-//SEND DATA TO TIMERSESSIONS TABLE
-async function commitPomodoroSession() {
-    const task = document.querySelector("#flow-task-value").textContent;
-
-    const timeCost = workSegment.accumulatedMs;
-    workSegment.accumulatedMs = 0;
-    workSegment.runningSince = null;
-
-    await fetch("/sessiontimes", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "X-CSRFToken": getcsrfToken
-        },
-        body: JSON.stringify({
-            startTime: null,
-            endTime: null,
-            task: task,
-            sessiondate: getLocal(),
-            timeCost: timeCost
-        })
-    });
-}
-
 
 
 function formatTime(sec){
@@ -53,9 +28,7 @@ function formatTime(sec){
     return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`; 
 }
 
-//Pomodoro Timer Session Storage:
-let workSegment = { accumulatedMs: 0, runningSince: null };
-let activeMode = "work";
+
 
 // update timer display
 function timeupdate(){
@@ -84,7 +57,6 @@ function length_change(length, button) {
     timer = null;
 
     startBtn.textContent = 'Start';
-    activeMode = mode;
     timeupdate();
 }
 const workbtn = document.getElementById('pomo_length');
@@ -92,13 +64,13 @@ const shortbtn = document.getElementById('sbreak_length');
 const longbtn = document.getElementById('lbreak_length');
 
 workbtn.addEventListener('click', () => {
-    length_change(worklength, workbtn, "work");
+    length_change(worklength, workbtn);
 })
 shortbtn.addEventListener('click', () => {
-    length_change(short_break, shortbtn, "short");
+    length_change(short_break, shortbtn);
 })
 longbtn.addEventListener('click', () => {
-    length_change(long_break, longbtn, "long"); 
+    length_change(long_break, longbtn); 
 })
 
 // start/pause timer
@@ -106,9 +78,6 @@ startBtn.addEventListener('click', () => {
     if (!is_running) {
         is_running = true;
         startBtn.textContent = 'Pause';
-        if (activeMode === "work") {
-            workSegment.runningSince = Date.now();
-        }
         timer = setInterval(() => {
             if (time_left > 0) {
                 time_left--;
@@ -117,11 +86,6 @@ startBtn.addEventListener('click', () => {
                 clearInterval(timer);
                 is_running = false;
                 startBtn.textContent = 'Start';
-                if (activeMode === "work" && workSegment.runningSince !== null) {
-                    workSegment.accumulatedMs += Date.now() - workSegment.runningSince;
-                    workSegment.runningSince = null;
-                }
-                commitPomodoroSession();
             }
         },1000);
 
@@ -131,22 +95,12 @@ startBtn.addEventListener('click', () => {
         timer = null;
         is_running = false;
         startBtn.textContent = 'Resume';
-        if (activeMode === "work" && workSegment.runningSince !== null) {
-            workSegment.accumulatedMs += Date.now() - workSegment.runningSince;
-            workSegment.runningSince = null;
-        }
-        commitPomodoroSession();
     }
 });
 
 
 // reset timer
 document.getElementById('reset-btn').addEventListener('click', () => {
-    if (activeMode === "work" && workSegment.runningSince !== null) {
-        workSegment.accumulatedMs += Date.now() - workSegment.runningSince;
-        workSegment.runningSince = null;
-    }
-    commitPomodoroSession();
     clearInterval(timer);
     timer = null;
     is_running = false;
@@ -183,8 +137,6 @@ function selectFlowTask(task) {
         document.getElementById('flow-task-name').textContent = 'Task: No task selected';
         document.getElementById('flow-task-value').textContent = '';
         document.getElementById('flow-start-btn').disabled = true;
-        startBtn.disabled = true;
-        document.getElementById('pomo-task-prompt').style.display = '';
         document.querySelectorAll('.task-item').forEach(item => {
             item.classList.remove('selected');
         });
@@ -197,14 +149,12 @@ function selectFlowTask(task) {
     document.getElementById('flow-task-name').textContent = `Task: ${task.content}`;
     document.getElementById('flow-task-value').textContent = task.content;
     document.getElementById('flow-start-btn').disabled = false;
-    startBtn.disabled = false;
-    document.getElementById('pomo-task-prompt').style.display = 'none';
 
     document.querySelectorAll('.task-item').forEach(item => {
         item.classList.toggle('selected', Number(item.dataset.taskId) === selectedFlowTaskId);
     });
 
-    // modeswitch('flow');
+    modeswitch('flow');
 }
 
 function selectFlowTaskFromList(id) {
@@ -303,9 +253,7 @@ function renderTasks(tasks) {
         selectedFlowTaskId = null;
         document.getElementById('flow-task-name').textContent = 'Task: No task selected';
         document.getElementById('flow-task-value').textContent = '';
-        document.getElementById('flow-start-btn').disabled = true;
-        startBtn.disabled = true;
-        document.getElementById('pomo-task-prompt').style.display = '';
+        document.getElementById('flow-start-btn').disabled = true; 
     }
 
     const taskList = document.getElementById('taskList');
