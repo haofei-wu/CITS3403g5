@@ -37,17 +37,34 @@ A productivity app with a built-in timer that lets you track time completed for 
 
 ## How to Run
 
-```bash
+### Windows Powershell
+
+```powershell
 python -m venv venv
+venv\scripts\activate
 
-venv\scripts\activate #window
-source venv/bin/activate #Mac/Linux
-
-#install dependencies
 pip install -r requirements.txt
 
-#update database
+$env:FLASK_APP = "run.py"
+
 flask db upgrade
 
-python run.py
+python run.py // flask run
+```
+
+### Mac/Linux
+
+```bash
+python3 -m venv venv
+source venv/bin/activate
+
+pip install -r requirements.txt
+
+export FLASK_APP=run.py
+
+flask db upgrade
+
+python run.py // flask run
+```
+
 
