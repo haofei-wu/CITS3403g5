@@ -150,10 +150,30 @@
 
 @media (max-width: 640px) {
     .settings-page {
-        padding: 28px 0;
+        padding: 20px 0;
     }
 
     .settings-card {
-        padding: 28px;
+        padding: 24px 18px;
+        border-radius: 12px;
+    }
+
+    .settings-title {
+        font-size: 30px;
+    }
+
+    .settings-subtitle {
+        font-size: 16px;
+    }
+
+    .settings-toggle-field {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .settings-input,
+    .settings-submit {
+        padding: 13px 14px;
+        font-size: 16px;
     }
 }
