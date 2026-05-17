@@ -362,16 +362,21 @@ def toggle_status(id):
 def timer():
     return render_template("timer.html", **get_user_settings_values())
 
-
+#-------flow timer sessions commit to database (removed pomo link)------------------
 @main.route("/sessiontimes", methods=['POST'])
 @login_required
 def sessiontimes():
+    #gets the data from the request
     data = request.get_json()
-    startTime = data['startTime']
-    endTime = data['endTime']
+    startTime = data.get('startTime')
+    endTime = data.get('endTime')
     task = data['task']
     sessiondate = data['sessiondate']
-    timeCost = endTime - startTime
+    timeCost = data.get('timeCost')
+    #if timeCost is not provided, calculate it from the start and end times -> was to support timersession from pomo before, but now this is removed. 
+    if timeCost is None:
+        timeCost = endTime - startTime
+    #creates a new timer session and adds it to the database
     new_session = TimerSession(user_id=current_user.id,
                                start_time=startTime,
                                end_time=endTime,
@@ -380,6 +385,7 @@ def sessiontimes():
                                timeCost=timeCost)
     db.session.add(new_session)
     db.session.commit()
+    #returns a message to the client that the session times have been committed successfully
     return jsonify({'message': 'Session times committed successfully'})
 
 # ------------------ SETTINGS ------------------
@@ -437,42 +443,58 @@ def calculate():
     return jsonify({'sessiondate': sessiondate, 'today_total': today_total})
 
 #-------------------- Task Cost ------------------
-@main.route("/analytics", methods=['GET'])
-@login_required
-def analytics():
-    period = request.args.get("period", "week")
+def findstartdate(period):
+    #finds the start date for the period (day, week, month) based on current date to start querying the user's data from
+    if period == "day":
+        return date.today().isoformat()
+    elif period == "month":
+        return (date.today() - relativedelta(months=1)).isoformat()
+    else:
+        return (date.today() - timedelta(days=7)).isoformat()
 
-    def findstartdate(period):
-        if period == "day":
-            return date.today().isoformat()
-        elif period == "month":
-            return (date.today() - relativedelta(months=1)).isoformat()
-        else:
-            return (date.today() - timedelta(days=7)).isoformat()
-    start_date = findstartdate(period)
 
+def formatchartdata(start_date):
+    #gets user's timer sessions and calculates the total hours spent on each task
     tasks = db.session.query(
         TimerSession.taskforsession,
         (func.sum(TimerSession.timeCost) / 3600000).label('totalhrs'),
     ).filter(
         TimerSession.sessiondate >= start_date,
         TimerSession.user_id == current_user.id,
-    ).group_by(TimerSession.taskforsession).all()
+    ).group_by(
+        TimerSession.taskforsession,
+    ).order_by(
+        func.max(TimerSession.sessiondate).desc(),
+        func.min(TimerSession.id).asc(),
+    ).all()
 
-    chart_data = {
+    #returns a dictionary with the task names and the total hours spent on each task, for use in chart.js
+    return {
         "labels": [task.taskforsession for task in tasks],
-        "data": [task.totalhrs for task in tasks]
+        "data": [float(task.totalhrs) for task in tasks],
     }
 
+
+@main.route("/analytics", methods=['GET'])
+@login_required
+def analytics():
+    #gets the period from the query parameters, default to week
+    period = request.args.get("period", "week")
+    start_date = findstartdate(period)
+    #gets the chart data for the period
+    chart_data = formatchartdata(start_date)
+
+    #gets the total number of tasks and the number of done tasks
     total_tasks = Task.query.filter_by(user_id=current_user.id).count()
     done_tasks = Task.query.filter_by(user_id=current_user.id, status=True).count()
 
+    #renders the dashboard.html template with the chart data, the total number of tasks and the number of done tasks
     return render_template(
         "dashboard.html",
         user=current_user,
         total_tasks=total_tasks,
         done_tasks=done_tasks,
-        avatar_form=profileForm(),
+        avatar_form=ProfileForm(),
         chart_data=chart_data,
         analytics_period=period
     )

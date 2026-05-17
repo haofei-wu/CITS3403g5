@@ -20,12 +20,15 @@ let modetime = worklength * 60;
 
 let time_left = modetime;
 
-// Format time in MM:SS
+
+
 function formatTime(sec){
     const minutes = Math.floor(sec / 60);
     const seconds = sec % 60;
     return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`; 
 }
+
+
 
 // update timer display
 function timeupdate(){
@@ -54,7 +57,6 @@ function length_change(length, button) {
     timer = null;
 
     startBtn.textContent = 'Start';
-    
     timeupdate();
 }
 const workbtn = document.getElementById('pomo_length');
@@ -76,7 +78,6 @@ startBtn.addEventListener('click', () => {
     if (!is_running) {
         is_running = true;
         startBtn.textContent = 'Pause';
-
         timer = setInterval(() => {
             if (time_left > 0) {
                 time_left--;
@@ -105,7 +106,6 @@ document.getElementById('reset-btn').addEventListener('click', () => {
     is_running = false;
     time_left = modetime; // reset to 15 minutes
     document.getElementById('start-btn').textContent = 'Start';
-
     timeupdate();
 });
 
@@ -137,7 +137,6 @@ function selectFlowTask(task) {
         document.getElementById('flow-task-name').textContent = 'Task: No task selected';
         document.getElementById('flow-task-value').textContent = '';
         document.getElementById('flow-start-btn').disabled = true;
-
         document.querySelectorAll('.task-item').forEach(item => {
             item.classList.remove('selected');
         });
@@ -246,15 +245,13 @@ document.getElementById('add-task-btn').addEventListener('click', () => {
 
 // Render tasks
 function renderTasks(tasks) {
-    console.log(tasks);
-    console.log(tasks[0]);
     taskCache = tasks;
 
     if (selectedFlowTaskId !== null && !taskCache.some(task => task.id === selectedFlowTaskId)) {
         selectedFlowTaskId = null;
         document.getElementById('flow-task-name').textContent = 'Task: No task selected';
         document.getElementById('flow-task-value').textContent = '';
-        document.getElementById('flow-start-btn').disabled = true;
+        document.getElementById('flow-start-btn').disabled = true; 
     }
 
     const taskList = document.getElementById('taskList');

@@ -1,39 +1,25 @@
+| UWA ID | Name | GitHub Username |
+|--------------|------------------|-----------------|
+| 24982075 | Haofei Wu        | haofei-wu       |
+| 24284436     | Himakshi Nayyar  | Himakshi28      |
+| 24245253     | Michael Jiang    | Sol1t4ry        |
+
 # Study & Fitness Tracker App
 
-A productivity app with a built-in timer that lets you track time studied and exercised, with social features including friends and a leaderboard.
+A productivity app with a built-in timer that lets you track time completed for different tasks, see your personal analytics on time spent for each task, and a leaderboard to compare your aggregate task time to other users.
 
 ---
 
-## Features
+## User Stories
 
-- Logging study hours
-As a student I want to be able to see my total hours studied and exercised, so I can see if I am working hard enough. 
-- Pomodoro / Flowmodoro timer
-As a student I want to use the pomodoro/flowmodoro techniquem, so I can stay productive over long periods of time. 
-- Motivational quotes
-As a student I want to feel motivated to work, so the latency of starting work is reduced. 
-- Streaks for how many consecutive days you have studied/exercised
-As a student I want to consistently work, so a streak system would encourage me to stay consistent in order to not break the streak. 
-- Task management for current and next day via a timebox planner
-- Google Calendar integration — push and pull tasks made in both apps
-- Roll-over feature so that today's uncompleted tasks can be pushed to the next day
-- Forgot password page 
-- Friend Request 
-- Small friend groups would be trolls. 
-- Doing tasks -within. 
-- Pop out page for timer
-- Send task to time
-- Gameify? 
-- Working together as a group -> group page, timer on the page. How long u worked together with ecach other. Data transferred to eberyone (GROUP)
-- Chat room on the homme page -> blurred out when studying
-- Group project shared tasks, and add individuak ours, as well as a group timer.
--Multiple groups
-- Leaderbaord add commments or reaction as support
-- Task creation tool, and pull google calendar. 
-
--IMPROVE USER INTERACTON
-
--dont want ot encourage more study, just encourage consistency?
+1. Creating an account As a new user. I want a straightforward sign-up process so that I can begin tracking my study sessions without unnecessary friction.
+2. Studying without a fixed time limit. As someone whose focus varies day to day, I want a timer that counts up from zero rather than down from a preset duration, so that I can study for as long as I remain productive without feeling rushed or artificially constrained.
+3. Taking a break proportional to my effort. As a user who has just completed a long focus block, I want my break length to scale with the time I just put in, so that my rest feels appropriately earned rather than arbitrary.
+4. Using a structured timer when I need one. As a user who sometimes struggles to begin, I want the option to switch to a traditional Pomodoro format with fixed focus and break intervals, so that I have a reliable structure to fall back on when motivation is low.
+5. Attributing sessions to specific tasks. As a student balancing multiple subjects, I want to label each session with the task I am working on, so that I can later understand how my time is distributed across my commitments.
+6. Tracking trends across weeks and months As a user planning my study load, I want to see how my time is distributed across tasks over the past week or month, so that I can identify subjects I have neglected and rebalance my effort.
+7. Comparing my progress with others, on my terms As a user motivated by friendly competition, I want the option to appear on a global leaderboard ranked by total study time, but I also want this disabled by default so that my data is never shared without my explicit consent.
+8. Tailoring the app to my preferences As a user, I want to adjust settings such as my rest ratio, Pomodoro durations, long-break interval, and daily quote visibility, so that the app aligns with my personal study habits rather than forcing me to adapt to its defaults.
 
 ---
 
@@ -42,25 +28,11 @@ As a student I want to consistently work, so a streak system would encourage me 
 | Page | Description |
 |------|-------------|
 | **Login** | User authentication |
-| **Home** | Summary of everything done today, weekly hours, stats, and tasks to complete today |
-| **Leaderboard** | Compare progress with friends |
-| **Timer** | Pomodoro / Flowmodoro session timer |
-| **Task Management** | Daily planner with timebox scheduling |
+| **Home** | Pomodoro/Flowmodoro Timers and Tasks |
+| **Leaderboard** | Compare progress globally |
+| **Dashboard/Analytics Page** | See your own progress for the last day, week or month |
+| **Settings Page** | Customise your settings for timers, opt into leaderboard|
 
----
-
-## Work Distribution
-
-> Deadline: **25/03/26** — draft design (drawing) + HTML of all pages
-
-| Page | Assignee |
-|------|----------|
-| Login | Himakshi |
-| Leaderboard | Himakshi |
-| Forgot password page | Himakshi |
-| Timer | Haofei |
-| Home | Michael |
-| Task Management | Haofei + Michael |
 
 
 ## How to Run
@@ -71,7 +43,7 @@ python -m venv venv
 venv\scripts\activate #window
 source venv/bin/activate #Mac/Linux
 
-#instal dependencies
+#install dependencies
 pip install -r requirements.txt
 
 #update database
