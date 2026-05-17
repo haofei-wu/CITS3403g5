@@ -1,6 +1,6 @@
 /* Main Content Styles */
 .page-title {
-    font-size: 26px;
+    font-size: clamp(22px, 5vw, 26px);
     font-weight: 600;
     margin-bottom: 20px;
 }
@@ -10,6 +10,7 @@
     gap: 20px;
     max-width: 1000px;
     margin: 0 auto;
+    width: 100%;
 }
 
 /* Button Styles */
@@ -193,7 +194,7 @@ body.delete-mode .delete-btn {
 }
 
 .timer-card {
-    height: 500px;
+    height: auto;
     min-height: 500px;
 }
 
@@ -204,6 +205,7 @@ body.delete-mode .delete-btn {
 .card-body {
     position: relative;
     padding:20px;
+    min-width: 0;
 }
 
 .card:hover{
@@ -236,7 +238,7 @@ body.delete-mode .delete-btn {
     padding: 28px 24px;
     border-radius: 16px;
 
-    width: 360px;
+    width: min(100%, 360px);
 
     box-shadow: 0 10px 30px rgba(0,0,0,0.15);
 
@@ -346,6 +348,7 @@ body.delete-mode .delete-btn {
 .task-item {
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
     gap: 12px;
 
     padding: 14px 20px;
@@ -454,7 +457,7 @@ body.delete-mode .delete-btn {
 }
 
 #simple-timer {
-    font-size: 8rem;
+    font-size: clamp(4rem, 15vw, 8rem);
     font-weight: 800;
     line-height: 1.1;
 
@@ -463,6 +466,7 @@ body.delete-mode .delete-btn {
 
     display: block;
     width:fit-content;
+    max-width: 100%;
     text-align: center;
     margin: 0 auto 20px;
 }
@@ -489,11 +493,11 @@ body.delete-mode .delete-btn {
 #timer-display {
     display: block;
     width: fit-content;
-    min-width: 430px;
+    min-width: min(100%, 430px);
     margin: 0 auto 20px;
     padding: 20px 40px;
     border-radius: 12px;
-    font-size: 8rem;
+    font-size: clamp(4rem, 15vw, 8rem);
     font-weight: 800;
     line-height: 1.1;
     text-align: center;
@@ -540,6 +544,10 @@ body.delete-mode .delete-btn {
 }
 
 @media (max-width: 640px) {
+    .timer-card {
+        min-height: 440px;
+    }
+
     #simple-timer,
     #timer-display {
         min-width: 0;
@@ -554,6 +562,44 @@ body.delete-mode .delete-btn {
 
     .mode-btn {
         font-size: 16px;
+        padding: 8px 12px;
+    }
+
+    .timer-modes {
+        min-height: 0;
+    }
+
+    .card {
+        border-radius: 12px;
+    }
+
+    .card-body {
+        padding: 16px;
+    }
+
+    #taskList {
+        padding-left: 0;
+    }
+
+    .task-item {
+        padding: 12px 14px;
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 420px) {
+    .timer_mode_switch {
+        width: 100%;
+    }
+
+    .seg-btn {
+        flex: 1;
+        padding: 8px 10px;
+    }
+
+    #simple-timer,
+    #timer-display {
+        font-size: 4rem;
     }
 }
 

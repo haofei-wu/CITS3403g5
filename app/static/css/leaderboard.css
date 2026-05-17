@@ -6,6 +6,7 @@
     margin:0 auto;
     padding: 32px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+    overflow-x: auto;
 }
 
 
@@ -28,6 +29,7 @@
 .filter-buttons {
     display: flex;
     gap: 12px;
+    flex-wrap: wrap;
 }
 
 .filter-btn {
@@ -82,6 +84,7 @@
 
 .leaderboard-table {
     width: 100%;
+    min-width: 560px;
     border-collapse: collapse;
     background: #ffffff;
 }
@@ -140,6 +143,7 @@
     color: #222;
     font-size: 17px;
     font-weight: 800;
+    word-break: break-word;
 }
 
 .leaderboard-user-id {
@@ -214,7 +218,7 @@
     }
 
     .leaderboard-title {
-        font-size: 34px;
+        font-size: clamp(28px, 8vw, 34px);
     }
 
     .leaderboard-table th,
@@ -223,7 +227,16 @@
         font-size: 14px;
     }
 
-    .filter-buttons {
-        flex-wrap: wrap;
+}
+
+@media (max-width: 480px) {
+    .leaderboard-container {
+        padding: 16px;
+        border-radius: 12px;
+    }
+
+    .filter-btn {
+        flex: 1;
+        text-align: center;
     }
 }

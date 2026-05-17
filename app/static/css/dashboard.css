@@ -8,6 +8,7 @@
     box-shadow: 0 4px 12px rgba(0,0,0,0.06);
 
     max-width: 1000px;
+    width: 100%;
     margin: 0 auto;
 }
 
@@ -38,6 +39,7 @@
     display: flex;
     justify-content: flex-end;
     gap: 10px;
+    flex-wrap: wrap;
 }
 
 #chartsize {
@@ -137,6 +139,9 @@
 }
 
 @media (max-width: 768px) {
+    .dashboard-card {
+        padding: 20px;
+    }
 
     .dashboard-summary-card {
         grid-template-columns: 1fr;
@@ -163,7 +168,7 @@
 }
 
 .avatar-modal-box {
-    width: 360px;
+    width: min(100% - 32px, 360px);
     background: white;
     border-radius: 12px;
     padding: 24px;
@@ -182,4 +187,30 @@
 
 .avatar-input {
     display: none;
+}
+
+@media (max-width: 480px) {
+    .dashboard-card {
+        padding: 16px;
+        border-radius: 12px;
+    }
+
+    .analytics-controls {
+        justify-content: stretch;
+    }
+
+    .analytics-controls .btn {
+        flex: 1;
+    }
+
+    .summary-panel h4,
+    .summary-panel h2,
+    .task-summary-card {
+        font-size: 20px;
+    }
+
+    #total_focus {
+        min-height: 80px;
+        font-size: 28px;
+    }
 }
