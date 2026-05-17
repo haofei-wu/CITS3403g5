@@ -146,27 +146,46 @@ background: linear-gradient(
 
 /* LOGIN BUTTON */
 .login-btn2 {
+
     width: 100%;
-    padding: 10px 16px;
+
+    padding: 14px;
 
     border: none;
-    border-radius: 6px;
 
-    background: linear-gradient(135deg, #ff6b6b, #ff8a80);
+    border-radius: 14px;
+
+    background: linear-gradient(
+        135deg,
+        #ff7b7b,
+        #ff5f8f
+    );
+
     color: white;
 
-    font-weight: 500;
-    font-size: 18px;
+    font-weight: 600;
 
-    cursor: pointer;
+    font-size: 16px;
 
-    transition: all 0.2s ease;
+    letter-spacing: 0.5px;
+
+    transition: all 0.3s ease;
+
+    box-shadow: 0 6px 15px rgba(255, 95, 143, 0.25);
 }
 
 .login-btn2:hover {
-    transform: translateY(-2px);
-}
 
+    transform: translateY(-3px);
+
+    box-shadow: 0 12px 25px rgba(255, 95, 143, 0.35);
+
+    background: linear-gradient(
+        135deg,
+        #ff6b6b,
+        #ff4f81
+    );
+}
 /* Forgot link */
 .login-link {
     font-size: 14px;
