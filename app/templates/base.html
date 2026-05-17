@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -17,14 +17,14 @@
 
 <header class="app-header">
 
-    <!-- ☰ Menu Button -->
+    <!-- Menu Button -->
     <div class="menu-btn">
-        <button id="menubtn">☰</button>
+        <button id="menubtn" type="button">&#9776;</button>
     </div>
 
     <!-- Sidebar -->
     <div id="menusidebar" class="menu-sidebar">
-        <b>StudyFlow 📚</b>
+        <b>StudyFlow</b>
         <a id = "urlfortimers" href="{{ url_for('main.index') }}"
         class="{% if request.endpoint == 'main.index' %}active{% endif %}">Home</a>
         <a id = "urlfordashboard" href="{{ url_for('main.dashboard') }}"
@@ -37,7 +37,7 @@
 
     <!-- Left Title -->
     <div class="header-left fw-bold">
-        StudyFlow 📚
+        StudyFlow
     </div>
 
     <!-- Right Side -->
@@ -71,11 +71,13 @@
 
 </header>
 
-<div class="container mt-4">
+<main class="app-main container-fluid">
     {% block content %}{% endblock %}
-</div>
+</main>
 
 <script src="{{ url_for('static', filename='js/base.js') }}"></script>
 
 </body>
 </html>
+
+

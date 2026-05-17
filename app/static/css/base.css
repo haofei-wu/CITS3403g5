@@ -1,10 +1,31 @@
+* {
+    box-sizing: border-box;
+}
+
+html {
+    min-height: 100%;
+}
+
 body {
-    min-height:80vh;
+    min-height: 100vh;
+    min-height: 100dvh;
     font-family: 'Inter', system-ui, sans-serif;
     background: linear-gradient(135deg, #e0f7ff, #f5f7fa);
     color: #333;
     font-weight: 400;
     margin:0;
+    overflow-x: hidden;
+}
+
+img,
+canvas,
+svg {
+    max-width: 100%;
+}
+
+.app-main {
+    width: 100%;
+    padding: 24px 16px;
 }
 
 /* Header Styles */
@@ -42,6 +63,7 @@ body {
     justify-self: end;
     display: flex;
     gap: 16px;
+    min-width: 0;
 }
 
 /*Menu Sidebar Styles */
@@ -120,6 +142,7 @@ body {
     font-weight: 500;
     cursor: pointer;
     transition: background-color 0.2s ease;
+    white-space: nowrap;
 }
 
 .btn:hover {
@@ -186,4 +209,55 @@ body {
 
 .nav-avatar-input {
     display: none;
+}
+
+@media (max-width: 768px) {
+    .app-header {
+        grid-template-columns: auto 1fr;
+        gap: 12px;
+        padding: 12px 16px;
+    }
+
+    .header-left {
+        font-size: 26px;
+    }
+
+    .header-right {
+        grid-column: 1 / -1;
+        justify-self: stretch;
+    }
+
+    .header-right > .d-flex {
+        width: 100%;
+        justify-content: flex-end;
+        gap: 8px !important;
+        flex-wrap: wrap;
+    }
+
+    .app-main {
+        padding: 16px 10px;
+    }
+
+    .userinfo {
+        max-width: 140px;
+    }
+}
+
+@media (max-width: 480px) {
+    .header-left {
+        font-size: 22px;
+    }
+
+    .nav-user {
+        padding-right: 6px;
+    }
+
+    .userinfo {
+        display: none;
+    }
+
+    .btn {
+        padding: 7px 10px;
+        font-size: 14px;
+    }
 }
