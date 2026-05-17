@@ -230,6 +230,22 @@ class TestAuthentication(seleniumTests):
         time.sleep(2)  # Wait for the page to load
 
         self.assertIn("Email not found", self.driver.page_source)
+        
+    def test_leaderboard_ranking_order(self):
+
+        self.driver.get(localHost + "/leaderboard")
+
+        time.sleep(2)
+
+        page = self.driver.page_source
+
+        first_index = page.find("C123")
+        second_index = page.find("A123")
+        third_index = page.find("B123")
+
+        self.assertTrue(
+            first_index < second_index < third_index
+        )
 
     #----------Register Page----------------
     def test_register_success(self):
@@ -460,3 +476,5 @@ class TestTimerSessionUpdatesChartData(seleniumTests):
 
         self.assertIn("CITS3403 project", task_hours.keys())
         self.assertGreater(task_hours["CITS3403 project"], 0)
+        
+   
