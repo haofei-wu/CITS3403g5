@@ -18,16 +18,6 @@
                 Build your study consistency.
             </p>
 
-            <div class="left-illustration">
-
-                <div class="book-stack">📚</div>
-
-                <div class="study-plant">🪴</div>
-
-                <div class="paper-plane">✈️</div>
-
-            </div>
-
         </div>
 
         <!-- RIGHT LOGIN PANEL -->
@@ -79,8 +69,19 @@
                     </div>
 
                     <!-- Password -->
-                    <div class="login-password">
-                        {{ form.password(class="login-input", id="password", placeholder="Password") }}     
+                    <!-- Password -->
+                    <div class="login-password password-wrapper">
+
+                        {{ form.password(
+                            class="login-input",
+                            id="password",
+                            placeholder="Password"
+                        ) }}
+
+                        <span id="toggle-password">
+                            👁️
+                        </span>
+
                     </div>
 
                     <!-- Forgot Password -->
