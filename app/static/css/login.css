@@ -71,26 +71,32 @@ background: linear-gradient(
 .login-card {
 
     width: 100%;
-    max-width: 420px;
+    max-width: 430px;
 
-    padding: 40px;
+    padding: 42px;
 
-    border-radius: 24px;
+    border-radius: 28px;
 
-    background: rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.45);
 
-    backdrop-filter: blur(12px);
+    backdrop-filter: blur(16px);
 
-    border: 1px solid rgba(255,255,255,0.2);
+    border: 1px solid rgba(255,255,255,0.3);
 
-    box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+    box-shadow:
+        0 8px 32px rgba(31, 38, 135, 0.15);
+
+    transition: all 0.3s ease;
 
     animation: fadeIn 0.8s ease;
 }
 
 .login-card:hover {
+
     transform: translateY(-4px);
 
+    box-shadow:
+        0 12px 40px rgba(31, 38, 135, 0.2);
 }
 
 /* INPUT STYLE */
@@ -215,6 +221,23 @@ background: linear-gradient(
 
     to {
         opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+
+    from {
+
+        opacity: 0;
+
+        transform: translateY(20px);
+    }
+
+    to {
+
+        opacity: 1;
+
         transform: translateY(0);
     }
 }
