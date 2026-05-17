@@ -373,3 +373,80 @@ background: linear-gradient(
     top: 32%;
     right: 30%;
 }
+
+.left-illustration {
+
+    position: relative;
+
+    margin-top: 80px;
+
+    height: 220px;
+}
+
+.book-stack {
+
+    position: absolute;
+
+    left: 10%;
+
+    bottom: 10px;
+
+    font-size: 90px;
+
+    animation: floaty 5s ease-in-out infinite;
+}
+
+.study-plant {
+
+    position: absolute;
+
+    left: 22%;
+
+    bottom: 95px;
+
+    font-size: 42px;
+
+    animation: floaty 6s ease-in-out infinite;
+}
+
+.paper-plane {
+
+    position: absolute;
+
+    right: 12%;
+
+    top: 30px;
+
+    font-size: 46px;
+
+    opacity: 0.85;
+
+    animation: flyPlane 7s ease-in-out infinite;
+}
+
+@keyframes flyPlane {
+
+    0% {
+
+        transform:
+            translateX(0px)
+            translateY(0px)
+            rotate(0deg);
+    }
+
+    50% {
+
+        transform:
+            translateX(20px)
+            translateY(-12px)
+            rotate(10deg);
+    }
+
+    100% {
+
+        transform:
+            translateX(0px)
+            translateY(0px)
+            rotate(0deg);
+    }
+}
