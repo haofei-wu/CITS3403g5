@@ -367,11 +367,13 @@ def timer():
 @login_required
 def sessiontimes():
     data = request.get_json()
-    startTime = data['startTime']
-    endTime = data['endTime']
+    startTime = data.get('startTime')
+    endTime = data.get('endTime')
     task = data['task']
     sessiondate = data['sessiondate']
-    timeCost = endTime - startTime
+    timeCost = data.get('timeCost')
+    if timeCost is None:
+        timeCost = endTime - startTime
     new_session = TimerSession(user_id=current_user.id,
                                start_time=startTime,
                                end_time=endTime,
