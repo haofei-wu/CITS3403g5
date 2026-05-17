@@ -91,6 +91,10 @@ background: linear-gradient(
     transition: all 0.3s ease;
 
     animation: fadeIn 0.8s ease;
+
+    position: relative;
+
+    z-index: 5;
 }
 
 .login-card:hover {
@@ -117,6 +121,39 @@ background: linear-gradient(
     background: rgba(255,255,255,0.9);
 
     transition: all 0.3s ease;
+}
+
+.password-wrapper {
+
+    position: relative;
+
+    width: 100%;
+}
+
+#toggle-password {
+
+    position: absolute;
+
+    right: 18px;
+
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    cursor: pointer;
+
+    font-size: 18px;
+
+    opacity: 0.65;
+
+    transition: 0.3s ease;
+
+    user-select: none;
+}
+
+#toggle-password:hover {
+
+    opacity: 1;
 }
 
 .login-input:focus {
@@ -255,6 +292,8 @@ background: linear-gradient(
     left: 0;
 
     pointer-events: none;
+
+    z-index: 2;
 }
 
 .floating-book,
@@ -273,26 +312,34 @@ background: linear-gradient(
 
 .floating-book {
 
-    top: 12%;
-    right: 28%;
+    top: 8%;
+    right: 26%;
+
+    font-size: 42px;
 }
 
 .floating-light {
 
-    top: 8%;
-    right: 15%;
+    top: 6%;
+    right: 8%;
+
+    font-size: 38px;
 }
 
 .floating-note {
 
-    top: 28%;
-    right: 10%;
+    top: 48%;
+    right: 2%;
+
+    font-size: 34px;
 }
 
 .floating-plane {
 
-    top: 18%;
-    right: 40%;
+    top: 22%;
+    right: 34%;
+
+    font-size: 30px;
 }
 
 @keyframes floaty {
@@ -314,23 +361,23 @@ background: linear-gradient(
 
     position: absolute;
 
-    top: 18%;
-    right: 8%;
+    top: 12%;
+    right: 2%;
 
-    width: 380px;
-    height: 280px;
+    width: 480px;
+    height: 340px;
 
-    border: 3px dashed rgba(123, 188, 255, 0.35);
+    border: 3px dashed rgba(123, 188, 255, 0.28);
 
     border-color:
-        rgba(123,188,255,0.35)
+        rgba(123,188,255,0.28)
         transparent
         transparent
         transparent;
 
     border-radius: 50%;
 
-    transform: rotate(15deg);
+    transform: rotate(12deg);
 
     animation: pathFloat 6s ease-in-out infinite;
 }
@@ -364,89 +411,13 @@ background: linear-gradient(
 
 .tiny-star {
 
-    top: 14%;
-    right: 22%;
+    top: 18%;
+    right: 18%;
 }
 
 .tiny-star2 {
 
-    top: 32%;
-    right: 30%;
+    top: 36%;
+    right: 24%;
 }
 
-.left-illustration {
-
-    position: relative;
-
-    margin-top: 80px;
-
-    height: 220px;
-}
-
-.book-stack {
-
-    position: absolute;
-
-    left: 10%;
-
-    bottom: 10px;
-
-    font-size: 90px;
-
-    animation: floaty 5s ease-in-out infinite;
-}
-
-.study-plant {
-
-    position: absolute;
-
-    left: 22%;
-
-    bottom: 95px;
-
-    font-size: 42px;
-
-    animation: floaty 6s ease-in-out infinite;
-}
-
-.paper-plane {
-
-    position: absolute;
-
-    right: 12%;
-
-    top: 30px;
-
-    font-size: 46px;
-
-    opacity: 0.85;
-
-    animation: flyPlane 7s ease-in-out infinite;
-}
-
-@keyframes flyPlane {
-
-    0% {
-
-        transform:
-            translateX(0px)
-            translateY(0px)
-            rotate(0deg);
-    }
-
-    50% {
-
-        transform:
-            translateX(20px)
-            translateY(-12px)
-            rotate(10deg);
-    }
-
-    100% {
-
-        transform:
-            translateX(0px)
-            translateY(0px)
-            rotate(0deg);
-    }
-}
