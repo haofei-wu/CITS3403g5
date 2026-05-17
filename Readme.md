@@ -1,3 +1,9 @@
+| UWA ID | Name | GitHub Username |
+|--------------|------------------|-----------------|
+| 24982075 | Haofei Wu        | haofei-wu       |
+| 24284436     | Himakshi Nayyar  | Himakshi28      |
+| 24245253     | Michael Jiang    | Sol1t4ry        |
+
 # Study & Fitness Tracker App
 
 A productivity app with a built-in timer that lets you track time completed for different tasks, see your personal analytics on time spent for each task, and a leaderboard to compare your aggregate task time to other users.
@@ -23,24 +29,10 @@ A productivity app with a built-in timer that lets you track time completed for 
 |------|-------------|
 | **Login** | User authentication |
 | **Home** | Pomodoro/Flowmodoro Timers and Tasks |
-| **Leaderboard** | Compare progress with friends |
+| **Leaderboard** | Compare progress globally |
+| **Dashboard/Analytics Page** | See your own progress for the last day, week or month |
+| **Settings Page** | Customise your settings for timers, opt into leaderboard|
 
-
-
----
-
-## Work Distribution
-
-> Deadline: **25/03/26** — draft design (drawing) + HTML of all pages
-
-| Page | Assignee |
-|------|----------|
-| Login | Himakshi |
-| Leaderboard | Himakshi |
-| Forgot password page | Himakshi |
-| Timer | Haofei |
-| Home | Michael |
-| Task Management | Haofei + Michael |
 
 
 ## How to Run
