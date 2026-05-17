@@ -24,7 +24,7 @@ class seleniumTests(TestCase):
         self.testApp = create_app(SeleniumTestConfig)
         self.app_context = self.testApp.app_context()
         self.app_context.push()
-
+        db.drop_all()
         db.create_all()
         add_test_data_to_db()
 
@@ -295,9 +295,55 @@ class TestAuthentication(seleniumTests):
     #wrong confirm password case is same as register wrong confirm, so not repeated here
 
 
+#---------Settings Tests--------------------
+class TestSettingsChangeAffectsTimer(seleniumTests):
+    def test_settings_change_affects_timer(self):
+        self.driver.get(localHost + "/login")
 
+        self.driver.find_element(By.ID, "email").send_keys("A123@example.com")
+        self.driver.find_element(By.ID, "password").send_keys("password1")
+        self.driver.find_element(By.ID, "login-submit-btn").click()
 
-#---------Settings Change, Affects Timer Logic--------------------
+        time.sleep(2)  # Wait for the page to load
+
+        self.driver.find_element(By.ID, "settings-btn").click()
+        time.sleep(2)  # Wait for the page to update
+
+        self.driver.find_element(By.ID, "flow_restratio").send_keys("2")
+        self.driver.find_element(By.ID, "submit").click()
+        time.sleep(2)  # Wait for the page to update
+        self.driver.find_element(By.ID, "menubtn").click()
+        time.sleep(1)  # Wait for the menu to open
+        
+        self.driver.find_element(By.ID, "urlfortimers").click()
+        self.assertEqual(
+            self.driver.find_element(By.ID, "flow-restratio").get_attribute("textContent"),
+            "2"
+        )
+        self.driver.find_element(By.ID, "settings-btn").click()
+        time.sleep(2)  # Wait for the page to update
+        self.driver.find_element(By.ID, "pom_worklength").send_keys("30")
+        self.driver.find_element(By.ID, "pom_short_break").send_keys("10")
+        self.driver.find_element(By.ID, "pom_long_break").send_keys("20")
+        self.driver.find_element(By.ID, "submit").click()
+        time.sleep(2)  # Wait for the page to update
+        self.driver.find_element(By.ID, "menubtn").click()
+        self.driver.find_element(By.ID, "urlfortimers").click()
+        time.sleep(2)  # Wait for the page to update
+        self.assertEqual(
+            self.driver.find_element(By.ID, "pom-worklength").get_attribute("textContent"),
+            "30"
+        )
+        self.assertEqual(
+            self.driver.find_element(By.ID, "pom-short-break").get_attribute("textContent"),
+            "10"
+        )
+        self.assertEqual(
+            self.driver.find_element(By.ID, "pom-long-break").get_attribute("textContent"),
+            "20"
+        )
+
+#-----------Timer session start and end updates dashboard graph--------------------
 class TestSettingsChangeAffectsTimer(seleniumTests):
     def test_settings_change_affects_timer(self):
         self.driver.get(localHost + "/login")
@@ -314,7 +360,10 @@ class TestSettingsChangeAffectsTimer(seleniumTests):
         flow_restratio_input = self.driver.find_element(By.ID, "flow_restratio")
         flow_restratio_input.clear()
         flow_restratio_input.send_keys("2")
-        self.driver.find_element(By.ID, "submit").click()
+
+        submit = self.driver.find_element(By.ID, "submit")
+        self.driver.execute_script("arguments[0].click();", submit)
+
         time.sleep(2)  # Wait for the page to update
         self.driver.find_element(By.ID, "menubtn").click()
         time.sleep(1)  # Wait for the sidebar slide-in animation
@@ -338,8 +387,8 @@ class TestSettingsChangeAffectsTimer(seleniumTests):
         pom_long_break_input = self.driver.find_element(By.ID, "pom_long_break")
         pom_long_break_input.clear()
         pom_long_break_input.send_keys("20")
-
-        self.driver.find_element(By.ID, "submit").click()
+        submit = self.driver.find_element(By.ID, "submit")
+        self.driver.execute_script("arguments[0].click();", submit)
         time.sleep(2)  # Wait for the page to update
         self.driver.find_element(By.ID, "menubtn").click()
         time.sleep(1)  # Wait for the sidebar slide-in animation
@@ -404,11 +453,10 @@ class TestTimerSessionUpdatesChartData(seleniumTests):
 
             const result = {};
             for (let i = 0; i < labels.length; i++) {
-                result[labels[i]] = values[i];
+                result[labels[i]] = Number(values[i]);
             }
             return result;
         """)
 
         self.assertIn("CITS3403 project", task_hours.keys())
         self.assertGreater(task_hours["CITS3403 project"], 0)
-
