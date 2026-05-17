@@ -3,6 +3,7 @@
 {% block content %}
 
 <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+<script src="{{ url_for('static', filename='js/login.js') }}"></script>
 
 <div class="container-fluid login-page d-flex justify-content-center align-items-center min-vh-100">
 
@@ -42,12 +43,14 @@
                         {{ form.email(class="form-control", placeholder="Enter your email") }}
                     </div>
 
-                    <div class="mb-3">
-                        {{ form.password(class="form-control", placeholder="Enter your password") }}
+                    <div class="login-password">
+                        {{ form.password(class="form-control", id="password", placeholder="Enter your password") }}
+                        <button type="button" class="login-show-btn" onclick="togglePassword('password', this)">Show</button>
                     </div>
 
-                    <div class="mb-3">
-                        {{ form.confirm_password(class="form-control", placeholder="Confirm your password") }}
+                    <div class="login-password">
+                        {{ form.confirm_password(class="form-control", id="confirm_password", placeholder="Confirm your password") }}
+                        <button type="button" class="login-show-btn" onclick="togglePassword('confirm_password', this)">Show</button>
                     </div>
 
                     <button type="submit" class="login-btn2">

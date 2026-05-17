@@ -92,9 +92,17 @@
     display: flex;
     align-items: center;
     gap:10px;
+    margin-bottom: 1rem;
+}
+
+.login-password .login-input,
+.login-password .form-control {
+    flex: 1;
 }
 
 .login-show-btn {
+    flex: 0 0 58px;
+    width: 58px;
     border: none;
     background: linear-gradient(135deg, #ff6b6b, #ff8a80);
     color: white;
@@ -106,10 +114,6 @@
     cursor: pointer;
 
     transition: 0.2s ease;
-}
-
-.login-show-btn:hover {
-    transform: scale(1.1);
 }
 
 /* LOGIN BUTTON */
