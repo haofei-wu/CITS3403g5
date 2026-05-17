@@ -297,3 +297,47 @@ class TestAuthentication(seleniumTests):
 
 
 
+#---------Settings Change, Affects Timer Test--------------------
+def test_settings_change_affects_timer(self):
+        self.driver.get(localHost + "/login")
+
+        self.driver.find_element(By.ID, "email").send_keys("A123@example.com")
+        self.driver.find_element(By.ID, "password").send_keys("password1")
+        self.driver.find_element(By.ID, "login-submit-btn").click()
+
+        time.sleep(2)  # Wait for the page to load
+
+        self.driver.find_element(By.ID, "settings-btn").click()
+        time.sleep(2)  # Wait for the page to update
+
+        self.driver.find_element(By.ID, "flow-rest-ratio").send_keys("2")
+        self.driver.find_element(By.ID, "submit").click()
+        time.sleep(2)  # Wait for the page to update
+        self.driver.find_element(By.ID, "menusidebar").click()
+        self.driver.find_element(By.ID, "urlfortimers").click()
+        self.assertEqual(
+            self.driver.find_element(By.ID, "flow-rest-ratio").text,
+            "2"
+        )
+        self.driver.find_element(By.ID, "settings-btn").click()
+        time.sleep(2)  # Wait for the page to update
+        self.driver_find_element(By.ID, "pom_worklength").send_keys("30")
+        self.driver_find_element(By.ID, "pom_short_break").send_keys("10")
+        self.driver_find_element(By.ID, "pom_long_break").send_keys("20")
+        self.driver_find_element(By.ID, "submit").click()
+        time.sleep(2)  # Wait for the page to update
+        self.driver.find_element(By.ID, "menusidebar").click()
+        self.driver.find_element(By.ID, "urlfortimers").click()
+        time.sleep(2)  # Wait for the page to update
+        self.assertEqual(
+            self.driver.find_element(By.ID, "pom-worklength").text,
+            "30"
+        )
+        self.assertEqual(
+            self.driver.find_element(By.ID, "pom-short-break").text,
+            "10"
+        )
+        self.assertEqual(
+            self.driver.find_element(By.ID, "pom-long-break").text,
+            "20"
+        )

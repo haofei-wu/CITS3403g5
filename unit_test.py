@@ -19,6 +19,14 @@ def add_test_data_to_db():
             email="C123@example.com", 
             nickname="C123", 
             password=generate_password_hash("password3")),
+        User(
+            email="D123@example.com", 
+            nickname="D123", 
+            password=generate_password_hash("password4")),
+        User(
+            email="E123@example.com", 
+            nickname="E123", 
+            password=generate_password_hash("password5")),
     ]
     db.session.add_all(users)
     db.session.commit()
@@ -81,8 +89,36 @@ def add_test_data_to_db():
             sessiondate="2025-04-15",
             timeCost=6099000,
         ),
+        
     ]
     db.session.add_all(sessions)
+    db.session.commit()
+    
+    today = date.today()
+    d123_sessions = [
+    TimerSession(user_id=d123.id, taskforsession="CITS3403 project",
+                 start_time=0, end_time=7_200_000, timeCost=7_200_000,
+                 sessiondate=(today - timedelta(days=0)).isoformat()),   # 120 min, today
+    TimerSession(user_id=d123.id, taskforsession="CITS3403 project",
+                 start_time=0, end_time=5_400_000, timeCost=5_400_000,
+                 sessiondate=(today - timedelta(days=0)).isoformat()),   #  90 min, today
+    TimerSession(user_id=d123.id, taskforsession="Fluids revision",
+                 start_time=0, end_time=5_400_000, timeCost=5_400_000,
+                 sessiondate=(today - timedelta(days=0)).isoformat()),   #  90 min, today
+    TimerSession(user_id=d123.id, taskforsession="Dynamics tutorial",
+                 start_time=0, end_time=1_800_000, timeCost=1_800_000,
+                 sessiondate=(today - timedelta(days=2)).isoformat()),   #  30 min, 2d ago
+    TimerSession(user_id=d123.id, taskforsession="Reading",
+                 start_time=0, end_time=1_500_000, timeCost=1_500_000,
+                 sessiondate=(today - timedelta(days=8)).isoformat()),   #  25 min, 8d ago
+    TimerSession(user_id=d123.id, taskforsession="CITS1402 SQL",
+                 start_time=0, end_time=1_800_000, timeCost=1_800_000,
+                 sessiondate=(today - timedelta(days=15)).isoformat()),  #  30 min, 15d ago
+    TimerSession(user_id=d123.id, taskforsession="Reading",
+                 start_time=0, end_time=1_200_000, timeCost=1_200_000,
+                 sessiondate=(today - timedelta(days=22)).isoformat()),  #  20 min, 22d ago
+]
+    db.session.add_all(d123_sessions)
     db.session.commit()
 
     settings = [
@@ -138,6 +174,7 @@ class BasicTests(TestCase):
             "email":email,
             "password":password})
 
+    
 
 # ---------TASK TESTS--------------------
 class TaskModelTest(BasicTests):
@@ -362,3 +399,38 @@ class LeaderboardTest(BasicTests):
         self.assertEqual(total, 6099000)
 
         
+
+#---------ANALYTICS TESTS--------------------
+class AnalyticsTest(BasicTests):
+    self.login("d123@example.com", "password4")
+    def test_startdate_week(self):
+        start_date = findstartdate("week")
+        self.assertEqual(start_date, (date.today() - timedelta(days=7)).isoformat())
+
+    def test_startdate_month(self):
+        start_date = findstartdate("month")
+        self.assertEqual(start_date, (date.today() - relativedelta(months=1)).isoformat())
+
+    def teststartdate_day(self):
+        start_date = findstartdate("day")
+        self.assertEqual(start_date, date.today().isoformat())
+    def test_formatchartdataday(self):
+        chart_data = formatchartdata("day")
+        self.assertEqual(chart_data, {
+            "labels": ["CITS3403 project", "Fluids revision"],
+            "data": [3.5, 1.5]
+        })
+
+    def test_formatchartdataweek(self):
+        chart_data = formatchartdata("week")
+        self.assertEqual(chart_data, {
+            "labels": ["CITS3403 project", "Fluids revision", "Dynamics tutorial"],
+            "data": [3.5, 1.5, 0.5]
+        })
+
+    def test_formatchartdatamonth(self):
+        chart_data = formatchartdata("month")
+        self.assertEqual(chart_data, {
+            "labels": ["CITS3403 project", "Fluids revision", "Dynamics tutorial", "Reading", "CITS1402 SQL"],
+            "data": [3.5, 1.5, 0.5, 0.75, 0.5]
+        })

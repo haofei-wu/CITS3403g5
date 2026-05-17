@@ -18,19 +18,24 @@
 
         <form method="POST" action="{{ url_for('main.settings') }}">
             {{ form.hidden_tag() }}
+            <!-- renders: <input id="csrf_token" name="csrf_token" type="hidden" value="<token>"> -->
 
             <div class="settings-field">
                 {{ form.nickname.label(class="settings-label") }}
+                <!-- renders: <label for="nickname" class="settings-label">Nickname</label> -->
                 {{ form.nickname(class="settings-input", placeholder="Enter your nickname") }}
+                <!-- renders: <input class="settings-input" id="nickname" maxlength="64" minlength="1" name="nickname" placeholder="Enter your nickname" required type="text" value="<current nickname>"> -->
             </div>
 
             <div class="settings-toggle-field">
                 <div>
                     {{ form.show_leaderboard.label(class="settings-label") }}
+                    <!-- renders: <label for="show_leaderboard" class="settings-label">Show me on the leaderboard</label> -->
                     <p class="settings-help">Allow your nickname and study time to appear in rankings.</p>
                 </div>
                 <label class="settings-switch">
                     {{ form.show_leaderboard(class="settings-checkbox") }}
+                    <!-- renders: <input class="settings-checkbox" id="show_leaderboard" name="show_leaderboard" type="checkbox" value="y"> (adds `checked` when True) -->
                     <span class="settings-switch-track">
                         <span class="settings-switch-thumb"></span>
                     </span>
@@ -39,25 +44,34 @@
 
             <div class="settings-field">
                 {{ form.flow_restratio.label(class="settings-label") }}
+                <!-- renders: <label for="flow_restratio" class="settings-label">Flow Rest Ratio</label> -->
                 {{ form.flow_restratio(class="settings-input", min="1") }}
+                <!-- renders: <input class="settings-input" id="flow_restratio" min="1" name="flow_restratio" required type="number" value="<current value>"> -->
             </div>
 
             <div class="settings-field">
                 {{ form.pom_worklength.label(class="settings-label") }}
+                <!-- renders: <label for="pom_worklength" class="settings-label">Pomodoro Work Length</label> -->
                 {{ form.pom_worklength(class="settings-input", min="1") }}
+                <!-- renders: <input class="settings-input" id="pom_worklength" min="1" name="pom_worklength" required type="number" value="<current value>"> -->
             </div>
 
             <div class="settings-field">
                 {{ form.pom_short_break.label(class="settings-label") }}
+                <!-- renders: <label for="pom_short_break" class="settings-label">Pomodoro Short Break Length</label> -->
                 {{ form.pom_short_break(class="settings-input", min="1") }}
+                <!-- renders: <input class="settings-input" id="pom_short_break" min="1" name="pom_short_break" required type="number" value="<current value>"> -->
             </div>
 
             <div class="settings-field">
                 {{ form.pom_long_break.label(class="settings-label") }}
+                <!-- renders: <label for="pom_long_break" class="settings-label">Pomodoro Long Break Length</label> -->
                 {{ form.pom_long_break(class="settings-input", min="1") }}
+                <!-- renders: <input class="settings-input" id="pom_long_break" min="1" name="pom_long_break" required type="number" value="<current value>"> -->
             </div>
 
             {{ form.submit(class="settings-submit") }}
+            <!-- renders: <input class="settings-submit" id="submit" name="submit" type="submit" value="Save"> -->
         </form>
     </div>
 </div>
