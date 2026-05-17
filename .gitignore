@@ -3,10 +3,11 @@ __pycache__/
 *.pyc
 
 #Virtual environments
-.vscode/
 .venv/
 venv/
 
 #Local database files
 app/*.db
 
+config.bat
+node_modules
