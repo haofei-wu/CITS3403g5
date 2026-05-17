@@ -2,10 +2,10 @@
 let livetime = {}
 let timerrefresh = null;
 
-// source venv/bin/activate
+
 async function commitSessionTimes() {
     const selectedTask = document.querySelector("#flow-task-value").textContent;
-
+    //commits the session times to the database
     const response = await fetch("/sessiontimes", {
     headers: {
         "Content-Type": "application/json",
@@ -20,10 +20,8 @@ async function commitSessionTimes() {
     })
 });
 };
-    // we want user click timer start, click again end, and know how much time elapsed
-    // store start and end time in external object
-    // in external object minus end from start on the second click
-    // return difference
+
+//formats milliseconds to minutes and seconds for display
 function formatMs(ms) {
     const totalSeconds = Math.floor(ms / 1000);
     const minutes = Math.floor(totalSeconds / 60);
@@ -31,15 +29,12 @@ function formatMs(ms) {
     return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
 }
 
-    // formatTime(125000); // "02:05" 
     
 document.getElementById("flow-start-btn").addEventListener("click", function() {
     if (!document.querySelector("#flow-task-value").textContent) {
         return;
     }
 
-    // keytimes.startTime = Date.now()
-    // console.log("working")
     document.getElementById("flow-task-name").style.display = "flex";
     document.getElementById("restTime").style.display = "none";
     document.getElementById("flow-start-btn").style.display = "none";
@@ -54,6 +49,7 @@ document.getElementById("flow-start-btn").addEventListener("click", function() {
 
 
 function countdownTimer() {
+    //starts a countdown timer based on the rest time and the flow rest ratio
     let resttime = Date.now() + (livetime.endTime - livetime.startTime)/document.getElementById("flow-restratio").innerHTML;
     let countdown = setInterval(() => {     
             if (Date.now() < resttime)   {
@@ -70,34 +66,18 @@ function countdownTimer() {
 
 
 document.getElementById("flow-end-btn").addEventListener("click", function() {
-    // console.log("working")
+    //ends the timer and commits the session times to the database
     document.getElementById("flow-end-btn").style.display = "none";
     document.getElementById("flow-start-btn").style.display = "block";
     clearInterval(timerrefresh);
-    console.log("killed timer");
     commitSessionTimes();
     document.getElementById("flow-task-name").style.display = "none";
     document.getElementById("restTime").style.display = "flex";
     document.querySelector("#timer-display").innerHTML = formatMs((livetime.endTime - livetime.startTime)/document.getElementById("flow-restratio").innerHTML);
     countdownTimer();
-    //countdown ment.getElementById("restTime").innerHTML = formatTime((livetime.endTime - livetime.startTime)/document.getElementById("flow-restratio").innerHTML);
-    
-    // set interval to update timer displayer every second using setinterval
 });
-//countdown 
 
-
-
-
-//countdown timer -> date.now() + resttime
-// set interval to update timer display every second until, date.now() = date.now() + resttime
-
-// "flow-end-btn".addEventListener("click", timeElapsed(currentTime)
-//     let timepassed = Date.now() - startTime;
-//     return timepassed;
-// }
-
-// UTC -----> Local_Time
+// converts UTC time to local time
 function getLocal() {
     const now = new Date();
 
