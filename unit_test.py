@@ -128,33 +128,6 @@ def add_test_data_to_db():
     db.session.add_all(d123_sessions)
     db.session.commit()
 
-    today = date.today()
-    d123_sessions = [
-        TimerSession(user_id=users[3].id, taskforsession="CITS3403 project",
-                     start_time=0, end_time=7_200_000, timeCost=7_200_000,
-                     sessiondate=today.isoformat()),                            # 120 min, today
-        TimerSession(user_id=users[3].id, taskforsession="CITS3403 project",
-                     start_time=0, end_time=5_400_000, timeCost=5_400_000,
-                     sessiondate=today.isoformat()),                            #  90 min, today
-        TimerSession(user_id=users[3].id, taskforsession="Fluids revision",
-                     start_time=0, end_time=5_400_000, timeCost=5_400_000,
-                     sessiondate=today.isoformat()),                            #  90 min, today
-        TimerSession(user_id=users[3].id, taskforsession="Dynamics tutorial",
-                     start_time=0, end_time=1_800_000, timeCost=1_800_000,
-                     sessiondate=(today - timedelta(days=2)).isoformat()),      #  30 min, 2d ago
-        TimerSession(user_id=users[3].id, taskforsession="Reading",
-                     start_time=0, end_time=1_500_000, timeCost=1_500_000,
-                     sessiondate=(today - timedelta(days=8)).isoformat()),      #  25 min, 8d ago
-        TimerSession(user_id=users[3].id, taskforsession="CITS1402 SQL",
-                     start_time=0, end_time=1_800_000, timeCost=1_800_000,
-                     sessiondate=(today - timedelta(days=15)).isoformat()),     #  30 min, 15d ago
-        TimerSession(user_id=users[3].id, taskforsession="Reading",
-                     start_time=0, end_time=1_200_000, timeCost=1_200_000,
-                     sessiondate=(today - timedelta(days=22)).isoformat()),     #  20 min, 22d ago
-    ]
-    db.session.add_all(d123_sessions)
-    db.session.commit()
-
     settings = [
         Settings(
             id=users[0].id,
